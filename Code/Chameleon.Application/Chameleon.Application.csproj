@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SevenTiny.Bantina" Version="1.0.57" />
+  </ItemGroup>
+
 </Project>

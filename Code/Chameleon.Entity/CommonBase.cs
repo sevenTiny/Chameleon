@@ -35,5 +35,29 @@ namespace Chameleon.Entity
         public DateTime ModifyTime { get; set; } = DateTime.Now;
         [Column]
         public int TenantId { get; set; } = 0;
+
+        public IsDeleted GetIsDeleted()
+        {
+            return (IsDeleted)this.IsDeleted;
+        }
+        public void SetIsDeleted(IsDeleted isDeleted)
+        {
+            this.IsDeleted = (int)isDeleted;
+        }
+    }
+
+    /// <summary>
+    /// 删除状态
+    /// </summary>
+    public enum IsDeleted : int
+    {
+        /// <summary>
+        /// 未删除
+        /// </summary>
+        UnDeleted = 0,
+        /// <summary>
+        /// 已删除
+        /// </summary>
+        Deleted = 1
     }
 }
