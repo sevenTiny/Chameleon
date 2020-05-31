@@ -10,6 +10,6 @@ namespace Chameleon.Entity
     public class MetaObject : CommonBase
     {
         [Column]
-        public Guid ApplicationId { get; set; }
+        public Guid CloudApplicationtId { get; set; }
     }
 }

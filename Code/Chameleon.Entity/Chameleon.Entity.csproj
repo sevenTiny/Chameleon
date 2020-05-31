@@ -9,4 +9,8 @@
     <PackageReference Include="SevenTiny.Bantina.Bankinate.MySql" Version="1.0.21" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Chameleon.Infrastructure\Chameleon.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
