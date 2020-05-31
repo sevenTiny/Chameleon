@@ -20,7 +20,7 @@ namespace Chameleon.Development.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return Redirect("/CloudApplication/Select");
         }
 
         public IActionResult Privacy()
