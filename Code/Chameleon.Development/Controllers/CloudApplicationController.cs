@@ -12,6 +12,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
 {
     public class CloudApplicationController : WebControllerBase
     {
+
         public CloudApplicationController(ICloudApplicationService applicationService,IMetaObjectService metaObjectService)
         {
             _applicationService = applicationService;
