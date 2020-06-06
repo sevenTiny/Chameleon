@@ -1,6 +1,7 @@
 ﻿@using Chameleon.Entity;
-@using Chameleon.Enum;
 @using System.Linq;
+@using SevenTiny.Bantina.Extensions.AspNetCore;
+@using Chameleon.Infrastructure;
 @{
     ViewData["Title"] = "Update";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
@@ -8,9 +9,7 @@
 @{
     ResponseModel result = Model as ResponseModel ?? new ResponseModel();
     MetaField metaField = result.Data as MetaField ?? new MetaField();
-    Array dataTypes = Enum.GetValues(typeof(DataType));
-    //不显示的数据类型
-    DataType[] dataTypesExclude = new[] { DataType.Unknown, DataType.StandradDate, DataType.StandradDateTime };
+    var lebel = ((DataType)metaField.FieldType).GetDescription();
 }
 
 @{
@@ -39,7 +38,7 @@
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
                     <select name="fieldType" class="select" value="@metaField.FieldType" onchange="fieldTypeSwitch(this)" required>
-                        <option value="@metaField.FieldType">@DataTypeTranslator.ToLabel(metaField.FieldType)</option>
+                        <option value="@metaField.FieldType">@lebel</option>
                     </select>
                 </span>
             </div>

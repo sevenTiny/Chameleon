@@ -60,14 +60,20 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             }
         }
 
+        protected void SetCookiesMetaObjectInfo(Guid metaObjectId, string metaObjectCode)
+        {
+            HttpContext.Response.Cookies.Append("MetaObjectId", metaObjectId.ToString());
+            HttpContext.Response.Cookies.Append("MetaObjectCode", metaObjectCode);
+        }
+
         /// <summary>
-        /// 请求中的对象Id
+        /// Cookie中的对象Id
         /// </summary>
-        protected Guid RequestMetaObjectId
+        protected Guid CurrentMetaObjectId
         {
             get
             {
-                var metaObjectId = HttpContext.Request.Query["MetaObjectId"];
+                var metaObjectId = HttpContext.Request.Cookies["MetaObjectId"];
 
                 if (string.IsNullOrEmpty(metaObjectId))
                     throw new ArgumentNullException("MetaObjectId is null,please check first!");
@@ -77,13 +83,13 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         }
 
         /// <summary>
-        /// 请求中的对象编码
+        /// Cookie中的对象编码
         /// </summary>
-        protected string RequestMetaObjectCode
+        protected string CurrentMetaObjectCode
         {
             get
             {
-                var metaObjectCode = HttpContext.Request.Query["MetaObjectCode"];
+                var metaObjectCode = HttpContext.Request.Cookies["MetaObjectCode"];
 
                 if (string.IsNullOrEmpty(metaObjectCode))
                     throw new ArgumentNullException("MetaObjectCode is null,please check first!");

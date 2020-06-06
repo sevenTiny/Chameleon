@@ -20,7 +20,7 @@ namespace Chameleon.Domain
         string GetMetaObjectNameById(Guid metaObjectId);
     }
 
-    internal abstract class MetaObjectCommonServiceBase<TEntity> : CommonServiceBase<TEntity>, IMetaObjectCommonServiceBase<TEntity> where TEntity : MetaObjectBase
+    public abstract class MetaObjectCommonServiceBase<TEntity> : CommonServiceBase<TEntity>, IMetaObjectCommonServiceBase<TEntity> where TEntity : MetaObjectBase
     {
         public MetaObjectCommonServiceBase(IMetaObjectRepositoryBase<TEntity> metaObjectCommonRepositoryBase) : base(metaObjectCommonRepositoryBase)
         {

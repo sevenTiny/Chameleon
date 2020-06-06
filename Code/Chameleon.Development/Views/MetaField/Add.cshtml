@@ -1,18 +1,16 @@
 ﻿@using Chameleon.Entity;
-@using Chameleon.Enum;
 @using System.Linq;
+@using SevenTiny.Bantina.Extensions.AspNetCore;
+@using Chameleon.Infrastructure;
 @{
     ViewData["Title"] = "Add";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
-    
-    ResponseModel result = Model as ResponseModel ?? new ResponseModel();
-    MetaField metaField = result.Data as MetaField ?? new MetaField() { FieldType = (int)DataType.Number };
-    Array dataTypes = Enum.GetValues(typeof(DataType));
-    //不显示的数据类型
-    DataType[] dataTypesExclude = new[] { DataType.Unknown, DataType.StandradDate, DataType.StandradDateTime };
-}
 
-@{ 
+    ResponseModel result = Model as ResponseModel ?? new ResponseModel { IsSuccess = true };
+    MetaField metaField = result.Data as MetaField ?? new MetaField();
+    var dataTypes = Enum.GetValues(typeof(DataType));
+}
+@{
     ViewData["Level_1"] = "对象管理";
     ViewData["Level_2"] = "添加字段";
 }
@@ -39,11 +37,14 @@
                     <select name="fieldType" class="select" value="@metaField.FieldType" onchange="fieldTypeSwitch(this)" required>
                         @foreach (var item in dataTypes)
                         {
-                            if (!dataTypesExclude.Any(t => t.ToString().Equals(item.ToString())))
-                            {
-                                var value = (int)item;
-                                <option value="@value">@DataTypeTranslator.ToLabel((int)item)</option>
-                            }
+                            var enumItem = (DataType)item;
+
+                            if (DataType.Unknown == enumItem)
+                                continue;
+
+                            var label = enumItem.GetDescription();
+
+                            <option value="@item">@label</option>
                         }
                     </select>
                 </span>

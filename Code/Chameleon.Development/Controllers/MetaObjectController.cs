@@ -1,4 +1,5 @@
-﻿using Chameleon.Domain;
+﻿using Chameleon.Application;
+using Chameleon.Domain;
 using Chameleon.Entity;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,11 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
     {
         IMetaObjectService _metaObjectService;
         IMetaObjectRepository _metaObjectRepository;
+        IMetaObjectApp _metaObjectApp;
 
-        public MetaObjectController(IMetaObjectService metaObjectService, IMetaObjectRepository metaObjectRepository)
+        public MetaObjectController(IMetaObjectApp metaObjectApp, IMetaObjectService metaObjectService, IMetaObjectRepository metaObjectRepository)
         {
+            _metaObjectApp = metaObjectApp;
             _metaObjectService = metaObjectService;
             _metaObjectRepository = metaObjectRepository;
         }
@@ -40,8 +43,11 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                 .ContinueAssert(_ => entity.Code.IsAlnum(2, 50), "编码不合法，2-50位且只能包含字母和数字（字母开头）")
                 .Continue(_ =>
                 {
+                    entity.Id = Guid.NewGuid();
                     entity.CreateBy = CurrentUserId;
-                    return _metaObjectService.Add(CurrentApplicationId, CurrentApplicationCode, entity);
+                    entity.CloudApplicationId = CurrentApplicationId;
+                    entity.Code = string.Concat(CurrentApplicationCode, ".", entity.Code);
+                    return _metaObjectApp.AddMetaObject(entity.Id, entity.Code, CurrentApplicationId, entity);
                 });
 
             if (!result.IsSuccess)

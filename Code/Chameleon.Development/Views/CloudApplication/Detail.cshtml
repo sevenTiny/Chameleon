@@ -98,7 +98,7 @@
                 <dt title="@item.Name"><i class="Hui-iconfont">&#xe72d;</i> @item.Name.Substring(0, item.Name.Length <= 9 ? item.Name.Length : 9)<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
                 <dd>
                     <ul>
-                        <li><a href="javascript:mainFrameOpen('/MetaField/List?metaObjectId=@item.Id')"><i class="Hui-iconfont">&#xe6ec;</i> 字段</a></li>
+                        <li><a href="javascript:mainFrameOpen('/MetaField/List?metaObjectId=@item.Id&metaObjectCode=@item.Code')"><i class="Hui-iconfont">&#xe6ec;</i> 字段</a></li>
                         <li><a href="javascript:mainFrameOpen('')"><i class="Hui-iconfont">&#xe627;</i> 接口字段</a></li>
                         <li><a href="javascript:mainFrameOpen('')"><i class="Hui-iconfont">&#xe665;</i> 接口条件</a></li>
                         <li><a href="javascript:mainFrameOpen('')"><i class="Hui-iconfont">&#xe676;</i> 接口校验</a></li>

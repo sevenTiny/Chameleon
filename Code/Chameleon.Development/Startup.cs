@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using System.Threading.Tasks;
+using Chameleon.Application;
 using Chameleon.Domain;
 using Chameleon.Infrastructure;
 using Chameleon.Repository;
@@ -34,6 +35,7 @@ namespace Chameleon.Development
             //inject domain
             services.AddScoped(typeof(CloudApplicationService).Assembly);
             //inject application
+            services.AddScoped(typeof(MetaObjectApp).Assembly);
 
             services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.All));
             services.AddSession();
