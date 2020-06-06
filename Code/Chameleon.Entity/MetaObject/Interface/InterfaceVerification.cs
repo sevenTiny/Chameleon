@@ -28,5 +28,10 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public string RegularExpression { get; set; }
+        /// <summary>
+        /// 校验失败时的提示消息
+        /// </summary>
+        [Column]
+        public string VerificationTips { get; set; }
     }
 }
