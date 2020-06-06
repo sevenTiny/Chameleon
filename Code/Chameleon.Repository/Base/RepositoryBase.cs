@@ -8,7 +8,7 @@ namespace Chameleon.Repository
     public interface IRepositoryBase<TEntity> where TEntity : class
     {
         Result Add(TEntity entity);
-        Result<IList<TEntity>> BatchAdd(IList<TEntity> entities);
+        Result<IEnumerable<TEntity>> BatchAdd(IEnumerable<TEntity> entities);
         Result Update(TEntity entity);
         Result Delete(TEntity entity);
 
@@ -32,10 +32,10 @@ namespace Chameleon.Repository
             return Result.Success();
         }
 
-        public Result<IList<TEntity>> BatchAdd(IList<TEntity> entities)
+        public Result<IEnumerable<TEntity>> BatchAdd(IEnumerable<TEntity> entities)
         {
             _dbContext.Add<TEntity>(entities);
-            return Result<IList<TEntity>>.Success(data: entities);
+            return Result<IEnumerable<TEntity>>.Success(data: entities);
         }
 
         public Result Update(TEntity entity)

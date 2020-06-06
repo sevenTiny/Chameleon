@@ -29,5 +29,10 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public string MetaFieldCustomViewName { get; set; }
+        /// <summary>
+        /// 父节点Id，父节点id为空的数据说明是顶级数据，不为空的则为配置数据
+        /// </summary>
+        [Column]
+        public Guid ParentId { get; set; }
     }
 }

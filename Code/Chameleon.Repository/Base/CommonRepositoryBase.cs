@@ -2,6 +2,7 @@
 using SevenTiny.Bantina;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Chameleon.Repository
@@ -14,6 +15,7 @@ namespace Chameleon.Repository
         /// <param name="id"></param>
         /// <returns></returns>
         Result Delete(Guid id);
+        Result BatchDelete(IEnumerable<Guid> ids);
         Result LogicDelete(Guid id);
         Result Recover(Guid id);
         TEntity GetById(Guid id);
@@ -98,5 +100,18 @@ namespace Chameleon.Repository
 
         public bool CheckCodeExist(string code)
             => _dbContext.Queryable<TEntity>().Where(t => t.Code.Equals(code)).Any();
+
+        public Result BatchDelete(IEnumerable<Guid> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Result.Success();
+
+            foreach (var item in ids)
+            {
+                this.Delete(item);
+            }
+
+            return Result.Success();
+        }
     }
 }

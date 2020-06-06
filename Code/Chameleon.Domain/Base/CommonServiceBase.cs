@@ -3,6 +3,7 @@ using Chameleon.Repository;
 using SevenTiny.Bantina;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Chameleon.Domain
@@ -10,7 +11,7 @@ namespace Chameleon.Domain
     public interface ICommonServiceBase<TEntity> where TEntity : CommonBase
     {
         Result Add(TEntity entity);
-        Result<IList<TEntity>> BatchAdd(IList<TEntity> entities);
+        Result<IEnumerable<TEntity>> BatchAdd(IEnumerable<TEntity> entities);
         Result Update(TEntity entity);
         Result Delete(TEntity entity);
 
@@ -20,6 +21,20 @@ namespace Chameleon.Domain
 
         Result CheckCodeExist(string code);
         Result CheckCodeExistWithoutSameId(Guid id, string code);
+        /// <summary>
+        /// 根据id更新（更新字段用action手动控制，内部仅更新了更新时间）
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updateFieldAction"></param>
+        /// <returns></returns>
+        Result UpdateWithId(Guid id, Action<TEntity> updateFieldAction = null);
+        /// <summary>
+        /// 通用编辑
+        /// 注：编码不能修改，其他通用字段内部修改，个性字段赋值通过action手动修改
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="updateFieldAction"></param>
+        /// <returns></returns>
         Result UpdateWithOutCode(TEntity source, Action<TEntity> updateFieldAction = null);
 
         /// <summary>
@@ -92,13 +107,19 @@ namespace Chameleon.Domain
                 .Continue(_ => _commonRepositoryBase.Add(entity));
         }
 
-        /// <summary>
-        /// 通用编辑
-        /// 注：编码不能修改，其他通用字段内部修改，个性字段赋值通过action手动修改
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="updateFieldAction"></param>
-        /// <returns></returns>
+        public Result UpdateWithId(Guid id, Action<TEntity> updateFieldAction = null)
+        {
+            TEntity target = _commonRepositoryBase.GetById(id);
+
+            if (target == null)
+                return Result.Error($"没有查到Id[{id}]对应的数据.");
+
+            //个性化字段赋值
+            updateFieldAction?.Invoke(target);
+
+            return _commonRepositoryBase.Update(target);
+        }
+
         public Result UpdateWithOutCode(TEntity source, Action<TEntity> updateFieldAction = null)
         {
             TEntity target = _commonRepositoryBase.GetById(source.Id);
@@ -165,9 +186,17 @@ namespace Chameleon.Domain
             return _commonRepositoryBase.GetByCodeWithoutSameId(id, code);
         }
 
-        public Result<IList<TEntity>> BatchAdd(IList<TEntity> entities)
+        public Result<IEnumerable<TEntity>> BatchAdd(IEnumerable<TEntity> entities)
         {
-            return _commonRepositoryBase.BatchAdd(entities);
+            var toAdd = entities.ToList();
+
+            foreach (var item in toAdd)
+            {
+                if (item.Id == Guid.Empty)
+                    item.Id = Guid.NewGuid();
+            }
+
+            return _commonRepositoryBase.BatchAdd(toAdd);
         }
 
         public Result Update(TEntity entity)
