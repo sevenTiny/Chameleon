@@ -79,5 +79,10 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         {
             return _metaFieldService.LogicDelete(id).ToJsonResult();
         }
+
+        public IActionResult Delete(Guid id)
+        {
+            return _metaFieldService.Delete(id).ToJsonResult();
+        }
     }
 }
