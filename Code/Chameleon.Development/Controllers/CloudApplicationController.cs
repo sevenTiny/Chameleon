@@ -1,26 +1,26 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Chameleon.Domain;
+using Chameleon.Entity;
+using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
+using SevenTiny.Bantina.Extensions.AspNetCore;
 using SevenTiny.Bantina.Validation;
-using SevenTiny.Cloud.MultiTenant.Domain.Entity;
-using SevenTiny.Cloud.MultiTenant.Domain.RepositoryContract;
-using SevenTiny.Cloud.MultiTenant.Domain.ServiceContract;
-using SevenTiny.Cloud.MultiTenant.Web.Models;
 using System;
 
 namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
 {
     public class CloudApplicationController : WebControllerBase
     {
+        ICloudApplicationService _applicationService;
+        IMetaObjectService _metaObjectService;
+        IMetaObjectRepository _metaObjectRepository;
 
-        public CloudApplicationController(ICloudApplicationService applicationService,IMetaObjectService metaObjectService)
+        public CloudApplicationController(IMetaObjectRepository metaObjectRepository, ICloudApplicationService applicationService, IMetaObjectService metaObjectService)
         {
+            _metaObjectRepository = metaObjectRepository;
             _applicationService = applicationService;
             _metaObjectService = metaObjectService;
         }
-
-        ICloudApplicationService _applicationService;
-        IMetaObjectService _metaObjectService;
 
         public IActionResult Select()
         {
@@ -41,7 +41,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                 Icon = "cloud"
             };
             application.Icon = "cloud";
-            return View(ResponseModel.Success(application));
+            return View(ResponseModel.Success(data: application));
         }
 
         public IActionResult AddLogic(CloudApplication entity)
@@ -66,7 +66,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         public IActionResult Update(Guid id)
         {
             var application = _applicationService.GetById(id);
-            return View(ResponseModel.Success(application));
+            return View(ResponseModel.Success(data: application));
         }
 
         public IActionResult UpdateLogic(CloudApplication entity)
@@ -90,7 +90,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         public IActionResult LogicDelete(Guid id)
         {
             _applicationService.LogicDelete(id);
-            return JsonResultModel.Success("删除成功");
+            return JsonResultSuccess("删除成功");
         }
 
         public IActionResult Detail(Guid applicationId, string applicationCode)
@@ -98,12 +98,12 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             if (string.IsNullOrEmpty(applicationCode))
                 return Redirect("/CloudApplication/Select");
 
-            SetApplictionInfoToSession(applicationId, applicationCode);
-            SetUserInfoToViewData();
+            //设置cookie
+            SetCookiesApplictionInfo(applicationId, applicationCode);
 
             ViewData["ApplicationCode"] = applicationCode;
             ViewData["ApplicationId"] = applicationId;
-            ViewData["MetaObjects"] = _metaObjectService.GetMetaObjectListUnDeletedByApplicationId(applicationId);
+            ViewData["MetaObjects"] = _metaObjectRepository.GetMetaObjectListUnDeletedByApplicationId(applicationId);
 
             return View();
         }

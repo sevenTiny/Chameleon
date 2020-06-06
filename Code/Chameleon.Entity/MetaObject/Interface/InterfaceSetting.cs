@@ -1,5 +1,4 @@
-﻿using Chameleon.Infrastructure.Enums;
-using SevenTiny.Bantina.Bankinate.Attributes;
+﻿using SevenTiny.Bantina.Bankinate.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;

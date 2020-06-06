@@ -39,7 +39,7 @@ namespace Chameleon.Domain
         TEntity GetByCodeWithoutSameId(Guid id, string code);
     }
 
-    internal abstract class CommonServiceBase<TEntity> : ICommonServiceBase<TEntity> where TEntity : CommonBase
+    public abstract class CommonServiceBase<TEntity> : ICommonServiceBase<TEntity> where TEntity : CommonBase
     {
         public CommonServiceBase(ICommonRepositoryBase<TEntity> commonRepositoryBase)
         {

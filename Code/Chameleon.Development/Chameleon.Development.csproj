@@ -5,6 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\CloudInterface\**" />
+    <Compile Remove="Views\MetaField\**" />
+    <Content Remove="Views\CloudInterface\**" />
+    <Content Remove="Views\MetaField\**" />
+    <EmbeddedResource Remove="Views\CloudInterface\**" />
+    <EmbeddedResource Remove="Views\MetaField\**" />
+    <None Remove="Views\CloudInterface\**" />
+    <None Remove="Views\MetaField\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\MetaObject\Add.cshtml" />
+    <None Include="Views\MetaObject\List.cshtml" />
+    <None Include="Views\MetaObject\Update.cshtml" />
     <None Include="wwwroot\js\site.js" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
@@ -35,6 +49,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.4" />
+    <PackageReference Include="SevenTiny.Bantina.Extensions.AspNetCore" Version="1.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Chameleon.Domain\Chameleon.Domain.csproj" />
   </ItemGroup>
 
 

@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SevenTiny.Bantina;
+using SevenTiny.Bantina.Extensions.AspNetCore;
+using System;
 
 namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
 {
@@ -9,78 +12,85 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
     //[Authorize]
     public class WebControllerBase : Controller
     {
-        //protected void SetApplictionInfoToSession(Guid applicationId, string applicationCode)
-        //{
-        //    HttpContext.Session.SetString("ApplicationId", applicationId.ToString());
-        //    HttpContext.Session.SetString("ApplicationCode", applicationCode);
-        //}
+        protected JsonResult JsonResultSuccess(string msg = "操作成功")
+        {
+            return Result.Success(msg).ToJsonResult();
+        }
 
-        //protected void SetMetaObjectInfoToSession(Guid metaObjectId)
-        //{
-        //    //HttpContext.Response.Cookies.Append("MetaObjectId", metaObjectId.ToString());
-        //    HttpContext.Session.SetString("MetaObjectId", metaObjectId.ToString());
-        //}
+        /// <summary>
+        /// 将当前操作的应用信息存储到cookies中
+        /// </summary>
+        /// <param name="applicationId"></param>
+        /// <param name="applicationCode"></param>
+        protected void SetCookiesApplictionInfo(Guid applicationId, string applicationCode)
+        {
+            HttpContext.Response.Cookies.Append("ApplicationId", applicationId.ToString());
+            HttpContext.Response.Cookies.Append("ApplicationCode", applicationCode);
+        }
 
-        ///// <summary>
-        ///// 当前应用Id
-        ///// </summary>
-        //protected Guid CurrentApplicationId
-        //{
-        //    get
-        //    {
-        //        var applicationId = HttpContext.Session.GetString("ApplicationId");
+        /// <summary>
+        /// Cookie中的应用Id
+        /// </summary>
+        protected Guid CurrentApplicationId
+        {
+            get
+            {
+                var applicationId = HttpContext.Request.Cookies["ApplicationId"];
 
-        //        if (string.IsNullOrEmpty(applicationId))
-        //            Response.Redirect("/CloudApplication/Select");
+                if (string.IsNullOrEmpty(applicationId))
+                    Response.Redirect("/CloudApplication/Select");
 
-        //        return Guid.Parse(applicationId);
-        //    }
-        //}
-        ///// <summary>
-        ///// 当前应用编码
-        ///// </summary>
-        //protected string CurrentApplicationCode
-        //{
-        //    get
-        //    {
-        //        var applicationCode = HttpContext.Session.GetString("ApplicationCode");
+                return Guid.Parse(applicationId);
+            }
+        }
 
-        //        if (string.IsNullOrEmpty(applicationCode))
-        //            Response.Redirect("/CloudApplication/Select");
+        /// <summary>
+        /// Cookie中的应用编码
+        /// </summary>
+        protected string CurrentApplicationCode
+        {
+            get
+            {
+                var applicationCode = HttpContext.Request.Cookies["ApplicationCode"];
 
-        //        ViewData["ApplicationCode"] = applicationCode;
+                if (string.IsNullOrEmpty(applicationCode))
+                    throw new ArgumentNullException("ApplicationCode is null,please check first!");
 
-        //        return applicationCode;
-        //    }
-        //}
+                return applicationCode;
+            }
+        }
 
-        ///// <summary>
-        ///// 当前对象Id
-        ///// </summary>
-        //protected Guid CurrentMetaObjectId
-        //{
-        //    get
-        //    {
-        //        var id = HttpContext.Session.GetString("MetaObjectId");
+        /// <summary>
+        /// 请求中的对象Id
+        /// </summary>
+        protected Guid RequestMetaObjectId
+        {
+            get
+            {
+                var metaObjectId = HttpContext.Request.Query["MetaObjectId"];
 
-        //        if (string.IsNullOrEmpty(id))
-        //            throw new ArgumentNullException("MetaObjectId is null,please select MetaObject first!");
+                if (string.IsNullOrEmpty(metaObjectId))
+                    throw new ArgumentNullException("MetaObjectId is null,please check first!");
 
-        //        return Guid.Parse(id);
-        //    }
-        //}
+                return Guid.Parse(metaObjectId);
+            }
+        }
 
-        ///// <summary>
-        ///// 这个即将移除
-        ///// </summary>
-        //protected string CurrentMetaObjectCode
-        //{
-        //    get
-        //    {
-        //        throw new NotImplementedException();
-        //        return HttpContext.Session.GetString("MetaObjectCode") ?? throw new ArgumentNullException("MetaObjectCode is null,please select MetaObject first!"); ;
-        //    }
-        //}
+        /// <summary>
+        /// 请求中的对象编码
+        /// </summary>
+        protected string RequestMetaObjectCode
+        {
+            get
+            {
+                var metaObjectCode = HttpContext.Request.Query["MetaObjectCode"];
+
+                if (string.IsNullOrEmpty(metaObjectCode))
+                    throw new ArgumentNullException("MetaObjectCode is null,please check first!");
+
+                return metaObjectCode;
+            }
+        }
 
         ///// <summary>
         ///// 请求上下文信息
@@ -137,18 +147,20 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         //    }
         //}
 
-        //protected int CurrentUserId
-        //{
-        //    get
-        //    {
-        //        var result = Convert.ToInt32(GetArgumentFromToken(AccountConst.KEY_UserId));
+        protected int CurrentUserId
+        {
+            get
+            {
+                return 0;
 
-        //        if (result <= 0)
-        //            Response.Redirect($"{UrlsConfig.Instance.Account}/UserAccount/Login?_redirectUrl={UrlsConfig.Instance.DevelopmentWebUrl}/Home/Index");
+                //var result = Convert.ToInt32(GetArgumentFromToken(AccountConst.KEY_UserId));
 
-        //        return result;
-        //    }
-        //}
+                //if (result <= 0)
+                //    Response.Redirect($"{UrlsConfig.Instance.Account}/UserAccount/Login?_redirectUrl={UrlsConfig.Instance.DevelopmentWebUrl}/Home/Index");
+
+                //return result;
+            }
+        }
 
         //protected string CurrentUserEmail
         //{

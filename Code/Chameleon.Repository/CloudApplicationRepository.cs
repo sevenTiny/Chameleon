@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Chameleon.Repository
 {
-    internal interface ICloudApplicationRepository : ICommonRepositoryBase<CloudApplication>
+    public interface ICloudApplicationRepository : ICommonRepositoryBase<CloudApplication>
     {
     }
 
-    internal class CloudApplicationRepository : CommonRepositoryBase<CloudApplication>, ICloudApplicationRepository
+    public class CloudApplicationRepository : CommonRepositoryBase<CloudApplication>, ICloudApplicationRepository
     {
         public CloudApplicationRepository(ChameleonDbContext dbContext) : base(dbContext) { }
     }

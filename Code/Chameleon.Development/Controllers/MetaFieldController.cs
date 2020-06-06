@@ -2,8 +2,8 @@
 //using SevenTiny.Bantina;
 //using SevenTiny.Bantina.Validation;
 //using SevenTiny.Cloud.MultiTenant.Application.ServiceContract;
-//using SevenTiny.Cloud.MultiTenant.Domain.Entity;
-//using SevenTiny.Cloud.MultiTenant.Domain.ServiceContract;
+//using Chameleon.Entity;
+//using Chameleon.ServiceContract;
 //using SevenTiny.Cloud.MultiTenant.Web.Models;
 //using System;
 

@@ -1,5 +1,4 @@
-﻿@using SevenTiny.Cloud.MultiTenant.Infrastructure.Configs;
-@using SevenTiny.Cloud.MultiTenant.Domain.Entity;
+﻿@using Chameleon.Entity;
 @{
     ViewData["Title"] = "Detail";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
@@ -26,8 +25,8 @@
                         <a href="#" class="dropDown_A"> @ViewData["UserName"] <i class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
                             <li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
-                            <li><a href="@UrlsConfig.Instance.Account/UserAccount/Login?_redirectUrl=@UrlsConfig.Instance.DevelopmentWebUrl/Home/Index">切换账户</a></li>
-                            <li><a href="@UrlsConfig.Instance.Account/UserAccount/Logout?_redirectUrl=@UrlsConfig.Instance.DevelopmentWebUrl/Home/Index">退出</a></li>
+                            <li><a href="">切换账户</a></li>
+                            <li><a href="">退出</a></li>
                         </ul>
                     </li>
                     <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
@@ -100,13 +99,10 @@
                 <dd>
                     <ul>
                         <li><a href="javascript:mainFrameOpen('/MetaField/List?metaObjectId=@item.Id')"><i class="Hui-iconfont">&#xe6ec;</i> 字段</a></li>
-                        <li><a href="javascript:mainFrameOpen('/FormView/List?metaObjectId=@item.Id')"><i class="Hui-iconfont">&#xe627;</i> 表单</a></li>
-                        <li><a href="javascript:mainFrameOpen('/ListView/List?metaObjectId=@item.Id')"><i class="Hui-iconfont">&#xe6f3;</i> 列表</a></li>
-                        <li><a href="javascript:mainFrameOpen('/SearchCondition/List?metaObjectId=@item.Id')"><i class="Hui-iconfont">&#xe683;</i> 搜索条件</a></li>
-                        <li><a href="javascript:mainFrameOpen('/IndexView/List?metaObjectId=@item.Id')"><i class="Hui-iconfont">&#xe72b;</i> 视图</a></li>
-                        <li><a href="javascript:mainFrameOpen('/Home/Http403')"><i class="Hui-iconfont">&#xe616;</i> 详情页</a></li>
-                        <li><a href="javascript:mainFrameOpen('/Home/Http403')"><i class="Hui-iconfont">&#xe616;</i> 功能按钮</a></li>
-                        <li><a href="javascript:mainFrameOpen('/CloudInterface/List')"><i class="Hui-iconfont">&#xe6f1;</i> 自定义接口</a></li>
+                        <li><a href="javascript:mainFrameOpen('')"><i class="Hui-iconfont">&#xe627;</i> 接口字段</a></li>
+                        <li><a href="javascript:mainFrameOpen('')"><i class="Hui-iconfont">&#xe665;</i> 接口条件</a></li>
+                        <li><a href="javascript:mainFrameOpen('')"><i class="Hui-iconfont">&#xe676;</i> 接口校验</a></li>
+                        <li><a href="javascript:mainFrameOpen('')"><i class="Hui-iconfont">&#xe61d;</i> 接口配置</a></li>
                         <li><a href="javascript:mainFrameOpen('/TriggerScript/List')"><i class="Hui-iconfont">&#xe6a2;</i> 触发器</a></li>
                     </ul>
                 </dd>

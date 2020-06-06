@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Chameleon.Repository
 {
-    internal interface IMetaObjectRepository : ICommonRepositoryBase<MetaObject>
+    public interface IMetaObjectRepository : ICommonRepositoryBase<MetaObject>
     {
         List<MetaObject> GetMetaObjectListUnDeletedByApplicationId(Guid applicationId);
         List<MetaObject> GetMetaObjectListDeletedByApplicationId(Guid applicationId);
@@ -13,7 +13,7 @@ namespace Chameleon.Repository
         MetaObject GetMetaObjectByCodeAndApplicationId(Guid applicationId, string code);
     }
 
-    internal class MetaObjectRepository : CommonRepositoryBase<MetaObject>, IMetaObjectRepository
+    public class MetaObjectRepository : CommonRepositoryBase<MetaObject>, IMetaObjectRepository
     {
         public MetaObjectRepository(ChameleonDbContext dbContext) : base(dbContext) { }
 

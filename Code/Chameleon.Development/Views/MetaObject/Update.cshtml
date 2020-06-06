@@ -1,4 +1,5 @@
-﻿@using SevenTiny.Cloud.MultiTenant.Domain.Entity;
+﻿@using Chameleon.Entity;
+@using SevenTiny.Bantina.Extensions.AspNetCore;
 @{
     ViewData["Title"] = "Update";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
@@ -6,12 +7,11 @@
     var result = Model as ResponseModel ?? new ResponseModel();
     var metaObject = result.Data as MetaObject ?? new MetaObject();
 }
-
 @{
     ViewData["Level_1"] = "对象管理";
     ViewData["Level_2"] = "修改对象";
 }
-@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml");
 
 <article class="page-container">
     <form class="form form-horizontal validate" id="form-article-add" method="post" action="/MetaObject/UpdateLogic">

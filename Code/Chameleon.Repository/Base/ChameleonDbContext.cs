@@ -1,4 +1,5 @@
 ﻿using Chameleon.Entity;
+using Chameleon.Infrastructure.Configs;
 using SevenTiny.Bantina.Bankinate;
 using SevenTiny.Bantina.Bankinate.Attributes;
 using System;
@@ -10,7 +11,7 @@ namespace Chameleon.Repository
     [DataBase("Chameleon")]
     public class ChameleonDbContext : MySqlDbContext<ChameleonDbContext>
     {
-        public ChameleonDbContext() : base("")
+        public ChameleonDbContext() : base(ConnectionStringsConfig.Instance.Chameleon)
         {
             ////开启一级缓存
             //OpenQueryCache = false;
