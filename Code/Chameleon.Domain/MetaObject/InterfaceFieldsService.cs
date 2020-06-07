@@ -84,7 +84,7 @@ namespace Chameleon.Domain
 
             var toAdds = toAddIds.Select(t => new InterfaceFields
             {
-                Code = fieldDic.SafeGet(t)?.ShortCode,
+                Code = fieldDic.SafeGet(t)?.Code,
                 Name = fieldDic.SafeGet(t)?.Name,
                 ParentId = interfaceFieldId,
                 MetaFieldId = t,
