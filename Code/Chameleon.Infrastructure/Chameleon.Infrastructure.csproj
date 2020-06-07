@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SevenTiny.Bantina" Version="1.0.59" />
+    <PackageReference Include="SevenTiny.Bantina" Version="1.0.60" />
     <PackageReference Include="SevenTiny.Bantina.Configuration.Core" Version="1.0.31" />
     <PackageReference Include="SevenTiny.Bantina.Configuration.MySql" Version="1.0.23" />
   </ItemGroup>

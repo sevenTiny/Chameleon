@@ -8,7 +8,6 @@
 
     ResponseModel result = Model as ResponseModel ?? new ResponseModel { IsSuccess = true };
     InterfaceFields entity = result.Data as InterfaceFields ?? new InterfaceFields();
-    var dataTypes = Enum.GetValues(typeof(DataType));
 }
 @{
     ViewData["Level_1"] = "对象管理";

@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chameleon.Entity", "Chamele
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Chameleon.UnitTest", "Test.Chameleon.UnitTest\Test.Chameleon.UnitTest.csproj", "{D3A4A1CA-533C-45BC-BF8C-FA6AEC25FC21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chameleon.Development", "Chameleon.Development\Chameleon.Development.csproj", "{5843B0E0-1694-4761-A1F1-7E361B31A3CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chameleon.Development", "Chameleon.Development\Chameleon.Development.csproj", "{5843B0E0-1694-4761-A1F1-7E361B31A3CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

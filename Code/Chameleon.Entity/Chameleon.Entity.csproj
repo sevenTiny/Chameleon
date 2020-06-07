@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SevenTiny.Bantina" Version="1.0.59" />
-    <PackageReference Include="SevenTiny.Bantina.Bankinate.Core" Version="1.0.25" />
+    <PackageReference Include="SevenTiny.Bantina" Version="1.0.60" />
+    <PackageReference Include="SevenTiny.Bantina.Bankinate.Core" Version="1.0.26" />
     <PackageReference Include="SevenTiny.Bantina.Bankinate.MySql" Version="1.0.21" />
   </ItemGroup>
 
