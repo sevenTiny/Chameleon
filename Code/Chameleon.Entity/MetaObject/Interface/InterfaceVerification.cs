@@ -12,6 +12,11 @@ namespace Chameleon.Entity
     public class InterfaceVerification : MetaObjectBase
     {
         /// <summary>
+        /// 所属接口校验，顶级节点没有接口校验
+        /// </summary>
+        [Column]
+        public Guid ParentId { get; set; }
+        /// <summary>
         /// 字段Id
         /// 该字段必填
         /// </summary>

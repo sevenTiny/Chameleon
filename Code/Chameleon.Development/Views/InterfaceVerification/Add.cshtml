@@ -1,49 +1,48 @@
 ﻿@using Chameleon.Entity;
 @using SevenTiny.Bantina.Extensions.AspNetCore;
 @{
-    ViewData["Title"] = "Update";
+    ViewData["Title"] = "Add";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
-    var result = Model as ResponseModel ?? new ResponseModel();
-    var metaObject = result.Data as MetaObject ?? new MetaObject();
+    var result = Model as ResponseModel ?? new ResponseModel() { IsSuccess = true };
+    var entity = result?.Data as InterfaceVerification ?? new InterfaceVerification();
 }
 @{
     ViewData["Level_1"] = "对象管理";
-    ViewData["Level_2"] = "修改对象";
+    ViewData["Level_2"] = "新增接口校验";
 }
-@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml");
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="page-container">
-    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/MetaObject/UpdateLogic">
-        <input type="text" class="input-text" value="@metaObject.Id" name="id" hidden>
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/InterfaceVerification/AddLogic">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@metaObject.Name" name="name" required minLength="2" maxlength="50">
+                <input type="text" class="input-text" value="@entity.Name" placeholder="" name="name" required minLength="2" maxlength="50">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编码：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" style="background-color:#e8e8e8;" value="@metaObject.Code" name="code" readonly="readonly" required>
+                <input type="text" class="input-text" value="@entity.Code" placeholder="" name="code" required minLength="2" maxlength="50">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">分组：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@metaObject.Group" name="group">
+                <input type="text" class="input-text" value="@entity.Group" placeholder="" name="group">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">排序值：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@metaObject.SortNumber" name="sortNumber">
+                <input type="text" class="input-text" value="@entity.SortNumber" placeholder="" name="sortNumber">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">描述：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="description" class="textarea ignore" placeholder="说点什么...">@metaObject.Description</textarea>
+                <textarea name="description" class="textarea ignore" placeholder="说点什么...">@entity.Description</textarea>
             </div>
         </div>
         <div class="row cl">

@@ -1,49 +1,40 @@
 ﻿@using Chameleon.Entity;
+@using System.Linq;
 @using SevenTiny.Bantina.Extensions.AspNetCore;
+@using Chameleon.Infrastructure;
 @{
     ViewData["Title"] = "Update";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
-
-    var result = Model as ResponseModel ?? new ResponseModel();
-    var metaObject = result.Data as MetaObject ?? new MetaObject();
+}
+@{
+    ResponseModel result = Model as ResponseModel ?? new ResponseModel();
+    InterfaceVerification entity = result.Data as InterfaceVerification ?? new InterfaceVerification();
 }
 @{
     ViewData["Level_1"] = "对象管理";
-    ViewData["Level_2"] = "修改对象";
+    ViewData["Level_2"] = "自定义接口校验配置";
 }
-@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml");
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="page-container">
-    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/MetaObject/UpdateLogic">
-        <input type="text" class="input-text" value="@metaObject.Id" name="id" hidden>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@metaObject.Name" name="name" required minLength="2" maxlength="50">
-            </div>
-        </div>
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/InterfaceVerification/SeletedMetaFieldEditLogic">
+        <input type="text" class="input-text" value="@entity.Id" name="id" hidden>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编码：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" style="background-color:#e8e8e8;" value="@metaObject.Code" name="code" readonly="readonly" required>
+                <input type="text" class="input-text" style="background-color:#e8e8e8;" value="@entity.MetaFieldShortCode" name="MetaFieldShortCode" readonly="readonly" required>
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">分组：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>校验表达式：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@metaObject.Group" name="group">
+                <input type="text" class="input-text" value="@entity.RegularExpression" name="RegularExpression" required minLength="2" maxlength="200">
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">排序值：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>失败提示语：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@metaObject.SortNumber" name="sortNumber">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">描述：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="description" class="textarea ignore" placeholder="说点什么...">@metaObject.Description</textarea>
+                <input type="text" class="input-text" value="@entity.VerificationTips" name="VerificationTips" required minLength="2" maxlength="50">
             </div>
         </div>
         <div class="row cl">
