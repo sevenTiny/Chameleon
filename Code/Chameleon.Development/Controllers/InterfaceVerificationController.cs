@@ -126,15 +126,15 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             return re.ToJsonResult();
         }
 
-        public IActionResult Setting(Guid parentMetaFieldsId)
+        public IActionResult Setting(Guid parentId)
         {
-            var selectedFields = _InterfaceVerificationRepository.GetInterfaceVerificationByParentId(parentMetaFieldsId);
+            var selectedFields = _InterfaceVerificationRepository.GetInterfaceVerificationByParentId(parentId);
 
             var selectedMetaFieldIds = selectedFields?.Select(t => t.MetaFieldId).ToArray() ?? new Guid[0];
 
             ViewData["MetaFields"] = _metaFieldService.GetListUnDeletedByMetaObjectId(CurrentMetaObjectId)?.Where(t => !selectedMetaFieldIds.Contains(t.Id)).ToList();
 
-            ViewData["Id"] = parentMetaFieldsId;
+            ViewData["Id"] = parentId;
 
             return View(selectedFields);
         }

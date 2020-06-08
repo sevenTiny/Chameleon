@@ -1,48 +1,124 @@
 ﻿@using Chameleon.Entity;
 @using SevenTiny.Bantina.Extensions.AspNetCore;
+@using Chameleon.Infrastructure;
 @{
     ViewData["Title"] = "Add";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
-    var result = Model as ResponseModel ?? new ResponseModel();
-    var metaObject = result?.Data as MetaObject ?? new MetaObject();
+    var result = Model as ResponseModel ?? new ResponseModel() { IsSuccess = true };
+    var entity = result?.Data as InterfaceSetting ?? new InterfaceSetting();
+
+    List<InterfaceCondition> interfaceConditions = (ViewData["InterfaceCondition"] as List<InterfaceCondition>) ?? new List<InterfaceCondition>(0);
+    List<InterfaceVerification> interfaceVerification = (ViewData["InterfaceVerification"] as List<InterfaceVerification>) ?? new List<InterfaceVerification>(0);
+    List<InterfaceFields> interfaceFields = (ViewData["InterfaceFields"] as List<InterfaceFields>) ?? new List<InterfaceFields>(0);
 }
-@{ 
+@{
     ViewData["Level_1"] = "对象管理";
-    ViewData["Level_2"] = "新增对象";
+    ViewData["Level_2"] = "新增接口";
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="page-container">
-    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/MetaObject/AddLogic">
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/InterfaceSetting/AddLogic">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@metaObject.Name" placeholder="" name="name" required minLength="2" maxlength="50">
+                <input type="text" class="input-text" value="@entity.Name" placeholder="" name="name" required minLength="2" maxlength="50">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编码：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@metaObject.Code" placeholder="" name="code" required minLength="2" maxlength="50">
+                <input type="text" class="input-text" value="@entity.Code" placeholder="" name="code" required minLength="2" maxlength="50">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>接口类型：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select name="InterfaceType" class="input select" onchange="interfaceTypeSwitch(this)" id="InterfaceType" required>
+                        <option value="">--请选择--</option>
+                        @foreach (var item in Enum.GetValues(typeof(InterfaceTypeEnum)))
+                        {
+                            if ((InterfaceTypeEnum)item == InterfaceTypeEnum.UnKnown)
+                                continue;
+
+                            var label = ((InterfaceTypeEnum)item).GetDescription();
+
+                            <option value="@Convert.ToInt32(item)">@label</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl" id="InterfaceConditionId">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>接口条件：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select name="InterfaceConditionId" class="input select" id="sl_InterfaceConditionId" required>
+                        <option value="">--请选择--</option>
+                        @foreach (var item in interfaceConditions)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl" id="InterfaceFieldsId">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>接口字段：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select name="InterfaceFieldsId" class="input select" id="sl_InterfaceFieldsId" required>
+                        <option value="">--请选择--</option>
+                        @foreach (var item in interfaceFields)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl" id="InterfaceVerificationId">
+            <label class="form-label col-xs-4 col-sm-2">接口校验：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select name="InterfaceVerificationId" class="input select" id="sl_InterfaceVerificationId">
+                        <option value="">--请选择--</option>
+                        @foreach (var item in interfaceVerification)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl" id="DataSourceId">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>数据源：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select name="DataSourceId" class="select" id="sl_DataSourceId" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </span>
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">分组：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@metaObject.Group" placeholder="" name="group">
+                <input type="text" class="input-text" value="@entity.Group" placeholder="" name="group">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">排序值：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@metaObject.SortNumber" placeholder="" name="sortNumber">
+                <input type="text" class="input-text" value="@entity.SortNumber" placeholder="" name="sortNumber">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">描述：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="description" class="textarea ignore" placeholder="说点什么...">@metaObject.Description</textarea>
+                <textarea name="description" class="textarea ignore" placeholder="说点什么...">@entity.Description</textarea>
             </div>
         </div>
         <div class="row cl">
@@ -63,6 +139,100 @@
 @await Html.PartialAsync("~/Views/Shared/_FormValidate.cshtml")
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
+    $("#InterfaceType").val('@entity.InterfaceType')
+    $("#sl_InterfaceConditionId").val('@entity.InterfaceConditionId');
+    $("#sl_InterfaceFieldsId").val('@entity.InterfaceFieldsId');
+    $("#sl_InterfaceVerificationId").val('@entity.InterfaceVerificationId');
 
+    //初始化预置显隐
+    interfaceTypeSwitch()
+
+    //隐藏全部标签
+    function hideAll() {
+        $("#InterfaceConditionId").hide()
+        $("#sl_InterfaceConditionId").addClass("ignore")
+
+        $("#InterfaceFieldsId").hide()
+        $("#sl_InterfaceFieldsId").addClass("ignore")
+
+        $("#InterfaceVerificationId").hide()
+        $("#sl_InterfaceVerificationId").addClass("ignore")
+
+         $("#DataSourceId").hide()
+        $("#sl_DataSourceId").addClass("ignore")
+    }
+
+    //切换接口类型
+    function interfaceTypeSwitch() {
+        //接口类型
+        var interfaceType = $("#InterfaceType").val()
+
+        //先隐藏全部
+        hideAll()
+
+        //根据不同场景显示不同的表单
+        //Add = 1,BatchAdd = 2,
+        if (interfaceType == 1 || interfaceType == 2) {
+            $("#InterfaceFieldsId").show()
+            $("#sl_InterfaceFieldsId").removeClass("ignore")
+
+            $("#InterfaceVerificationId").show()
+            $("#sl_InterfaceVerificationId").removeClass("ignore")
+        }
+        //Update = 3,
+        else if (interfaceType == 3) {
+            $("#InterfaceFieldsId").show()
+            $("#sl_InterfaceFieldsId").removeClass("ignore")
+
+            $("#InterfaceConditionId").show()
+            $("#sl_InterfaceConditionId").removeClass("ignore")
+
+            $("#InterfaceVerificationId").show()
+            $("#sl_InterfaceVerificationId").removeClass("ignore")
+        }
+        //Delete = 4,
+        else if (interfaceType == 4) {
+            $("#InterfaceConditionId").show()
+            $("#sl_InterfaceConditionId").removeClass("ignore")
+
+            $("#InterfaceVerificationId").show()
+            $("#sl_InterfaceVerificationId").removeClass("ignore")
+        }
+        //QueryCount = 5,
+        else if (interfaceType == 5) {
+            $("#InterfaceConditionId").show()
+            $("#sl_InterfaceConditionId").removeClass("ignore")
+
+            $("#InterfaceVerificationId").show()
+            $("#sl_InterfaceVerificationId").removeClass("ignore")
+        }
+        //QuerySingle = 6,
+        else if (interfaceType == 6) {
+            $("#InterfaceFieldsId").show()
+            $("#sl_InterfaceFieldsId").removeClass("ignore")
+
+            $("#InterfaceConditionId").show()
+            $("#sl_InterfaceConditionId").removeClass("ignore")
+
+            $("#InterfaceVerificationId").show()
+            $("#sl_InterfaceVerificationId").removeClass("ignore")
+        }
+        //QueryList = 7,
+        else if (interfaceType == 7) {
+            $("#InterfaceFieldsId").show()
+            $("#sl_InterfaceFieldsId").removeClass("ignore")
+
+            $("#InterfaceConditionId").show()
+            $("#sl_InterfaceConditionId").removeClass("ignore")
+
+            $("#InterfaceVerificationId").show()
+            $("#sl_InterfaceVerificationId").removeClass("ignore")
+        }
+        //数据源
+        else if (interfaceType == 8) {
+             $("#DataSourceId").show()
+            $("#sl_DataSourceId").removeClass("ignore")
+        }
+    }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

@@ -23,6 +23,11 @@
                 <tr class="text-c">
                     <th>名称</th>
                     <th>编码</th>
+                    <th>接口类型</th>
+                    <th>接口条件</th>
+                    <th>接口字段</th>
+                    <th>接口校验</th>
+                    <th>数据源</th>
                     <th>描述</th>
                     <th>排序</th>
                     <th>分组</th>
@@ -32,9 +37,15 @@
             <tbody>
                 @foreach (var item in entities)
                 {
+                    var interfaceTypeLabel = ((InterfaceTypeEnum)item.InterfaceType).GetDescription();
                     <tr class="text-c">
                         <td>@item.Name</td>
                         <td>@item.Code</td>
+                        <td>@interfaceTypeLabel</td>
+                        <td title="@item.InterfaceConditionId"><a style="color:dodgerblue" href="/InterfaceCondition/Setting?belongToId=@item.InterfaceConditionId">@item.InterfaceConditionName</a></td>
+                        <td title="@item.InterfaceFieldsId"><a style="color:dodgerblue" href="/InterfaceFields/Setting?parentMetaFieldsId=@item.InterfaceFieldsId">@item.InterfaceFieldsName</a></td>
+                        <td title="@item.InterfaceVerificationId"><a style="color:dodgerblue" href="/InterfaceVerification/Setting?parentId=@item.InterfaceVerificationId">@item.InterfaceVerificationName</a></td>
+                        <td title="@item.DataSourceId">@item.DataSourceName</td>
                         <td>@item.Description</td>
                         <td>@item.SortNumber</td>
                         <td>@item.Group</td>
@@ -56,11 +67,11 @@
 <script type="text/javascript">
     $('.table-sort').dataTable({
         "aLengthMenu": [[50, 100, -1], ["50", "100", "All"]],//二组数组，第一组数量，
-        "aaSorting": [[3, "asc"]],//默认第几个排序
+        "aaSorting": [[8, "asc"]],//默认第几个排序
         "bAutoWidth": false,
         "bStateSave": true,//状态保存
         "aoColumnDefs": [
-            { "orderable": false, "aTargets": [5] }// 不参与排序的列
+            { "orderable": false, "aTargets": [10] }// 不参与排序的列
         ]
     });
 </script>

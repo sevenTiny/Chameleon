@@ -14,12 +14,24 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
 {
     public class InterfaceSettingController : WebControllerBase
     {
-        readonly IInterfaceSettingService _InterfaceSettingService;
+        IInterfaceSettingService _InterfaceSettingService;
         IMetaFieldService _metaFieldService;
         IInterfaceSettingRepository _InterfaceSettingRepository;
         IInterfaceSettingApp _interfaceSettingApp;
-        public InterfaceSettingController(IInterfaceSettingApp interfaceSettingApp, IInterfaceSettingRepository InterfaceSettingRepository, IInterfaceSettingService InterfaceSettingService, IMetaFieldService metaFieldService)
+        IInterfaceConditionRepository _interfaceConditionRepository;
+        IInterfaceVerificationRepository _interfaceVerificationRepository;
+        IInterfaceFieldsRepository _interfaceFieldsRepository;
+        IInterfaceFieldsService _interfaceFieldsService;
+        IInterfaceVerificationService _interfaceVerificationService;
+        IInterfaceConditionService _interfaceConditionService;
+        public InterfaceSettingController(IInterfaceConditionService interfaceConditionService, IInterfaceVerificationService interfaceVerificationService, IInterfaceFieldsService interfaceFieldsService, IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceVerificationRepository interfaceVerificationRepository, IInterfaceConditionRepository interfaceConditionRepository, IInterfaceSettingApp interfaceSettingApp, IInterfaceSettingRepository InterfaceSettingRepository, IInterfaceSettingService InterfaceSettingService, IMetaFieldService metaFieldService)
         {
+            _interfaceConditionService = interfaceConditionService;
+            _interfaceVerificationService = interfaceVerificationService;
+            _interfaceFieldsService = interfaceFieldsService;
+            _interfaceFieldsRepository = interfaceFieldsRepository;
+            _interfaceVerificationRepository = interfaceVerificationRepository;
+            _interfaceConditionRepository = interfaceConditionRepository;
             _interfaceSettingApp = interfaceSettingApp;
             _InterfaceSettingRepository = InterfaceSettingRepository;
             _metaFieldService = metaFieldService;
@@ -30,11 +42,14 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         {
             SetCookiesMetaObjectInfo(metaObjectId, metaObjectCode);
 
-            return View(_InterfaceSettingRepository.GetListUnDeletedByMetaObjectId(metaObjectId));
+            return View(_InterfaceSettingService.GetInterfaceSettingsTranslated(metaObjectId));
         }
 
         public IActionResult Add()
         {
+            ViewData["InterfaceCondition"] = _interfaceConditionRepository.GetTopInterfaceCondition(CurrentMetaObjectId);
+            ViewData["InterfaceVerification"] = _interfaceVerificationRepository.GetTopInterfaceVerification(CurrentMetaObjectId);
+            ViewData["InterfaceFields"] = _interfaceFieldsRepository.GetTopInterfaceFields(CurrentMetaObjectId);
             return View();
         }
 
@@ -63,6 +78,10 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
 
         public IActionResult Update(Guid id)
         {
+            ViewData["InterfaceCondition"] = _interfaceConditionRepository.GetTopInterfaceCondition(CurrentMetaObjectId);
+            ViewData["InterfaceVerification"] = _interfaceVerificationRepository.GetTopInterfaceVerification(CurrentMetaObjectId);
+            ViewData["InterfaceFields"] = _interfaceFieldsRepository.GetTopInterfaceFields(CurrentMetaObjectId);
+
             return View(ResponseModel.Success(data: _InterfaceSettingService.GetById(id)));
         }
 
@@ -75,7 +94,14 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                .Continue(_ =>
                {
                    entity.ModifyBy = CurrentUserId;
-                   return _InterfaceSettingService.UpdateWithOutCode(entity);
+                   return _InterfaceSettingService.UpdateWithOutCode(entity, item =>
+                   {
+                       item.InterfaceType = entity.InterfaceType;
+                       item.InterfaceConditionId = entity.InterfaceConditionId;
+                       item.InterfaceVerificationId = entity.InterfaceVerificationId;
+                       item.InterfaceFieldsId = entity.InterfaceFieldsId;
+                       item.DataSourceId = entity.DataSourceId;
+                   });
                });
 
             if (!result.IsSuccess)

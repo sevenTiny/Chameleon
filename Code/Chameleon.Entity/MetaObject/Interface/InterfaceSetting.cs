@@ -1,6 +1,7 @@
 ﻿using SevenTiny.Bantina.Bankinate.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace Chameleon.Entity
@@ -31,6 +32,18 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public Guid InterfaceFieldsId { get; set; }
+        /// <summary>
+        /// 数据源Id
+        /// </summary>
+        [Column]
+        public Guid DataSourceId { get; set; }
+
+        #region 不参与数据存储的字段
+        public string InterfaceConditionName { get; set; }
+        public string InterfaceVerificationName { get; set; }
+        public string InterfaceFieldsName { get; set; }
+        public string DataSourceName { get; set; }
+        #endregion
 
         public InterfaceTypeEnum GetInterfaceType()
         {
@@ -48,34 +61,23 @@ namespace Chameleon.Entity
     /// </summary>
     public enum InterfaceTypeEnum
     {
+        [Description("UnKnown")]
         UnKnown = 0,
-        /// <summary>
-        /// 添加
-        /// </summary>
+        [Description("添加")]
         Add = 1,
-        /// <summary>
-        /// 批量添加
-        /// </summary>
+        [Description("批量添加")]
         BatchAdd = 2,
-        /// <summary>
-        /// 更新
-        /// </summary>
+        [Description("更新")]
         Update = 3,
-        /// <summary>
-        /// 删除
-        /// </summary>
+        [Description("删除")]
         Delete = 4,
-        /// <summary>
-        /// 查询数量统计
-        /// </summary>
+        [Description("查询数量")]
         QueryCount = 5,
-        /// <summary>
-        /// 查询单条记录
-        /// </summary>
+        [Description("查询单条记录")]
         QuerySingle = 6,
-        /// <summary>
-        /// 查询记录集合
-        /// </summary>
-        QueryList = 7
+        [Description("查询记录集合")]
+        QueryList = 7,
+        [Description("数据源")]
+        DataSource = 8
     }
 }
