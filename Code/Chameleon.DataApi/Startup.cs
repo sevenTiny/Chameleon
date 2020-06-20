@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chameleon.Application;
+using Chameleon.Domain;
+using Chameleon.Infrastructure;
+using Chameleon.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +28,16 @@ namespace Chameleon.DataApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //inject dbContext
+            services.AddScoped<ChameleonMetaDataDbContext>();
+            services.AddScoped<ChameleonDataDbContext>();
+            //inject repository
+            services.AddScoped(typeof(CloudApplicationRepository).Assembly);
+            //inject domain
+            services.AddScoped(typeof(CloudApplicationService).Assembly);
+            //inject application
+            services.AddScoped(typeof(MetaObjectApp).Assembly);
+
             services.AddControllers();
         }
 

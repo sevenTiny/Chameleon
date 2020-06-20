@@ -30,6 +30,7 @@ namespace Chameleon.Development
         {
             //inject dbContext
             services.AddScoped<ChameleonMetaDataDbContext>();
+            services.AddScoped<ChameleonDataDbContext>();
             //inject repository
             services.AddScoped(typeof(CloudApplicationRepository).Assembly);
             //inject domain
