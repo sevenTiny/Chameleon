@@ -19,6 +19,6 @@ namespace Chameleon.Entity
         /// 所属应用Id
         /// </summary>
         [Column]
-        public Guid CloudApplicationtId { get; set; 
+        public Guid CloudApplicationtId { get; set; }
     }
 }
