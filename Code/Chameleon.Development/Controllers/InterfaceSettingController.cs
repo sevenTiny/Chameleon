@@ -63,7 +63,9 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                 .Continue(_ =>
                 {
                     entity.CloudApplicationtId = CurrentApplicationId;
+                    entity.CloudApplicationCode = CurrentApplicationCode;
                     entity.MetaObjectId = CurrentMetaObjectId;
+                    entity.MetaObjectCode = CurrentMetaObjectCode;
                     entity.CreateBy = CurrentUserId;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
 

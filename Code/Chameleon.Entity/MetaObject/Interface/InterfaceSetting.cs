@@ -13,6 +13,16 @@ namespace Chameleon.Entity
     public class InterfaceSetting : MetaObjectBase
     {
         /// <summary>
+        /// 所属对象编码
+        /// </summary>
+        [Column]
+        public string MetaObjectCode { get; set; }
+        /// <summary>
+        /// 所属应用编码
+        /// </summary>
+        [Column]
+        public string CloudApplicationCode { get; set; }
+        /// <summary>
         /// 接口类型
         /// </summary>
         [Column]
