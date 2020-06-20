@@ -1,7 +1,9 @@
 ﻿using Chameleon.Entity;
 using SevenTiny.Bantina;
+using SevenTiny.Bantina.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Chameleon.Repository
@@ -20,6 +22,12 @@ namespace Chameleon.Repository
         /// <param name="parentId"></param>
         /// <returns></returns>
         List<InterfaceFields> GetInterfaceFieldsByParentId(Guid parentId);
+        /// <summary>
+        /// 获取以字段编码大写为key的所有接口字段列表
+        /// </summary>
+        /// <param name="interfaceFieldId"></param>
+        /// <returns></returns>
+        Dictionary<string, InterfaceFields> GetInterfaceFieldMetaFieldUpperKeyDicByInterfaceFieldsId(Guid interfaceFieldId);
     }
 
     public class InterfaceFieldsRepository : MetaObjectRepositoryBase<InterfaceFields>, IInterfaceFieldsRepository
@@ -34,8 +42,21 @@ namespace Chameleon.Repository
 
         public List<InterfaceFields> GetInterfaceFieldsByParentId(Guid parentId)
         {
+            if (parentId == Guid.Empty)
+                return new List<InterfaceFields>(0);
+
             var guidEmpty = Guid.Empty;
             return _dbContext.Queryable<InterfaceFields>().Where(t => t.ParentId == parentId && t.IsDeleted == 0 && t.ParentId != guidEmpty).ToList();
+        }
+
+        public Dictionary<string, InterfaceFields> GetInterfaceFieldMetaFieldUpperKeyDicByInterfaceFieldsId(Guid interfaceFieldId)
+        {
+            var list = GetInterfaceFieldsByParentId(interfaceFieldId);
+
+            if (list == null || !list.Any())
+                return new Dictionary<string, InterfaceFields>(0);
+
+            return list.SafeToDictionary(k => k.MetaFieldShortCode.ToUpperInvariant(), v => v);
         }
     }
 }

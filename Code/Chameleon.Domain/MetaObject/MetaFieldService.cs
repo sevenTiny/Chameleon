@@ -1,5 +1,6 @@
 ﻿using Chameleon.Entity;
 using Chameleon.Repository;
+using MongoDB.Bson;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Validation;
 using System;
@@ -30,6 +31,11 @@ namespace Chameleon.Domain
         /// <param name="value"></param>
         /// <returns></returns>
         Result<dynamic> CheckAndGetFieldValueByFieldType(MetaField metaField, object value);
+        /// <summary>
+        /// 系统字段和数据的字典形式
+        /// </summary>
+        /// <returns></returns>
+        BsonDocument GetSystemFieldBsonDocument();
     }
 
     public class MetaFieldService : MetaObjectCommonServiceBase<MetaField>, IMetaFieldService
@@ -92,6 +98,19 @@ namespace Chameleon.Domain
             });
 
             base._commonRepositoryBase.BatchAdd(systemFields);
+        }
+
+        public BsonDocument GetSystemFieldBsonDocument()
+        {
+            return new BsonDocument
+            {
+                { "_id",Guid.NewGuid().ToString()},
+                { "IsDeleted",false },
+                { "CreateBy", -1 },
+                { "CreateTime", DateTime.Now },
+                { "ModifyBy", -1},
+                { "ModifyTime", DateTime.Now }
+            };
         }
 
         /// <summary>

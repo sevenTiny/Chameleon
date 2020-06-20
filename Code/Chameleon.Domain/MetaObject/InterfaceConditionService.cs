@@ -1,6 +1,8 @@
 ﻿using Chameleon.Entity;
 using Chameleon.Infrastructure;
 using Chameleon.Repository;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions;
 using SevenTiny.Bantina.Validation;
@@ -39,6 +41,13 @@ namespace Chameleon.Domain
         /// <param name="nodeId"></param>
         /// <returns></returns>
         Result DeleteNode(Guid conditionId, Guid nodeId);
+        /// <summary>
+        /// 通过条件构造查询filter
+        /// </summary>
+        /// <param name="conditionId"></param>
+        /// <param name="cnodition"></param>
+        /// <returns></returns>
+        FilterDefinition<BsonDocument> GetFilterDefinitionByCondition(Guid conditionId, Dictionary<string, string> cnodition);
     }
 
     public class InterfaceConditionService : MetaObjectCommonServiceBase<InterfaceCondition>, IInterfaceConditionService
@@ -258,6 +267,11 @@ namespace Chameleon.Domain
 
                 return childs;
             }
+        }
+
+        public FilterDefinition<BsonDocument> GetFilterDefinitionByCondition(Guid conditionId, Dictionary<string, string> cnodition)
+        {
+            throw new NotImplementedException();
         }
     }
 }

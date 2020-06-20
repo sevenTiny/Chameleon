@@ -68,6 +68,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                     entity.MetaObjectCode = CurrentMetaObjectCode;
                     entity.CreateBy = CurrentUserId;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
+                    entity.PageSize = 300;//暂时写死每页300条
 
                     return _InterfaceSettingService.Add(entity);
                 });

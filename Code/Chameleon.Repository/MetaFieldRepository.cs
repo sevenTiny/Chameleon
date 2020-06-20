@@ -14,6 +14,18 @@ namespace Chameleon.Repository
         /// <param name="metaObjectId"></param>
         /// <returns></returns>
         Dictionary<Guid, MetaField> GetMetaFieldIdDicByMetaObjectId(Guid metaObjectId);
+        /// <summary>
+        /// 获取当前对象下所有字段以编码为Key的字典
+        /// </summary>
+        /// <param name="metaObjectId"></param>
+        /// <returns></returns>
+        Dictionary<string, MetaField> GetMetaFieldCodeDicByMetaObjectId(Guid metaObjectId);
+        /// <summary>
+        /// 获取当前对象下所有字段以编码为Key大写的字典
+        /// </summary>
+        /// <param name="metaObjectId"></param>
+        /// <returns></returns>
+        Dictionary<string, MetaField> GetMetaFieldCodeUpperDicByMetaObjectId(Guid metaObjectId);
     }
 
     public class MetaFieldRepository : MetaObjectRepositoryBase<MetaField>, IMetaFieldRepository
@@ -25,6 +37,18 @@ namespace Chameleon.Repository
             var list = _dbContext.Queryable<MetaField>().Where(t => t.IsDeleted == 0 && t.MetaObjectId == metaObjectId).ToList();
 
             return list.SafeToDictionary(k => k.Id, v => v);
+        }
+
+        public Dictionary<string, MetaField> GetMetaFieldCodeDicByMetaObjectId(Guid metaObjectId)
+        {
+            var list = _dbContext.Queryable<MetaField>().Where(t => t.IsDeleted == 0 && t.MetaObjectId == metaObjectId).ToList();
+            return list.SafeToDictionary(k => k.Code, v => v);
+        }
+
+        public Dictionary<string, MetaField> GetMetaFieldCodeUpperDicByMetaObjectId(Guid metaObjectId)
+        {
+            var list = _dbContext.Queryable<MetaField>().Where(t => t.IsDeleted == 0 && t.MetaObjectId == metaObjectId).ToList();
+            return list.SafeToDictionary(k => k.Code.ToUpperInvariant(), v => v);
         }
     }
 }

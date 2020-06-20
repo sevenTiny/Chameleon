@@ -47,6 +47,11 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public Guid DataSourceId { get; set; }
+        /// <summary>
+        /// 页大小
+        /// </summary>
+        [Column]
+        public int PageSize { get; set; }
 
         #region 不参与数据存储的字段
         public string InterfaceConditionName { get; set; }

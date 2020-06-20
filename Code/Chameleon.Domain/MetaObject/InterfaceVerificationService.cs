@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Chameleon.Domain
 {
@@ -27,6 +28,13 @@ namespace Chameleon.Domain
         /// <param name="metaFieldIds"></param>
         /// <returns></returns>
         Result SaveSetting(Guid metaObjectId, Guid interfaceVerificationId, List<Guid> metaFieldIds);
+        /// <summary>
+        /// 正则表达式校验输入值是否正确
+        /// </summary>
+        /// <param name="interfaceVerification"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        bool IsMatch(InterfaceVerification interfaceVerification, string input);
     }
 
     public class InterfaceVerificationService : MetaObjectCommonServiceBase<InterfaceVerification>, IInterfaceVerificationService
@@ -85,5 +93,15 @@ namespace Chameleon.Domain
             return Result.Success();
         }
 
+        public bool IsMatch(InterfaceVerification interfaceVerification, string input)
+        {
+            //用正则表达式校验
+            if (!string.IsNullOrEmpty(interfaceVerification.RegularExpression))
+            {
+                return Regex.IsMatch(input, interfaceVerification.RegularExpression);
+            }
+
+            return true;
+        }
     }
 }
