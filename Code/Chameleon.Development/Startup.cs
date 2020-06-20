@@ -29,7 +29,7 @@ namespace Chameleon.Development
         public void ConfigureServices(IServiceCollection services)
         {
             //inject dbContext
-            services.AddScoped<ChameleonDbContext>();
+            services.AddScoped<ChameleonMetaDataDbContext>();
             //inject repository
             services.AddScoped(typeof(CloudApplicationRepository).Assembly);
             //inject domain

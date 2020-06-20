@@ -15,7 +15,7 @@ namespace Chameleon.Repository
 
     public class MetaObjectRepository : CommonRepositoryBase<MetaObject>, IMetaObjectRepository
     {
-        public MetaObjectRepository(ChameleonDbContext dbContext) : base(dbContext) { }
+        public MetaObjectRepository(ChameleonMetaDataDbContext dbContext) : base(dbContext) { }
 
         public List<MetaObject> GetMetaObjectListUnDeletedByApplicationId(Guid applicationId)
             => _dbContext.Queryable<MetaObject>().Where(t => t.CloudApplicationId == applicationId && t.IsDeleted == (int)IsDeleted.UnDeleted).ToList();

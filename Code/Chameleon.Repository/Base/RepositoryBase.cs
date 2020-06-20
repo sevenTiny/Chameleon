@@ -19,12 +19,12 @@ namespace Chameleon.Repository
 
     public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class
     {
-        public RepositoryBase(ChameleonDbContext chameleonDbContext)
+        public RepositoryBase(ChameleonMetaDataDbContext chameleonDbContext)
         {
             _dbContext = chameleonDbContext;
         }
 
-        protected ChameleonDbContext _dbContext;
+        protected ChameleonMetaDataDbContext _dbContext;
 
         public Result Add(TEntity entity)
         {

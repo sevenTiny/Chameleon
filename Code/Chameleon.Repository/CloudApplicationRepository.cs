@@ -11,6 +11,6 @@ namespace Chameleon.Repository
 
     public class CloudApplicationRepository : CommonRepositoryBase<CloudApplication>, ICloudApplicationRepository
     {
-        public CloudApplicationRepository(ChameleonDbContext dbContext) : base(dbContext) { }
+        public CloudApplicationRepository(ChameleonMetaDataDbContext dbContext) : base(dbContext) { }
     }
 }

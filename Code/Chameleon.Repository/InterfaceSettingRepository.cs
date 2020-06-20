@@ -12,6 +12,6 @@ namespace Chameleon.Repository
 
     public class InterfaceSettingRepository : MetaObjectRepositoryBase<InterfaceSetting>, IInterfaceSettingRepository
     {
-        public InterfaceSettingRepository(ChameleonDbContext dbContext) : base(dbContext) { }
+        public InterfaceSettingRepository(ChameleonMetaDataDbContext dbContext) : base(dbContext) { }
     }
 }

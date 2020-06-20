@@ -18,7 +18,7 @@ namespace Chameleon.Repository
 
     public class MetaFieldRepository : MetaObjectRepositoryBase<MetaField>, IMetaFieldRepository
     {
-        public MetaFieldRepository(ChameleonDbContext dbContext) : base(dbContext) { }
+        public MetaFieldRepository(ChameleonMetaDataDbContext dbContext) : base(dbContext) { }
 
         public Dictionary<Guid, MetaField> GetMetaFieldIdDicByMetaObjectId(Guid metaObjectId)
         {

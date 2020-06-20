@@ -24,7 +24,7 @@ namespace Chameleon.Repository
 
     public class InterfaceFieldsRepository : MetaObjectRepositoryBase<InterfaceFields>, IInterfaceFieldsRepository
     {
-        public InterfaceFieldsRepository(ChameleonDbContext dbContext) : base(dbContext) { }
+        public InterfaceFieldsRepository(ChameleonMetaDataDbContext dbContext) : base(dbContext) { }
         public List<InterfaceFields> GetTopInterfaceFields(Guid metaObjectId)
         {
             //Bankinate组件的一个bug，表达式解析错误，最终解析成了Guid.Empty文本

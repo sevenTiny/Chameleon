@@ -31,7 +31,7 @@ namespace Chameleon.Repository
 
     public abstract class CommonRepositoryBase<TEntity> : RepositoryBase<TEntity>, ICommonRepositoryBase<TEntity> where TEntity : CommonBase
     {
-        public CommonRepositoryBase(ChameleonDbContext dbContext) : base(dbContext)
+        public CommonRepositoryBase(ChameleonMetaDataDbContext dbContext) : base(dbContext)
         {
         }
 

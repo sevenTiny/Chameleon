@@ -20,7 +20,7 @@ namespace Chameleon.Repository
 
     public abstract class MetaObjectRepositoryBase<TEntity> : CommonRepositoryBase<TEntity>, IMetaObjectRepositoryBase<TEntity> where TEntity : MetaObjectBase
     {
-        public MetaObjectRepositoryBase(ChameleonDbContext dbContext) : base(dbContext) { }
+        public MetaObjectRepositoryBase(ChameleonMetaDataDbContext dbContext) : base(dbContext) { }
 
         public void LogicDeleteByMetaObjectId(Guid metaObjectId)
         {

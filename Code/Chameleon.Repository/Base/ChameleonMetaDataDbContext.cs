@@ -9,9 +9,9 @@ using System.Text;
 namespace Chameleon.Repository
 {
     [DataBase("Chameleon")]
-    public class ChameleonDbContext : MySqlDbContext<ChameleonDbContext>
+    public class ChameleonMetaDataDbContext : MySqlDbContext<ChameleonMetaDataDbContext>
     {
-        public ChameleonDbContext() : base(ConnectionStringsConfig.Instance.Chameleon)
+        public ChameleonMetaDataDbContext() : base(ConnectionStringsConfig.Instance.Chameleon)
         {
             ////开启一级缓存
             //OpenQueryCache = false;

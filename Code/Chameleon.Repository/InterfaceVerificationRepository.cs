@@ -24,7 +24,7 @@ namespace Chameleon.Repository
 
     public class InterfaceVerificationRepository : MetaObjectRepositoryBase<InterfaceVerification>, IInterfaceVerificationRepository
     {
-        public InterfaceVerificationRepository(ChameleonDbContext dbContext) : base(dbContext) { }
+        public InterfaceVerificationRepository(ChameleonMetaDataDbContext dbContext) : base(dbContext) { }
         public List<InterfaceVerification> GetTopInterfaceVerification(Guid metaObjectId)
         {
             //Bankinate组件的一个bug，表达式解析错误，最终解析成了Guid.Empty文本
