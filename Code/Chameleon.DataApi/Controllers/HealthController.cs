@@ -13,7 +13,7 @@ namespace Chameleon.DataApi.Controllers
     {
         public IActionResult Get()
         {
-            return Content("success");
+            return Ok("success");
         }
     }
 }
