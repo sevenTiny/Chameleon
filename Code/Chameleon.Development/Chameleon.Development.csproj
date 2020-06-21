@@ -5,27 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\CloudInterface\**" />
-    <Compile Remove="Views\MetaField\**" />
-    <Content Remove="Views\CloudInterface\**" />
-    <Content Remove="Views\MetaField\**" />
-    <EmbeddedResource Remove="Views\CloudInterface\**" />
-    <EmbeddedResource Remove="Views\MetaField\**" />
-    <None Remove="Views\CloudInterface\**" />
-    <None Remove="Views\MetaField\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="Views\InterfaceCondition\Update.cshtml" />
-    <Content Remove="Views\InterfaceFields\Update.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\InterfaceCondition\Update.cshtml" />
-    <None Include="Views\InterfaceFields\Update.cshtml" />
-    <None Include="Views\MetaField\Add.cshtml" />
-    <None Include="Views\MetaField\List.cshtml" />
-    <None Include="Views\MetaField\Update.cshtml" />
     <None Include="wwwroot\js\site.js" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
@@ -65,7 +44,5 @@
     <ProjectReference Include="..\Chameleon.Application\Chameleon.Application.csproj" />
     <ProjectReference Include="..\Chameleon.Domain\Chameleon.Domain.csproj" />
   </ItemGroup>
-
-
 
 </Project>

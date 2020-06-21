@@ -25,7 +25,7 @@ namespace Chameleon.Repository
         /// </summary>
         /// <param name="metaObjectId"></param>
         /// <returns></returns>
-        Dictionary<string, MetaField> GetMetaFieldCodeUpperDicByMetaObjectId(Guid metaObjectId);
+        Dictionary<string, MetaField> GetMetaFieldShortCodeUpperDicByMetaObjectId(Guid metaObjectId);
     }
 
     public class MetaFieldRepository : MetaObjectRepositoryBase<MetaField>, IMetaFieldRepository
@@ -45,10 +45,10 @@ namespace Chameleon.Repository
             return list.SafeToDictionary(k => k.Code, v => v);
         }
 
-        public Dictionary<string, MetaField> GetMetaFieldCodeUpperDicByMetaObjectId(Guid metaObjectId)
+        public Dictionary<string, MetaField> GetMetaFieldShortCodeUpperDicByMetaObjectId(Guid metaObjectId)
         {
             var list = _dbContext.Queryable<MetaField>().Where(t => t.IsDeleted == 0 && t.MetaObjectId == metaObjectId).ToList();
-            return list.SafeToDictionary(k => k.Code.ToUpperInvariant(), v => v);
+            return list.SafeToDictionary(k => k.ShortCode.ToUpperInvariant(), v => v);
         }
     }
 }

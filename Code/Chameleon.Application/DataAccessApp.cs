@@ -202,7 +202,7 @@ namespace Chameleon.Application
             var verificationDic = _interfaceVerificationRepository.GetMetaFieldUpperKeyDicByInterfaceVerificationId(interfaceSetting.InterfaceVerificationId);
 
             //获取到字段列表以编码为Key大写的字典
-            var metaFields = _metaFieldRepository.GetMetaFieldCodeUpperDicByMetaObjectId(interfaceSetting.MetaObjectId);
+            var metaFields = _metaFieldRepository.GetMetaFieldShortCodeUpperDicByMetaObjectId(interfaceSetting.MetaObjectId);
 
             List<BsonDocument> insertBsonsList = new List<BsonDocument>(bsonsList.Count());
 
@@ -232,7 +232,7 @@ namespace Chameleon.Application
                     var checkResult = _metaFieldService.CheckAndGetFieldValueByFieldType(metaFields[upperKey], bsonElement.Value);
 
                     if (checkResult.IsSuccess)
-                        bsonElementsToAdd.Add(new BsonElement(metaFields[upperKey].Code, BsonValue.Create(checkResult.Data)));
+                        bsonElementsToAdd.Add(new BsonElement(metaFields[upperKey].ShortCode, BsonValue.Create(checkResult.Data)));
                     else
                         return Result.Error($"字段[{bsonElement.Name}]传递的值[{bsonElement.Value}]不符合字段定义的类型");
                 }
@@ -249,7 +249,7 @@ namespace Chameleon.Application
                 }
 
                 //补充字段
-                bsonElementsToAdd.SetElement(new BsonElement("MetaObjectCode", interfaceSetting.MetaObjectCode));
+                bsonElementsToAdd.SetElement(new BsonElement("MetaObject", interfaceSetting.MetaObjectCode));
 
                 if (bsonElementsToAdd.Any())
                     insertBsonsList.Add(bsonElementsToAdd);
@@ -273,7 +273,7 @@ namespace Chameleon.Application
             var verificationDic = _interfaceVerificationRepository.GetMetaFieldUpperKeyDicByInterfaceVerificationId(interfaceSetting.InterfaceVerificationId);
 
             //获取到字段列表以编码为Key大写的字典
-            var metaFields = _metaFieldRepository.GetMetaFieldCodeUpperDicByMetaObjectId(interfaceSetting.MetaObjectId);
+            var metaFields = _metaFieldRepository.GetMetaFieldShortCodeUpperDicByMetaObjectId(interfaceSetting.MetaObjectId);
 
             BsonDocument bsonElementsToModify = new BsonDocument();
 
@@ -330,7 +330,7 @@ namespace Chameleon.Application
         public Result<List<Dictionary<string, CloudData>>> GetList(InterfaceSetting interfaceSetting, FilterDefinition<BsonDocument> filter, int pageIndex = 0)
         {
             //获取到字段列表以编码为Key大写的字典
-            var metaFields = _metaFieldRepository.GetMetaFieldCodeUpperDicByMetaObjectId(interfaceSetting.MetaObjectId);
+            var metaFields = _metaFieldRepository.GetMetaFieldShortCodeUpperDicByMetaObjectId(interfaceSetting.MetaObjectId);
 
             //自定义查询列表
             var interfaceFields = _interfaceFieldsRepository.GetInterfaceFieldMetaFieldUpperKeyDicByInterfaceFieldsId(interfaceSetting.InterfaceFieldsId);

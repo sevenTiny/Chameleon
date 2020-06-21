@@ -54,7 +54,8 @@ namespace Chameleon.Development
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Home/Error");
             }
 
             //app.UseDefaultFiles().UseStaticFiles();

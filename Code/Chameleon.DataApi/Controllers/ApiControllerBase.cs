@@ -43,7 +43,7 @@ namespace Chameleon.DataApi.Controllers
             _queryContext = new QueryContext();
 
             //查询接口
-            _queryContext.InterfaceSetting = _interfaceSettingRepository.GetInterfaceSettingByIdWithVerify(queryArgs._interface);
+            _queryContext.InterfaceSetting = _interfaceSettingRepository.GetInterfaceSettingByCodeWithVerify(queryArgs._interface);
 
             //argumentsDic generate
             foreach (var item in Request.Query)

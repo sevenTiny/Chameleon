@@ -9,7 +9,9 @@ using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace Chameleon.DataApi.Controllers
 {
@@ -64,16 +66,16 @@ namespace Chameleon.DataApi.Controllers
          Content-Type: application/json
          * */
         [HttpPost]
-        public IActionResult Post([FromQuery]QueryArgs queryArgs, [FromBody]JObject jObj)
+        public IActionResult Post([FromQuery]QueryArgs queryArgs, [FromBody]JsonElement arg)
         {
             return SafeExecute(() =>
             {
+                var bson = BsonDocument.Parse(arg.ToString());
+
+                if(bson==null ||!bson.Any())
+                    return Result.Error("Parameter invalid: 业务数据为空，无法执行新增操作").ToJsonResult();
+
                 InitQueryContext(queryArgs);
-
-                var bson = BsonDocument.Parse(jObj.ToString());
-
-                if (bson == null || !bson.Any())
-                    return Result.Error("Parameter invalid:jObj = null 业务数据为空，无法执行新增操作").ToJsonResult();
 
                 var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, new[] { bson });
 
