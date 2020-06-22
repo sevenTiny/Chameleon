@@ -47,7 +47,7 @@ namespace Chameleon.DataApi.Controllers
 
             //argumentsDic generate
             foreach (var item in Request.Query)
-                _queryContext.ConditionArguments.AddOrUpdate(item.Key.ToUpperInvariant(), item.Value);
+                _queryContext.ConditionArguments.AddOrUpdate(item.Key, item.Value);
         }
 
         /// <summary>
@@ -83,9 +83,11 @@ namespace Chameleon.DataApi.Controllers
             //校验条件是否满足校验
             foreach (var item in _queryContext.ConditionArguments)
             {
-                if (verificationDic.ContainsKey(item.Key))
+                var upperKey = item.Key.ToUpperInvariant();
+
+                if (verificationDic.ContainsKey(upperKey))
                 {
-                    var verification = verificationDic[item.Key];
+                    var verification = verificationDic[upperKey];
 
                     if (!_interfaceVerificationService.IsMatch(verification, item.Value))
                         throw new ArgumentException(!string.IsNullOrEmpty(verification.VerificationTips) ? verification.VerificationTips : $"Key[{item.Key}]对应的值[{item.Value}]格式不正确");
