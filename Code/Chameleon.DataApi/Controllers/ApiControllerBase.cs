@@ -47,7 +47,7 @@ namespace Chameleon.DataApi.Controllers
 
             //argumentsDic generate
             foreach (var item in Request.Query)
-                _queryContext.ConditionArguments.AddOrUpdate(item.Key, item.Value);
+                _queryContext.ConditionArgumentsUpperKeyDic.AddOrUpdate(item.Key.ToUpperInvariant(), item.Value);
         }
 
         /// <summary>
@@ -81,13 +81,11 @@ namespace Chameleon.DataApi.Controllers
             var verificationDic = _interfaceVerificationRepository.GetMetaFieldUpperKeyDicByInterfaceVerificationId(_queryContext.InterfaceSetting.InterfaceVerificationId);
 
             //校验条件是否满足校验
-            foreach (var item in _queryContext.ConditionArguments)
+            foreach (var item in _queryContext.ConditionArgumentsUpperKeyDic)
             {
-                var upperKey = item.Key.ToUpperInvariant();
-
-                if (verificationDic.ContainsKey(upperKey))
+                if (verificationDic.ContainsKey(item.Key))
                 {
-                    var verification = verificationDic[upperKey];
+                    var verification = verificationDic[item.Key];
 
                     if (!_interfaceVerificationService.IsMatch(verification, item.Value))
                         throw new ArgumentException(!string.IsNullOrEmpty(verification.VerificationTips) ? verification.VerificationTips : $"Key[{item.Key}]对应的值[{item.Value}]格式不正确");
@@ -95,9 +93,7 @@ namespace Chameleon.DataApi.Controllers
             }
 
             //构造条件
-            FilterDefinition<BsonDocument> filter = _interfaceConditionService.GetFilterDefinitionByCondition(_queryContext.InterfaceSetting.InterfaceConditionId, _queryContext.ConditionArguments);
-
-            return filter;
+            return _interfaceConditionService.GetFilterDefinitionByCondition(_queryContext.InterfaceSetting.InterfaceConditionId, _queryContext.ConditionArgumentsUpperKeyDic);
         }
     }
 }

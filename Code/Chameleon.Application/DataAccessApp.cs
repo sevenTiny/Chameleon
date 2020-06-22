@@ -144,7 +144,7 @@ namespace Chameleon.Application
 
         public List<Dictionary<string, CloudData>> TranslatorBsonToCloudData(List<BsonDocument> bsonDocuments, Dictionary<string, InterfaceFields> formatInterfaceFieldsDic = null)
         {
-            if (bsonDocuments == null || bsonDocuments.Any())
+            if (bsonDocuments == null || !bsonDocuments.Any())
                 return new List<Dictionary<string, CloudData>>(0);
 
             return bsonDocuments.Select(t => TranslatorBsonToCloudData(t, formatInterfaceFieldsDic)).ToList();
@@ -152,7 +152,7 @@ namespace Chameleon.Application
 
         public Dictionary<string, CloudData> TranslatorBsonToCloudData(BsonDocument bsonDocument, Dictionary<string, InterfaceFields> formatInterfaceFieldsDic = null)
         {
-            if (bsonDocument == null || bsonDocument.Any())
+            if (bsonDocument == null || !bsonDocument.Any())
                 return new Dictionary<string, CloudData>(0);
 
             Dictionary<string, CloudData> result = new Dictionary<string, CloudData>(formatInterfaceFieldsDic?.Count ?? bsonDocument.ElementCount);
@@ -180,7 +180,7 @@ namespace Chameleon.Application
                     cloudData = new CloudData();
 
                 cloudData.FieldCode = element.Name;
-                cloudData.Value = element.Value.AsString;
+                cloudData.Value = Convert.ToString(element.Value);
                 //如果后续需要翻译，则处理该字段
                 cloudData.ValueText = cloudData.Value;
 
@@ -339,7 +339,7 @@ namespace Chameleon.Application
             var projection = Builders<BsonDocument>.Projection.Include("_id");
 
             foreach (var item in interfaceFields.Values)
-                projection.Include(item.MetaFieldShortCode);
+                projection = projection.Include(item.MetaFieldShortCode);
 
             //处理排序（这里后续从配置获取）
             Dictionary<string, string> sortSetting = null;

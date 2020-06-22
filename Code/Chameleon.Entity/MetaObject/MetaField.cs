@@ -5,7 +5,6 @@ using System.ComponentModel;
 namespace Chameleon.Entity
 {
     [Table]
-    [TableCaching]
     public class MetaField : MetaObjectBase
     {
         /// <summary>

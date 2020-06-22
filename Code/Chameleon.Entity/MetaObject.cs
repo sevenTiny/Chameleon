@@ -5,7 +5,6 @@ using System.Text;
 
 namespace Chameleon.Entity
 {
-    [TableCaching]
     [Table]
     public class MetaObject : CommonBase
     {

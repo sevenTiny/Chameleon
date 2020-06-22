@@ -47,15 +47,17 @@ namespace Chameleon.Domain
         /// <param name="conditionId"></param>
         /// <param name="cnodition"></param>
         /// <returns></returns>
-        FilterDefinition<BsonDocument> GetFilterDefinitionByCondition(Guid conditionId, Dictionary<string, string> cnodition);
+        FilterDefinition<BsonDocument> GetFilterDefinitionByCondition(Guid conditionId, Dictionary<string, string> conditionUpperKeyDic, bool isIgnoreArgumentsCheck = false);
     }
 
     public class InterfaceConditionService : MetaObjectCommonServiceBase<InterfaceCondition>, IInterfaceConditionService
     {
         IInterfaceConditionRepository _InterfaceConditionRepository;
         IMetaFieldRepository _metaFieldRepository;
-        public InterfaceConditionService(IInterfaceConditionRepository repository, IMetaFieldRepository metaFieldRepository) : base(repository)
+        IMetaFieldService _metaFieldService;
+        public InterfaceConditionService(IMetaFieldService metaFieldService, IInterfaceConditionRepository repository, IMetaFieldRepository metaFieldRepository) : base(repository)
         {
+            _metaFieldService = metaFieldService;
             _metaFieldRepository = metaFieldRepository;
             _InterfaceConditionRepository = repository;
         }
@@ -269,9 +271,184 @@ namespace Chameleon.Domain
             }
         }
 
-        public FilterDefinition<BsonDocument> GetFilterDefinitionByCondition(Guid conditionId, Dictionary<string, string> condition)
+        public FilterDefinition<BsonDocument> GetFilterDefinitionByCondition(Guid conditionId, Dictionary<string, string> conditionUpperKeyDic, bool isIgnoreArgumentsCheck = false)
         {
-            throw new NotImplementedException();
+            List<InterfaceCondition> conditions = _InterfaceConditionRepository.GetInterfaceConditionByBelongToId(conditionId);
+
+            var bf = Builders<BsonDocument>.Filter;
+
+            if (conditions == null || !conditions.Any())
+                return bf.Empty;
+
+            //全部字段字典缓存
+            var metaFieldUpperShortCodeKeyDic = _metaFieldRepository.GetMetaFieldShortCodeUpperDicByMetaObjectId(conditions.First().MetaObjectId);
+
+            InterfaceCondition condition = conditions.FirstOrDefault(t => t.ParentId == Guid.Empty);
+
+            if (condition == null)
+                return bf.Empty;
+
+            //如果连接条件
+            if (condition.GetConditionNodeType() == NodeTypeEnum.Joint)
+            {
+                //通过链接条件解析器进行解析
+                return ConditionRouter(condition);
+            }
+            //语句
+            else
+            {
+                //通过条件表达式语句解析器解析
+                return ConditionValue(condition);
+            }
+
+            //连接条件解析器。如果是连接条件， 则执行下面逻辑将左...右子条件解析
+            FilterDefinition<BsonDocument> ConditionRouter(InterfaceCondition routeCondition)
+            {
+                FilterDefinition<BsonDocument> filterDefinition = Builders<BsonDocument>.Filter.Empty;
+                //将子节点全部取出
+                var routeConditionChildren = conditions.Where(t => t.ParentId == routeCondition.Id).ToList();
+                var first = routeConditionChildren.FirstOrDefault();
+                if (first != null)
+                {
+                    //如果字节点是连接条件
+                    if (first.GetConditionNodeType() == NodeTypeEnum.Joint)
+                    {
+                        filterDefinition = ConditionRouter(first);
+                    }
+                    //如果是语句
+                    else
+                    {
+                        filterDefinition = ConditionValue(first);
+                        //根据根节点的连接条件执行不同的连接操作
+                        switch (routeCondition.GetConditionJointType())
+                        {
+                            case ConditionJointTypeEnum.And:
+                                //子节点全部是与逻辑
+                                foreach (var item in routeConditionChildren.Except(new[] { first }))
+                                {
+                                    //如果是连接条件
+                                    if (item.GetConditionNodeType() == NodeTypeEnum.Joint)
+                                    {
+                                        var tempCondition = ConditionRouter(item);
+                                        if (tempCondition != null)
+                                        {
+                                            filterDefinition = bf.And(filterDefinition, tempCondition);
+                                        }
+                                    }
+                                    //如果是表达式语句
+                                    else
+                                    {
+                                        var tempCondition = ConditionValue(item);
+                                        if (tempCondition != null)
+                                        {
+                                            filterDefinition = bf.And(filterDefinition, tempCondition);
+                                        }
+                                    }
+                                }
+                                break;
+                            case ConditionJointTypeEnum.Or:
+                                //子节点全部是或逻辑
+                                foreach (var item in routeConditionChildren.Except(new[] { first }))
+                                {
+                                    //如果是连接条件
+                                    if (item.GetConditionNodeType() == NodeTypeEnum.Joint)
+                                    {
+                                        var tempCondition = ConditionRouter(item);
+                                        if (tempCondition != null)
+                                        {
+                                            filterDefinition = bf.Or(filterDefinition, tempCondition);
+                                        }
+                                    }
+                                    //如果是表达式语句
+                                    else
+                                    {
+                                        var tempCondition = ConditionValue(item);
+                                        if (tempCondition != null)
+                                        {
+                                            filterDefinition = bf.Or(filterDefinition, tempCondition);
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                return bf.Empty;
+                        }
+                    }
+                    return filterDefinition;
+                }
+                return bf.Empty;
+            }
+
+            //条件值解析器
+            FilterDefinition<BsonDocument> ConditionValue(InterfaceCondition routeCondition)
+            {
+                //如果条件值来自参数,则从参数列表里面获取
+                if (routeCondition.ConditionValue.Equals("?"))
+                {
+                    //从参数获取到值
+                    string key = routeCondition.MetaFieldShortCode;
+                    var keyUpper = key.ToUpperInvariant();
+                    //如果没有传递参数值，则抛出异常
+                    if (!conditionUpperKeyDic.ContainsKey(keyUpper))
+                    {
+                        //如果忽略参数检查，则直接返回null
+                        if (isIgnoreArgumentsCheck)
+                            return Builders<BsonDocument>.Filter.Empty;
+                        //如果不忽略参数检查，则抛出异常
+                        else
+                            throw new ArgumentNullException(key, $"Conditions define field parameters [{key}] but do not provide values.");
+                    }
+                    object argumentValue = conditionUpperKeyDic.SafeGet(keyUpper);
+                    //将值转化为字段同类型的类型值
+                    object value = _metaFieldService.CheckAndGetFieldValueByFieldType(metaFieldUpperShortCodeKeyDic[routeCondition.MetaFieldShortCode.ToUpperInvariant()], argumentValue).Data;
+
+                    switch (routeCondition.GetConditionType())
+                    {
+                        case ConditionTypeEnum.Equal:
+                            return bf.Eq(key, value);
+                        case ConditionTypeEnum.GreaterThan:
+                            return bf.Gt(key, value);
+                        case ConditionTypeEnum.GreaterThanEqual:
+                            return bf.Gte(key, value);
+                        case ConditionTypeEnum.LessThan:
+                            return bf.Lt(key, value);
+                        case ConditionTypeEnum.LessThanEqual:
+                            return bf.Lte(key, value);
+                        case ConditionTypeEnum.NotEqual:
+                            return bf.Ne(key, value);
+                        default:
+                            return Builders<BsonDocument>.Filter.Empty;
+                    }
+                }
+                //如果来自配置，则直接从配置里面获取到值
+                else
+                {
+                    //校验字段以及转换字段值为目标类型
+                    var convertResult = _metaFieldService.CheckAndGetFieldValueByFieldType(metaFieldUpperShortCodeKeyDic[routeCondition.MetaFieldShortCode.ToUpperInvariant()], routeCondition.ConditionValue);
+                    if (!convertResult.IsSuccess)
+                    {
+                        throw new ArgumentException("配置的字段值不符合字段的类型");
+                    }
+
+                    switch (routeCondition.GetConditionType())
+                    {
+                        case ConditionTypeEnum.Equal:
+                            return bf.Eq(routeCondition.MetaFieldShortCode, convertResult.Data);
+                        case ConditionTypeEnum.GreaterThan:
+                            return bf.Gt(routeCondition.MetaFieldShortCode, convertResult.Data);
+                        case ConditionTypeEnum.GreaterThanEqual:
+                            return bf.Gte(routeCondition.MetaFieldShortCode, convertResult.Data);
+                        case ConditionTypeEnum.LessThan:
+                            return bf.Lt(routeCondition.MetaFieldShortCode, convertResult.Data);
+                        case ConditionTypeEnum.LessThanEqual:
+                            return bf.Lte(routeCondition.MetaFieldShortCode, convertResult.Data);
+                        case ConditionTypeEnum.NotEqual:
+                            return bf.Ne(routeCondition.MetaFieldShortCode, convertResult.Data);
+                        default:
+                            return Builders<BsonDocument>.Filter.Empty;
+                    }
+                }
+            }
         }
     }
 }

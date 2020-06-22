@@ -7,7 +7,7 @@ datas = []
 for i in range(1, 100):
     data = {
         'Name': '张三_'+str(i),
-        'Age': 30,
+        'Age': i
     }
 
     datas.append(data)

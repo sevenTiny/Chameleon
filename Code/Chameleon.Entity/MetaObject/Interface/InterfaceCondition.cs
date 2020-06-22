@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Text;
 using Chameleon.Infrastructure;
 
-
 namespace Chameleon.Entity
 {
     /// <summary>

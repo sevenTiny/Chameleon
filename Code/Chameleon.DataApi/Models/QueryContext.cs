@@ -11,7 +11,7 @@ namespace Chameleon.DataApi.Models
         /// <summary>
         /// 请求参数
         /// </summary>
-        public Dictionary<string, string> ConditionArguments { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> ConditionArgumentsUpperKeyDic { get; set; } = new Dictionary<string, string>();
         /// <summary>
         /// 接口设置
         /// </summary>

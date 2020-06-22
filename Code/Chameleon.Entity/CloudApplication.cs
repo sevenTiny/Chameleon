@@ -6,7 +6,6 @@ namespace Chameleon.Entity
     /// 应用
     /// </summary>
     [Table]
-    [TableCaching]
     public class CloudApplication : CommonBase
     {
         [Column]
