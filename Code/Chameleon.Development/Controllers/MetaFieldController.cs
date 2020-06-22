@@ -1,5 +1,6 @@
 ﻿using Chameleon.Domain;
 using Chameleon.Entity;
+using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
@@ -11,16 +12,18 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
     public class MetaFieldController : WebControllerBase
     {
         readonly IMetaFieldService _metaFieldService;
+        IMetaFieldRepository _metaFieldRepository;
 
-        public MetaFieldController(IMetaFieldService metaFieldService)
+        public MetaFieldController(IMetaFieldRepository metaFieldRepository, IMetaFieldService metaFieldService)
         {
+            _metaFieldRepository = metaFieldRepository;
             _metaFieldService = metaFieldService;
         }
 
         public IActionResult List(Guid metaObjectId, string metaObjectCode)
         {
             SetCookiesMetaObjectInfo(metaObjectId, metaObjectCode);
-            return View(_metaFieldService.GetListUnDeletedByMetaObjectId(metaObjectId));
+            return View(_metaFieldRepository.GetListUnDeletedByMetaObjectId(metaObjectId));
         }
 
         public IActionResult Add()

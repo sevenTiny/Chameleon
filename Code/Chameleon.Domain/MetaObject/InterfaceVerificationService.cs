@@ -15,19 +15,17 @@ namespace Chameleon.Domain
     public interface IInterfaceVerificationService : IMetaObjectCommonServiceBase<InterfaceVerification>
     {
         /// <summary>
-        /// 更新选择字段
+        /// 添加校验项
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        Result UpdateSeletedMetaField(InterfaceVerification entity);
+        Result AddVerificationItem(InterfaceVerification entity);
         /// <summary>
-        /// 保存接口校验配置
+        /// 更新校验项
         /// </summary>
-        /// <param name="metaObjectId"></param>
-        /// <param name="interfaceVerificationId"></param>
-        /// <param name="metaFieldIds"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        Result SaveSetting(Guid metaObjectId, Guid interfaceVerificationId, List<Guid> metaFieldIds);
+        Result UpdateVerificationItem(InterfaceVerification entity);
         /// <summary>
         /// 正则表达式校验输入值是否正确
         /// </summary>
@@ -47,50 +45,34 @@ namespace Chameleon.Domain
             _InterfaceVerificationRepository = repository;
         }
 
-        public Result UpdateSeletedMetaField(InterfaceVerification entity)
+        public Result AddVerificationItem(InterfaceVerification entity)
+        {
+            //查询字段
+            var fieldDic = _metaFieldRepository.GetMetaFieldIdDicByMetaObjectId(entity.MetaObjectId);
+
+            if (!fieldDic.ContainsKey(entity.MetaFieldId))
+                return Result.Error("当前对象中不存在该字段");
+
+            var metaField = fieldDic[entity.MetaFieldId];
+
+            entity.Name = metaField.Name;
+            //短编码重新赋值
+            entity.MetaFieldShortCode = metaField.ShortCode;
+
+            //校验是否已经存在了这个字段的校验
+            if (_InterfaceVerificationRepository.CheckMetaFieldShortCodeHasExistInCurrentVerification(entity.ParentId, entity.MetaFieldShortCode))
+                return Result.Error("已经存在一个该字段的规则了");
+
+            return base.Add(entity);
+        }
+
+        public Result UpdateVerificationItem(InterfaceVerification entity)
         {
             return base.UpdateWithId(entity.Id, item =>
             {
                 item.VerificationTips = entity.VerificationTips;
                 item.RegularExpression = entity.RegularExpression;
             });
-        }
-
-        public Result SaveSetting(Guid metaObjectId, Guid interfaceVerificationId, List<Guid> metaFieldIds)
-        {
-            if (metaFieldIds == null || !metaFieldIds.Any()) return Result.Success();
-
-            //获取现在已经有的
-            var currentList = _InterfaceVerificationRepository.GetInterfaceVerificationByParentId(interfaceVerificationId) ?? new List<InterfaceVerification>(0);
-
-            //删掉已经不包含的字段
-            _InterfaceVerificationRepository.BatchDelete(currentList.Where(t => !metaFieldIds.Contains(t.MetaFieldId)).Select(t => t.Id));
-
-            //缓存当前已经存在的字段id集合
-            var currentMetaFieldIds = currentList.Select(t => t.MetaFieldId).ToArray();
-
-            //找出本次需要添加的字段
-            var toAddIds = metaFieldIds.Where(t => !currentMetaFieldIds.Contains(t)).ToArray();
-
-            if (!toAddIds.Any()) return Result.Success();
-
-            //查询字段
-            var fieldDic = _metaFieldRepository.GetMetaFieldIdDicByMetaObjectId(metaObjectId);
-
-            var toAdds = toAddIds.Select(t => new InterfaceVerification
-            {
-                Code = fieldDic.SafeGet(t)?.Code,
-                Name = fieldDic.SafeGet(t)?.Name,
-                ParentId = interfaceVerificationId,
-                MetaFieldId = t,
-                MetaFieldShortCode = fieldDic.SafeGet(t)?.ShortCode,
-                MetaObjectId = metaObjectId,
-                CloudApplicationtId = fieldDic.SafeGet(t)?.CloudApplicationtId ?? Guid.Empty
-            });
-
-            base.BatchAdd(toAdds);
-
-            return Result.Success();
         }
 
         public bool IsMatch(InterfaceVerification interfaceVerification, string input)

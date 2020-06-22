@@ -18,8 +18,10 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         IMetaFieldService _metaFieldService;
         IInterfaceConditionRepository _InterfaceConditionRepository;
         IInterfaceSettingApp _interfaceSettingApp;
-        public InterfaceConditionController(IInterfaceSettingApp interfaceSettingApp, IInterfaceConditionRepository InterfaceConditionRepository, IInterfaceConditionService InterfaceConditionService, IMetaFieldService metaFieldService)
+        IMetaFieldRepository _metaFieldRepository;
+        public InterfaceConditionController(IMetaFieldRepository metaFieldRepository, IInterfaceSettingApp interfaceSettingApp, IInterfaceConditionRepository InterfaceConditionRepository, IInterfaceConditionService InterfaceConditionService, IMetaFieldService metaFieldService)
         {
+            _metaFieldRepository = metaFieldRepository;
             _interfaceSettingApp = interfaceSettingApp;
             _InterfaceConditionRepository = InterfaceConditionRepository;
             _metaFieldService = metaFieldService;
@@ -88,7 +90,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         {
             var selectedFields = _InterfaceConditionRepository.GetInterfaceConditionByBelongToId(belongToId);
 
-            ViewData["MetaFields"] = _metaFieldService.GetListUnDeletedByMetaObjectId(CurrentMetaObjectId);
+            ViewData["MetaFields"] = _metaFieldRepository.GetListUnDeletedByMetaObjectId(CurrentMetaObjectId);
 
             ViewData["Id"] = belongToId;
 

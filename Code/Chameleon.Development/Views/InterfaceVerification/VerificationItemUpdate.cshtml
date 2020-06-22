@@ -3,21 +3,20 @@
 @using SevenTiny.Bantina.Extensions.AspNetCore;
 @using Chameleon.Infrastructure;
 @{
-    ViewData["Title"] = "Update";
+    ViewData["Title"] = "VerificationItemUpdate";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
-}
-@{
+
     ResponseModel result = Model as ResponseModel ?? new ResponseModel();
     InterfaceVerification entity = result.Data as InterfaceVerification ?? new InterfaceVerification();
 }
 @{
     ViewData["Level_1"] = "对象管理";
-    ViewData["Level_2"] = "自定义接口校验配置";
+    ViewData["Level_2"] = "接口参数校验项编辑";
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="page-container">
-    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/InterfaceVerification/SeletedMetaFieldEditLogic">
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/InterfaceVerification/VerificationItemUpdateLogic?parentId=@entity.ParentId">
         <input type="text" class="input-text" value="@entity.Id" name="id" hidden>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编码：</label>

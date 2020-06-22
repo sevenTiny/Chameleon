@@ -18,8 +18,10 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         IMetaFieldService _metaFieldService;
         IInterfaceVerificationRepository _InterfaceVerificationRepository;
         IInterfaceSettingApp _interfaceSettingApp;
-        public InterfaceVerificationController(IInterfaceSettingApp interfaceSettingApp, IInterfaceVerificationRepository InterfaceVerificationRepository, IInterfaceVerificationService InterfaceVerificationService, IMetaFieldService metaFieldService)
+        IMetaFieldRepository _metaFieldRepository;
+        public InterfaceVerificationController(IMetaFieldRepository metaFieldRepository, IInterfaceSettingApp interfaceSettingApp, IInterfaceVerificationRepository InterfaceVerificationRepository, IInterfaceVerificationService InterfaceVerificationService, IMetaFieldService metaFieldService)
         {
+            _metaFieldRepository = metaFieldRepository;
             _interfaceSettingApp = interfaceSettingApp;
             _InterfaceVerificationRepository = InterfaceVerificationRepository;
             _metaFieldService = metaFieldService;
@@ -90,49 +92,69 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             return _InterfaceVerificationService.LogicDelete(id).ToJsonResult();
         }
 
-        public IActionResult SeletedMetaFieldEdit(Guid id)
+
+        public IActionResult VerificationItemAdd(Guid parentId)
+        {
+            ViewData["MetaFields"] = _metaFieldRepository.GetListByMetaObjectId(CurrentMetaObjectId);
+            return View(Result.Success().ToResponseModel(new InterfaceVerification { ParentId = parentId }));
+        }
+
+        public IActionResult VerificationItemAddLogic(Guid parentId, InterfaceVerification entity)
+        {
+            var result = Result.Success()
+                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
+                .ContinueEnsureArgumentNotNullOrEmpty(parentId, nameof(parentId))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.MetaFieldId, nameof(entity.MetaFieldId))
+                .Continue(_ =>
+                {
+                    entity.ParentId = parentId;
+                    entity.CloudApplicationtId = CurrentApplicationId;
+                    entity.MetaObjectId = CurrentMetaObjectId;
+                    entity.CreateBy = CurrentUserId;
+                    entity.Name = "-";
+                    entity.Code = Guid.NewGuid().ToString();
+
+                    return _InterfaceVerificationService.AddVerificationItem(entity);
+                });
+
+            if (!result.IsSuccess)
+            {
+                ViewData["MetaFields"] = _metaFieldRepository.GetListByMetaObjectId(CurrentMetaObjectId);
+                return View($"VerificationItemAdd", result.ToResponseModel(data: entity));
+            }
+
+            return Redirect($"/InterfaceVerification/VerificationItemList?parentId={entity.ParentId}");
+        }
+
+        public IActionResult VerificationItemUpdate(Guid id)
         {
             return View(ResponseModel.Success(data: _InterfaceVerificationService.GetById(id)));
         }
 
-        public IActionResult SeletedMetaFieldEditLogic(InterfaceVerification entity)
+        public IActionResult VerificationItemUpdateLogic(Guid parentId, InterfaceVerification entity)
         {
-            var result = _InterfaceVerificationService.UpdateSeletedMetaField(entity);
+            var result = Result.Success()
+               .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
+               .ContinueAssert(_ => entity.Id != Guid.Empty, "Id Can Not Be Null")
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.RegularExpression, nameof(entity.RegularExpression))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.VerificationTips, nameof(entity.VerificationTips))
+               .Continue(_ =>
+               {
+                   entity.ModifyBy = CurrentUserId;
+                   return _InterfaceVerificationService.UpdateVerificationItem(entity);
+               });
 
             if (!result.IsSuccess)
-                return View("SeletedMetaFieldEdit", result.ToResponseModel(entity));
+                return View("VerificationItemUpdate", result.ToResponseModel(entity));
 
-            return Content("修改成功");
+            return Redirect($"/InterfaceVerification/VerificationItemList?parentId={parentId}");
         }
 
-        public IActionResult SaveSetting(Guid id, string metaFieldIds)
-        {
-            if (string.IsNullOrEmpty(metaFieldIds))
-                return Result.Success().ToJsonResult();
-
-            List<Guid> metaFieldsToAdd = new List<Guid>();
-
-            foreach (var item in metaFieldIds.Split(','))
-            {
-                if (Guid.TryParse(item, out Guid result))
-                    metaFieldsToAdd.Add(result);
-            }
-
-            var re = _InterfaceVerificationService.SaveSetting(CurrentMetaObjectId, id, metaFieldsToAdd);
-
-            if (re.IsSuccess)
-                re.Message = "操作成功";
-
-            return re.ToJsonResult();
-        }
-
-        public IActionResult Setting(Guid parentId)
+        public IActionResult VerificationItemList(Guid parentId)
         {
             var selectedFields = _InterfaceVerificationRepository.GetInterfaceVerificationByParentId(parentId);
 
             var selectedMetaFieldIds = selectedFields?.Select(t => t.MetaFieldId).ToArray() ?? new Guid[0];
-
-            ViewData["MetaFields"] = _metaFieldService.GetListUnDeletedByMetaObjectId(CurrentMetaObjectId)?.Where(t => !selectedMetaFieldIds.Contains(t.Id)).ToList();
 
             ViewData["Id"] = parentId;
 

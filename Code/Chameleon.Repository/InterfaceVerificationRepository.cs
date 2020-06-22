@@ -28,6 +28,13 @@ namespace Chameleon.Repository
         /// <param name="interfaceVerificationId"></param>
         /// <returns></returns>
         Dictionary<string, InterfaceVerification> GetMetaFieldUpperKeyDicByInterfaceVerificationId(Guid interfaceVerificationId);
+        /// <summary>
+        /// 校验当前接口校验下是否已经存在某字段的校验项
+        /// </summary>
+        /// <param name="interfaceVerificationId"></param>
+        /// <param name="metaFieldShortCode"></param>
+        /// <returns></returns>
+        bool CheckMetaFieldShortCodeHasExistInCurrentVerification(Guid interfaceVerificationId, string metaFieldShortCode);
     }
 
     public class InterfaceVerificationRepository : MetaObjectRepositoryBase<InterfaceVerification>, IInterfaceVerificationRepository
@@ -38,6 +45,12 @@ namespace Chameleon.Repository
             //Bankinate组件的一个bug，表达式解析错误，最终解析成了Guid.Empty文本
             var guidEmpty = Guid.Empty;
             return _dbContext.Queryable<InterfaceVerification>().Where(t => t.MetaObjectId == metaObjectId && t.IsDeleted == 0 && t.ParentId == guidEmpty).ToList();
+        }
+
+        public bool CheckMetaFieldShortCodeHasExistInCurrentVerification(Guid interfaceVerificationId, string metaFieldShortCode)
+        {
+            var guidEmpty = Guid.Empty;
+            return _dbContext.Queryable<InterfaceVerification>().Where(t => t.ParentId == interfaceVerificationId && t.IsDeleted == 0 && t.ParentId != guidEmpty && t.MetaFieldShortCode.Equals(metaFieldShortCode)).Any();
         }
 
         public List<InterfaceVerification> GetInterfaceVerificationByParentId(Guid parentId)

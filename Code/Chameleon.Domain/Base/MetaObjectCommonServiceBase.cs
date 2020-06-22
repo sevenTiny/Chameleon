@@ -9,15 +9,6 @@ namespace Chameleon.Domain
     public interface IMetaObjectCommonServiceBase<TEntity> : ICommonServiceBase<TEntity> where TEntity : MetaObjectBase
     {
         Result CheckHasSameCodeOrNameWithSameMetaObjectId(Guid metaObjectId, TEntity entity);
-        void LogicDeleteByMetaObjectId(Guid metaObjectId);
-        List<TEntity> GetListByMetaObjectId(Guid metaObjectId);
-        List<TEntity> GetListDeletedByMetaObjectId(Guid metaObjectId);
-        List<TEntity> GetListUnDeletedByMetaObjectId(Guid metaObjectId);
-        TEntity GetByCodeOrNameWithSameMetaObjectIdAndNotSameId(Guid metaObjectId, Guid id, string code, string name);
-
-        MetaObject GetMetaObjectById(Guid metaObjectId);
-        string GetMetaObjectCodeById(Guid metaObjectId);
-        string GetMetaObjectNameById(Guid metaObjectId);
     }
 
     public abstract class MetaObjectCommonServiceBase<TEntity> : CommonServiceBase<TEntity>, IMetaObjectCommonServiceBase<TEntity> where TEntity : MetaObjectBase
@@ -46,46 +37,6 @@ namespace Chameleon.Domain
                     return Result.Error($"名称[{obj.Name}]已存在");
             }
             return Result.Success();
-        }
-
-        public void LogicDeleteByMetaObjectId(Guid metaObjectId)
-        {
-            _metaObjectCommonRepositoryBase.LogicDeleteByMetaObjectId(metaObjectId);
-        }
-
-        public List<TEntity> GetListByMetaObjectId(Guid metaObjectId)
-        {
-            return _metaObjectCommonRepositoryBase.GetListByMetaObjectId(metaObjectId);
-        }
-
-        public List<TEntity> GetListDeletedByMetaObjectId(Guid metaObjectId)
-        {
-            return _metaObjectCommonRepositoryBase.GetListDeletedByMetaObjectId(metaObjectId);
-        }
-
-        public List<TEntity> GetListUnDeletedByMetaObjectId(Guid metaObjectId)
-        {
-            return _metaObjectCommonRepositoryBase.GetListUnDeletedByMetaObjectId(metaObjectId);
-        }
-
-        public TEntity GetByCodeOrNameWithSameMetaObjectIdAndNotSameId(Guid metaObjectId, Guid id, string code, string name)
-        {
-            return _metaObjectCommonRepositoryBase.GetByCodeOrNameWithSameMetaObjectIdAndNotSameId(metaObjectId, id, code, name);
-        }
-
-        public MetaObject GetMetaObjectById(Guid metaObjectId)
-        {
-            return _metaObjectCommonRepositoryBase.GetMetaObjectById(metaObjectId);
-        }
-
-        public string GetMetaObjectNameById(Guid metaObjectId)
-        {
-            return _metaObjectCommonRepositoryBase.GetMetaObjectNameById(metaObjectId);
-        }
-
-        public string GetMetaObjectCodeById(Guid metaObjectId)
-        {
-            return _metaObjectCommonRepositoryBase.GetMetaObjectCodeById(metaObjectId);
         }
     }
 }

@@ -16,8 +16,10 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         readonly IInterfaceFieldsService _interfaceFieldsService;
         IMetaFieldService _metaFieldService;
         IInterfaceFieldsRepository _interfaceFieldsRepository;
-        public InterfaceFieldsController(IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceFieldsService InterfaceFieldsService, IMetaFieldService metaFieldService)
+        IMetaFieldRepository _metaFieldRepository;
+        public InterfaceFieldsController(IMetaFieldRepository metaFieldRepository, IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceFieldsService InterfaceFieldsService, IMetaFieldService metaFieldService)
         {
+            _metaFieldRepository = metaFieldRepository;
             _interfaceFieldsRepository = interfaceFieldsRepository;
             _metaFieldService = metaFieldService;
             _interfaceFieldsService = InterfaceFieldsService;
@@ -123,7 +125,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
 
             var selectedMetaFieldIds = selectedFields?.Select(t => t.MetaFieldId).ToArray() ?? new Guid[0];
 
-            ViewData["MetaFields"] = _metaFieldService.GetListUnDeletedByMetaObjectId(CurrentMetaObjectId)?.Where(t => !selectedMetaFieldIds.Contains(t.Id)).ToList();
+            ViewData["MetaFields"] = _metaFieldRepository.GetListUnDeletedByMetaObjectId(CurrentMetaObjectId)?.Where(t => !selectedMetaFieldIds.Contains(t.Id)).ToList();
 
             ViewData["Id"] = parentMetaFieldsId;
 
