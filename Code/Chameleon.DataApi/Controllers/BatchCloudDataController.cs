@@ -12,9 +12,13 @@ using SevenTiny.Bantina.Extensions.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace Chameleon.DataApi.Controllers
 {
+    /// <summary>
+    /// 批量操作api
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class BatchCloudDataController : ApiControllerBase
@@ -23,15 +27,21 @@ namespace Chameleon.DataApi.Controllers
         {
         }
 
+        /// <summary>
+        /// 批量新增操作
+        /// </summary>
+        /// <param name="queryArgs"></param>
+        /// <param name="args">json数组</param>
+        /// <returns></returns>
         [HttpPost]
-        public IActionResult Post([FromQuery]QueryArgs queryArgs, [FromBody]JArray jArray)
+        public IActionResult Post([FromQuery]QueryArgs queryArgs, [FromBody]JsonElement[] args)
         {
             return SafeExecute(() =>
             {
-                if (jArray == null || !jArray.Any())
-                    return Result.Error("Parameter invalid:jArray = null 业务数据为空，无法执行新增操作").ToJsonResult();
+                List<BsonDocument> documents = args.Select(item => BsonDocument.Parse(item.ToString())).ToList();
 
-                List<BsonDocument> documents = jArray.Select(item => BsonDocument.Parse(item.ToString())).ToList();
+                if (documents == null || !documents.Any())
+                    return Result.Error("Parameter invalid: 业务数据为空，无法执行新增操作").ToJsonResult();
 
                 InitQueryContext(queryArgs);
 

@@ -23,6 +23,11 @@ namespace Chameleon.DataApi.Controllers
         {
         }
 
+        /// <summary>
+        /// 查询数据
+        /// </summary>
+        /// <param name="queryArgs"></param>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Get([FromQuery]QueryArgs queryArgs)
         {
@@ -62,9 +67,12 @@ namespace Chameleon.DataApi.Controllers
             });
         }
 
-        /**
-         Content-Type: application/json
-         * */
+        /// <summary>
+        /// 新增单条数据
+        /// </summary>
+        /// <param name="queryArgs"></param>
+        /// <param name="arg">数据json</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Post([FromQuery]QueryArgs queryArgs, [FromBody]JsonElement arg)
         {
@@ -72,7 +80,7 @@ namespace Chameleon.DataApi.Controllers
             {
                 var bson = BsonDocument.Parse(arg.ToString());
 
-                if(bson==null ||!bson.Any())
+                if (bson == null || !bson.Any())
                     return Result.Error("Parameter invalid: 业务数据为空，无法执行新增操作").ToJsonResult();
 
                 InitQueryContext(queryArgs);
@@ -83,20 +91,23 @@ namespace Chameleon.DataApi.Controllers
             });
         }
 
-        /**
-         Content-Type: application/json
-         * */
+        /// <summary>
+        /// 修改数据
+        /// </summary>
+        /// <param name="queryArgs"></param>
+        /// <param name="jObj"></param>
+        /// <returns></returns>
         [HttpPut]
-        public IActionResult Update([FromQuery]QueryArgs queryArgs, [FromBody]JObject jObj)
+        public IActionResult Update([FromQuery]QueryArgs queryArgs, [FromBody]JsonElement arg)
         {
             return SafeExecute(() =>
             {
-                InitQueryContext(queryArgs);
-
-                var bson = BsonDocument.Parse(jObj.ToString());
+                var bson = BsonDocument.Parse(arg.ToString());
 
                 if (bson == null || !bson.Any())
-                    return Result.Error("Parameter invalid:jObj = null 业务数据为空，无法执行更新操作").ToJsonResult();
+                    return Result.Error("Parameter invalid: 业务数据为空，无法执行更新操作").ToJsonResult();
+
+                InitQueryContext(queryArgs);
 
                 var filter = GetFilterDefinitionFromInterface();
 
@@ -106,6 +117,11 @@ namespace Chameleon.DataApi.Controllers
             });
         }
 
+        /// <summary>
+        /// 删除数据
+        /// </summary>
+        /// <param name="queryArgs"></param>
+        /// <returns></returns>
         [HttpDelete]
         public IActionResult Delete([FromQuery]QueryArgs queryArgs)
         {
