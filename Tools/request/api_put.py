@@ -1,18 +1,12 @@
 import requests
 import datetime
 
-url = 'http://localhost:57004/api/CloudData?conditionCode=WangDongApp.DataTest.SearchCondition.GetByInteger&Integer=90000'
-
-i = 90000
+url = 'http://localhost:39011/api/CloudData?_interface=SevenTinyTest.UserInformation.UpdateNameByAge&age=99'
 
 data = {
-    # 'positiveNumber': i,
-    # 'Text': 'Text测试'+str(i),
-    # 'DateTime': str(datetime.datetime.now()),
-    # 'TrueOrFalse': True,
-    # 'Integer': i,
-    'Long': i,
-    'Double': 90088
+    'Name': '虎虎虎'
 }
+
 response = requests.put(url, json=data)
+
 print(response.text)

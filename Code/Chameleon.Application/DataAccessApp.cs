@@ -297,7 +297,7 @@ namespace Chameleon.Application
                 var checkResult = _metaFieldService.CheckAndGetFieldValueByFieldType(metaFields[upperKey], bsonElement.Value);
 
                 if (checkResult.IsSuccess)
-                    bsonElementsToModify.Add(new BsonElement(metaFields[upperKey].Code, BsonValue.Create(checkResult.Data)));
+                    bsonElementsToModify.Add(new BsonElement(metaFields[upperKey].ShortCode, BsonValue.Create(checkResult.Data)));
                 else
                     return Result.Error($"字段[{bsonElement.Name}]传递的值[{bsonElement.Value}]不符合字段定义的类型");
             }
@@ -346,7 +346,13 @@ namespace Chameleon.Application
 
             int skipSize = (pageIndex - 1) > 0 ? ((pageIndex - 1) * interfaceSetting.PageSize) : 0;
 
-            return Result<List<Dictionary<string, CloudData>>>.Success("查询成功", TranslatorBsonToCloudData(_chameleonDataDbContext.GetCollectionBson(interfaceSetting.MetaObjectCode).Find(filter).Skip(skipSize).Limit(interfaceSetting.PageSize).Sort(StructureSortDefinition(metaFields, sortSetting)).Project(projection).ToList() ?? new List<BsonDocument>(0), interfaceFields));
+            var datas = TranslatorBsonToCloudData(_chameleonDataDbContext.GetCollectionBson(interfaceSetting.MetaObjectCode).Find(filter).Skip(skipSize).Limit(interfaceSetting.PageSize).Sort(StructureSortDefinition(metaFields, sortSetting)).Project(projection).ToList() ?? new List<BsonDocument>(0), interfaceFields);
+
+            var result = Result<List<Dictionary<string, CloudData>>>.Success($"查询成功，共{datas.Count}条记录", datas);
+
+            result.MoreMessage = datas.Count.ToString();
+
+            return result;
         }
 
         public Result<int> GetCount(InterfaceSetting interfaceSetting, FilterDefinition<BsonDocument> filter)
