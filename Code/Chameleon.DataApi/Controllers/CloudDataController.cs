@@ -40,18 +40,22 @@ namespace Chameleon.DataApi.Controllers
 
                 switch (_queryContext.InterfaceSetting.GetInterfaceType())
                 {
+                    //查询数量
                     case InterfaceTypeEnum.QueryCount:
                         filter = GetFilterDefinitionFromInterface();
                         var countResult = _dataAccessApp.GetCount(_queryContext.InterfaceSetting, filter);
                         return countResult.ToJsonResult();
+                    //查询单条记录
                     case InterfaceTypeEnum.QuerySingle:
                         filter = GetFilterDefinitionFromInterface();
                         var singleResult = _dataAccessApp.Get(_queryContext.InterfaceSetting, filter);
                         return singleResult.ToJsonResult();
+                    //查询集合
                     case InterfaceTypeEnum.QueryList:
                         filter = GetFilterDefinitionFromInterface();
                         var listResult = _dataAccessApp.GetList(_queryContext.InterfaceSetting, filter);
                         return listResult.ToJsonResult();
+                    //查询数据源
                     case InterfaceTypeEnum.DataSource:
                         break;
                     case InterfaceTypeEnum.UnKnown:
