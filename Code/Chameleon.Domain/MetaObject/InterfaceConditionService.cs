@@ -45,7 +45,8 @@ namespace Chameleon.Domain
         /// 通过条件构造查询filter
         /// </summary>
         /// <param name="conditionId"></param>
-        /// <param name="cnodition"></param>
+        /// <param name="conditionUpperKeyDic"></param>
+        /// <param name="isIgnoreArgumentsCheck">是否忽略参数检查</param>
         /// <returns></returns>
         FilterDefinition<BsonDocument> GetFilterDefinitionByCondition(Guid conditionId, Dictionary<string, string> conditionUpperKeyDic, bool isIgnoreArgumentsCheck = false);
     }
@@ -398,9 +399,18 @@ namespace Chameleon.Domain
                         else
                             throw new ArgumentNullException(key, $"Conditions define field parameters [{key}] but do not provide values.");
                     }
-                    object argumentValue = conditionUpperKeyDic.SafeGet(keyUpper);
+
+                    var arguemntValue = conditionUpperKeyDic.SafeGet(keyUpper);
+
                     //将值转化为字段同类型的类型值
-                    object value = _metaFieldService.CheckAndGetFieldValueByFieldType(metaFieldUpperShortCodeKeyDic[routeCondition.MetaFieldShortCode.ToUpperInvariant()], argumentValue).Data;
+                    var metaField = metaFieldUpperShortCodeKeyDic[routeCondition.MetaFieldShortCode.ToUpperInvariant()];
+
+                    var convertResult = _metaFieldService.CheckAndGetFieldValueByFieldType(metaField, arguemntValue);
+
+                    if (!convertResult.IsSuccess)
+                        throw new InvalidCastException($"Condition parameters data type of field [{metaField.ShortCode}] invalid. field define is [{metaField.GetFieldType().GetDescription()}], but value is [{arguemntValue}]");
+
+                    object value = convertResult.Data;
 
                     switch (routeCondition.GetConditionType())
                     {

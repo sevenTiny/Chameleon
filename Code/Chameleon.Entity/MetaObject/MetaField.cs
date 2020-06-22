@@ -27,6 +27,11 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public int IsSystem { get; set; }
+
+        public DataType GetFieldType()
+        {
+            return (DataType)FieldType;
+        }
     }
 
     /// <summary>

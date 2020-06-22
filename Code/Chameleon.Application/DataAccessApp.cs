@@ -180,7 +180,7 @@ namespace Chameleon.Application
                     cloudData = new CloudData();
 
                 cloudData.FieldCode = element.Name;
-                cloudData.Value = Convert.ToString(element.Value);
+                cloudData.Value = element.Value?.ToString();
                 //如果后续需要翻译，则处理该字段
                 cloudData.ValueText = cloudData.Value;
 
