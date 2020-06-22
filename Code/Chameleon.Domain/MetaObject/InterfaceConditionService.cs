@@ -269,7 +269,7 @@ namespace Chameleon.Domain
             }
         }
 
-        public FilterDefinition<BsonDocument> GetFilterDefinitionByCondition(Guid conditionId, Dictionary<string, string> cnodition)
+        public FilterDefinition<BsonDocument> GetFilterDefinitionByCondition(Guid conditionId, Dictionary<string, string> condition)
         {
             throw new NotImplementedException();
         }
