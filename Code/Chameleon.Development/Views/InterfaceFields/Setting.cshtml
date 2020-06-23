@@ -82,10 +82,8 @@
             margin-left: 1px;
         }
 </style>
-<div class="container pane-wrapper">
+<article class="cl pd-20">
     <div class="opration">
-        <a class="btn btn-secondary-outline radius" href="javascript:history.back(-1);"><i class="Hui-iconfont">&#xe66b;</i> 返回</a>
-        <a class="btn btn-danger radius" href="javascript:history.back(-1);"><i class="Hui-iconfont">&#xe6a6;</i> 取消</a>
         <a class="btn btn-primary radius" href="javascript:addFields();"><i class="Hui-iconfont">&#xe632;</i> 保存</a>
     </div>
     <div class="row">
@@ -120,7 +118,7 @@
             </div>
         </div>
     </div>
-</div>
+</article>
 @await Html.PartialAsync("~/Views/Shared/_FooterScripts.cshtml")
 @await Html.PartialAsync("~/Views/Shared/_CommonScript.cshtml")
 <script src="~/lib/jquery-ui/jquery-ui.js"></script>
