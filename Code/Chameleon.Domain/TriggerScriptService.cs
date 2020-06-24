@@ -106,8 +106,9 @@ namespace Chameleon.Domain
 
             return new Result<TResult>
             {
-                //1. 这里要调整bantina为可赋值
-                //2. 要调整
+                IsSuccess = result.IsSuccess,
+                Message = result.Message,
+                Data = result.Data
             };
         }
 
@@ -125,8 +126,8 @@ namespace Chameleon.Domain
 
             return new Result
             {
-                //1. 这里要调整bantina为可赋值
-                //2. 要调整
+                IsSuccess = result.IsSuccess,
+                Message = result.Message,
             };
         }
     }
