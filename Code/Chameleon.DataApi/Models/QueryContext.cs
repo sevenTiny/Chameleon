@@ -16,5 +16,11 @@ namespace Chameleon.DataApi.Models
         /// 接口设置
         /// </summary>
         public InterfaceSetting InterfaceSetting { get; set; }
+        /// <summary>
+        /// 将要执行的脚本库，一次查出来
+        /// </summary>
+        public List<TriggerScript> TriggerScripts { get; set; }
+        //贯穿触发器执行方法的上下文，常用于从before往after传递参数
+        public Dictionary<string, object> TriggerContext { get; set; } = new Dictionary<string, object>();
     }
 }

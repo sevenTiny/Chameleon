@@ -23,7 +23,7 @@ namespace Chameleon.DataApi.Controllers
     [ApiController]
     public class BatchCloudDataController : ApiControllerBase
     {
-        public BatchCloudDataController(IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository) : base(interfaceConditionService, interfaceSettingRepository, dataAccessApp, interfaceVerificationService, interfaceVerificationRepository)
+        public BatchCloudDataController(ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository) : base(triggerScriptService, triggerScriptRepository, interfaceConditionService, interfaceSettingRepository, dataAccessApp, interfaceVerificationService, interfaceVerificationRepository)
         {
         }
 
@@ -45,7 +45,12 @@ namespace Chameleon.DataApi.Controllers
 
                 InitQueryContext(queryArgs);
 
-                var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, documents);
+                //before
+                var arg = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.BatchAdd_Before, new object[] { _queryContext.TriggerContext, documents }, documents);
+                //execute
+                var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, arg);
+                //after
+                result = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.BatchAdd_After, new object[] { _queryContext.TriggerContext, result }, result);
 
                 return result.ToJsonResult();
             });

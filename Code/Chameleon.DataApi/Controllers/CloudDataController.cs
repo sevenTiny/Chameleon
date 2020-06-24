@@ -6,10 +6,8 @@ using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json.Linq;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
@@ -19,7 +17,7 @@ namespace Chameleon.DataApi.Controllers
     [ApiController]
     public class CloudDataController : ApiControllerBase
     {
-        public CloudDataController(IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository) : base(interfaceConditionService, interfaceSettingRepository, dataAccessApp, interfaceVerificationService, interfaceVerificationRepository)
+        public CloudDataController(ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository) : base(triggerScriptService, triggerScriptRepository, interfaceConditionService, interfaceSettingRepository, dataAccessApp, interfaceVerificationService, interfaceVerificationRepository)
         {
         }
 
@@ -43,20 +41,35 @@ namespace Chameleon.DataApi.Controllers
                     //查询数量
                     case InterfaceTypeEnum.QueryCount:
                         filter = GetFilterDefinitionFromInterface();
+                        //before
+                        filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryCount_Before, new object[] { _queryContext.TriggerContext, filter }, filter);
+                        //execute
                         var countResult = _dataAccessApp.GetCount(_queryContext.InterfaceSetting, filter);
+                        //after
+                        countResult = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryCount_After, new object[] { _queryContext.TriggerContext, countResult }, countResult);
                         return countResult.ToJsonResult();
                     //查询单条记录
                     case InterfaceTypeEnum.QuerySingle:
                         filter = GetFilterDefinitionFromInterface();
+                        //before
+                        filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QuerySingle_Before, new object[] { _queryContext.TriggerContext, filter }, filter);
+                        //execute
                         var singleResult = _dataAccessApp.Get(_queryContext.InterfaceSetting, filter);
+                        //after
+                        singleResult = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QuerySingle_After, new object[] { _queryContext.TriggerContext, singleResult }, singleResult);
                         return singleResult.ToJsonResult();
                     //查询集合
                     case InterfaceTypeEnum.QueryList:
                         filter = GetFilterDefinitionFromInterface();
+                        //before
+                        filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryList_Before, new object[] { _queryContext.TriggerContext, filter }, filter);
+                        //execute
                         var listResult = _dataAccessApp.GetList(_queryContext.InterfaceSetting, filter);
+                        //after
+                        listResult = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryList_After, new object[] { _queryContext.TriggerContext, listResult }, listResult);
                         return listResult.ToJsonResult();
                     //查询数据源
-                    case InterfaceTypeEnum.DataSource:
+                    case InterfaceTypeEnum.DynamicScriptInterface:
                         break;
                     case InterfaceTypeEnum.UnKnown:
                     case InterfaceTypeEnum.Add:
@@ -89,7 +102,12 @@ namespace Chameleon.DataApi.Controllers
 
                 InitQueryContext(queryArgs);
 
-                var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, new[] { bson });
+                //before
+                var args = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Add_Before, new object[] { _queryContext.TriggerContext, new[] { bson } }, new[] { bson });
+                //execute
+                var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, args);
+                //after
+                result = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Add_After, new object[] { _queryContext.TriggerContext, result }, result);
 
                 return result.ToJsonResult();
             });
@@ -99,7 +117,7 @@ namespace Chameleon.DataApi.Controllers
         /// 修改数据
         /// </summary>
         /// <param name="queryArgs"></param>
-        /// <param name="jObj"></param>
+        /// <param name="arg"></param>
         /// <returns></returns>
         [HttpPut]
         public IActionResult Update([FromQuery]QueryArgs queryArgs, [FromBody]JsonElement arg)
@@ -115,7 +133,12 @@ namespace Chameleon.DataApi.Controllers
 
                 var filter = GetFilterDefinitionFromInterface();
 
+                //before
+                filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Update_Before, new object[] { _queryContext.TriggerContext, filter }, filter);
+                //execute
                 var result = _dataAccessApp.BatchUpdate(_queryContext.InterfaceSetting, filter, bson);
+                //after
+                result = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Update_After, new object[] { _queryContext.TriggerContext, result }, result);
 
                 return result.ToJsonResult();
             });
@@ -135,7 +158,12 @@ namespace Chameleon.DataApi.Controllers
 
                 var filter = GetFilterDefinitionFromInterface();
 
+                //before
+                filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Delete_Before, new object[] { _queryContext.TriggerContext, filter }, filter);
+                //execute
                 var result = _dataAccessApp.Delete(_queryContext.InterfaceSetting, filter);
+                //after
+                result = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Delete_After, new object[] { _queryContext.TriggerContext, result }, result);
 
                 return result.ToJsonResult();
             });

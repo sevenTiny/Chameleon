@@ -46,7 +46,8 @@ namespace Chameleon.Entity
         /// 数据源Id
         /// </summary>
         [Column]
-        public Guid DataSourceId { get; set; }
+#warning 这里改了数据库!!!!!!!!!!!!!!!!!!!!
+        public Guid DynamicScriptInterfaceId { get; set; }
         /// <summary>
         /// 页大小
         /// </summary>
@@ -57,7 +58,7 @@ namespace Chameleon.Entity
         public string InterfaceConditionName { get; set; }
         public string InterfaceVerificationName { get; set; }
         public string InterfaceFieldsName { get; set; }
-        public string DataSourceName { get; set; }
+        public string DynamicScriptInterfaceName { get; set; }
         #endregion
 
         public InterfaceTypeEnum GetInterfaceType()
@@ -92,7 +93,7 @@ namespace Chameleon.Entity
         QuerySingle = 6,
         [Description("查询记录集合")]
         QueryList = 7,
-        [Description("数据源")]
-        DataSource = 8
+        [Description("动态脚本接口")]
+        DynamicScriptInterface = 8
     }
 }

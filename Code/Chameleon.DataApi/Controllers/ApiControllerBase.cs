@@ -23,8 +23,11 @@ namespace Chameleon.DataApi.Controllers
         protected IInterfaceVerificationRepository _interfaceVerificationRepository;
         protected IInterfaceVerificationService _interfaceVerificationService;
         protected IInterfaceConditionService _interfaceConditionService;
-        public ApiControllerBase(IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository)
+        protected ITriggerScriptRepository _triggerScriptRepository;
+        protected ITriggerScriptService _triggerScriptService;
+        public ApiControllerBase(ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository)
         {
+            _triggerScriptRepository = triggerScriptRepository;
             _interfaceConditionService = interfaceConditionService;
             _interfaceVerificationRepository = interfaceVerificationRepository;
             _interfaceVerificationService = interfaceVerificationService;
@@ -33,22 +36,6 @@ namespace Chameleon.DataApi.Controllers
         }
 
         protected QueryContext _queryContext;
-
-        /// <summary>
-        /// 初始化查询上下文
-        /// </summary>
-        /// <param name="queryArgs"></param>
-        protected void InitQueryContext(QueryArgs queryArgs)
-        {
-            _queryContext = new QueryContext();
-
-            //查询接口
-            _queryContext.InterfaceSetting = _interfaceSettingRepository.GetInterfaceSettingByCodeWithVerify(queryArgs._interface);
-
-            //argumentsDic generate
-            foreach (var item in Request.Query)
-                _queryContext.ConditionArgumentsUpperKeyDic.AddOrUpdate(item.Key.ToUpperInvariant(), item.Value);
-        }
 
         /// <summary>
         /// 返回安全执行结果
@@ -73,6 +60,69 @@ namespace Chameleon.DataApi.Controllers
             {
                 return Result.Error(ex.Message).ToJsonResult();
             }
+        }
+
+        /// <summary>
+        /// 初始化查询上下文
+        /// </summary>
+        /// <param name="queryArgs"></param>
+        protected void InitQueryContext(QueryArgs queryArgs)
+        {
+            _queryContext = new QueryContext();
+
+            //查询接口
+            _queryContext.InterfaceSetting = _interfaceSettingRepository.GetInterfaceSettingByCodeWithVerify(queryArgs._interface);
+
+            //argumentsDic generate
+            foreach (var item in Request.Query)
+                _queryContext.ConditionArgumentsUpperKeyDic.AddOrUpdate(item.Key.ToUpperInvariant(), item.Value);
+
+            //初始化触发器
+            switch (_queryContext.InterfaceSetting.GetInterfaceType())
+            {
+                case InterfaceTypeEnum.Add:
+                case InterfaceTypeEnum.BatchAdd:
+                case InterfaceTypeEnum.Update:
+                case InterfaceTypeEnum.Delete:
+                case InterfaceTypeEnum.QueryCount:
+                case InterfaceTypeEnum.QuerySingle:
+                case InterfaceTypeEnum.QueryList:
+                //查询对象接口
+                    _queryContext.TriggerScripts = _triggerScriptRepository.GetMetaObjectInterfaceListByMetaObjectId(_queryContext.InterfaceSetting.MetaObjectId);
+                    break;
+                //查询动态脚本接口
+                case InterfaceTypeEnum.DynamicScriptInterface:
+                    _queryContext.TriggerScripts = new List<TriggerScript> { _triggerScriptRepository.GetById(_queryContext.InterfaceSetting.CloudApplicationtId) };
+                    break;
+                case InterfaceTypeEnum.UnKnown:
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 尝试执行服务对应的动态脚本，如果没有，则采用默认值
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="metaObjectInterfaceServiceTypeEnum"></param>
+        /// <param name="parameters"></param>
+        /// <param name="ifNoScriptReturnDefaultValue">默认值</param>
+        /// <returns></returns>
+        protected TResult TryExecuteTriggerByServiceType<TResult>(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum, object[] parameters, TResult ifNoScriptReturnDefaultValue)
+        {
+            //拿到当前服务类型对应的脚本
+            var triggerScript = _queryContext.TriggerScripts?.FirstOrDefault(t => t.MetaObjectInterfaceServiceType == (int)metaObjectInterfaceServiceTypeEnum);
+
+            if (triggerScript == null)
+                return ifNoScriptReturnDefaultValue;
+
+            //执行脚本
+            var executeResult = _triggerScriptService.ExecuteTriggerScript<TResult>(triggerScript, parameters);
+
+            if (!executeResult.IsSuccess)
+                throw new InvalidOperationException(executeResult.Message);
+
+            return executeResult.Data;
         }
 
         protected FilterDefinition<BsonDocument> GetFilterDefinitionFromInterface()
