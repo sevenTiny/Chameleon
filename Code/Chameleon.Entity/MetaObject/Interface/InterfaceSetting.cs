@@ -46,7 +46,6 @@ namespace Chameleon.Entity
         /// 数据源Id
         /// </summary>
         [Column]
-#warning 这里改了数据库!!!!!!!!!!!!!!!!!!!!
         public Guid DynamicScriptInterfaceId { get; set; }
         /// <summary>
         /// 页大小
