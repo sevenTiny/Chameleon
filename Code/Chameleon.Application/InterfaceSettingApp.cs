@@ -37,11 +37,11 @@ namespace Chameleon.Application
                 {
                     //如果是固定值，则校验值是否和类型一致
                     if (entity.ConditionValueType == (int)ConditionValueTypeEnum.FixedValue)
-                        return _.ContinueAssert(_ => _metaFieldService.CheckAndGetFieldValueByFieldType(entity.MetaFieldId, entity.ConditionValue).IsSuccess, "设置的值和字段值格式不匹配");
+                        return _.ContinueAssert(re => _metaFieldService.CheckAndGetFieldValueByFieldType(entity.MetaFieldId, entity.ConditionValue).IsSuccess, "设置的值和字段值格式不匹配");
 
                     return _;
                 })
-                .Continue(_ => _interfaceConditionService.AddNode(brotherNodeId,entity));
+                .Continue(_ => _interfaceConditionService.AddNode(brotherNodeId, entity));
         }
     }
 }
