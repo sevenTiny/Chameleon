@@ -350,7 +350,7 @@ namespace Chameleon.Application
 
             var result = Result<List<Dictionary<string, CloudData>>>.Success($"查询成功，共{datas.Count}条记录", datas);
 
-            result.MoreMessage = datas.Count.ToString();
+            result.MoreMessage = new List<string> { datas.Count.ToString() };
 
             return result;
         }
