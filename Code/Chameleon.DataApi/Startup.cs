@@ -5,6 +5,7 @@ using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 using Chameleon.Application;
+using Chameleon.Bootstrapper;
 using Chameleon.Domain;
 using Chameleon.Infrastructure;
 using Chameleon.Repository;
@@ -30,15 +31,8 @@ namespace Chameleon.DataApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //inject dbContext
-            services.AddScoped<ChameleonMetaDataDbContext>();
-            services.AddScoped<ChameleonDataDbContext>();
-            //inject repository
-            services.AddScoped(typeof(CloudApplicationRepository).Assembly);
-            //inject domain
-            services.AddScoped(typeof(CloudApplicationService).Assembly);
-            //inject application
-            services.AddScoped(typeof(MetaObjectApp).Assembly);
+            //×¢ÈëÒµÎñ²ã
+            DependencyInjector.Inject(services);
 
             services.AddControllers().AddJsonOptions(options =>
             {

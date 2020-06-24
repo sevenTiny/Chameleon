@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chameleon.Application\Chameleon.Application.csproj" />
+    <ProjectReference Include="..\Chameleon.Bootstrapper\Chameleon.Bootstrapper.csproj" />
     <ProjectReference Include="..\Chameleon.Domain\Chameleon.Domain.csproj" />
   </ItemGroup>
 

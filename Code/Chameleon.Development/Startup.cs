@@ -1,18 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
-using System.Threading.Tasks;
-using Chameleon.Application;
-using Chameleon.Domain;
-using Chameleon.Infrastructure;
-using Chameleon.Repository;
+using Chameleon.Bootstrapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace Chameleon.Development
 {
@@ -28,15 +21,8 @@ namespace Chameleon.Development
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //inject dbContext
-            services.AddScoped<ChameleonMetaDataDbContext>();
-            services.AddScoped<ChameleonDataDbContext>();
-            //inject repository
-            services.AddScoped(typeof(CloudApplicationRepository).Assembly);
-            //inject domain
-            services.AddScoped(typeof(CloudApplicationService).Assembly);
-            //inject application
-            services.AddScoped(typeof(MetaObjectApp).Assembly);
+            //×¢ÈëÒµÎñ²ã
+            DependencyInjector.Inject(services);
 
             services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.All));
             services.AddSession();
