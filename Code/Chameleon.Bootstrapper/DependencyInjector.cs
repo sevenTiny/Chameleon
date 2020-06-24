@@ -3,6 +3,8 @@ using Chameleon.Domain;
 using Chameleon.Infrastructure;
 using Chameleon.Repository;
 using Microsoft.Extensions.DependencyInjection;
+using SevenTiny.Cloud.ScriptEngine;
+using SevenTiny.Cloud.ScriptEngine.CSharp;
 
 namespace Chameleon.Bootstrapper
 {
@@ -26,6 +28,9 @@ namespace Chameleon.Bootstrapper
             services.AddScoped(typeof(CloudApplicationService).Assembly);
             //inject application
             services.AddScoped(typeof(MetaObjectApp).Assembly);
+
+            //inject component
+            services.AddScoped<IDynamicScriptEngine, CSharpDynamicScriptEngine>();
         }
     }
 }
