@@ -1,4 +1,5 @@
 ﻿using Chameleon.Entity;
+using Chameleon.Infrastructure;
 using Chameleon.Repository;
 using Chameleon.ValueObject;
 using SevenTiny.Bantina;
@@ -16,7 +17,7 @@ namespace Chameleon.Domain
         /// </summary>
         /// <param name="metaObjectInterfaceServiceTypeEnum"></param>
         /// <returns></returns>
-        DefaultScriptBase GetDefaultMetaObjectInterfaceTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum);
+        DefaultScriptBase GetDefaultMetaObjectTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum);
         /// <summary>
         /// 获取默认动态接口触发器脚本
         /// </summary>
@@ -36,17 +37,34 @@ namespace Chameleon.Domain
         /// <param name="triggerScript"></param>
         /// <returns></returns>
         Result CheckScript(TriggerScript triggerScript);
+        /// <summary>
+        /// 添加对象触发器
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Result MetaObjectTriggerAdd(TriggerScript entity);
     }
 
     public class TriggerScriptService : CommonServiceBase<TriggerScript>, ITriggerScriptService
     {
         IDynamicScriptEngine _dynamicScriptEngine;
+        ITriggerScriptRepository _triggerScriptRepository;
         public TriggerScriptService(IDynamicScriptEngine dynamicScriptEngine, ITriggerScriptRepository repository) : base(repository)
         {
             _dynamicScriptEngine = dynamicScriptEngine;
+            _triggerScriptRepository = repository;
         }
 
-        public DefaultScriptBase GetDefaultMetaObjectInterfaceTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
+        public Result MetaObjectTriggerAdd(TriggerScript entity)
+        {
+            //校验是否已经存在相同服务的触发器脚本
+            if (_triggerScriptRepository.CheckMetaObjectInterfaceServiceTypeExistIfMetaObjectTrigger(entity.MetaObjectId, entity.GetMetaObjectInterfaceServiceType()))
+                return Result.Error($"该对象下已经存在一个[{entity.GetMetaObjectInterfaceServiceType().GetDescription()}]类型的脚本");
+
+            return base.Add(entity);
+        }
+
+        public DefaultScriptBase GetDefaultMetaObjectTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
         {
             switch (metaObjectInterfaceServiceTypeEnum)
             {

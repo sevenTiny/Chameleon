@@ -172,17 +172,17 @@ namespace Chameleon.Application
 
                     cloudData = new CloudData
                     {
-                        FieldText = formatInterfaceFieldsDic[upperKey].MetaFieldCustomViewName
+                        Name = formatInterfaceFieldsDic[upperKey].MetaFieldCustomViewName
                     };
                 }
 
                 if (cloudData == null)
                     cloudData = new CloudData();
 
-                cloudData.FieldCode = element.Name;
+                cloudData.Code = element.Name;
                 cloudData.Value = element.Value?.ToString();
                 //如果后续需要翻译，则处理该字段
-                cloudData.ValueText = cloudData.Value;
+                cloudData.Text = cloudData.Value;
 
                 result.TryAdd(element.Name, cloudData);
             }

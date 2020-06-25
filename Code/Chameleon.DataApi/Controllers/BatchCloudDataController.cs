@@ -38,7 +38,7 @@ namespace Chameleon.DataApi.Controllers
         {
             return SafeExecute(() =>
             {
-                List<BsonDocument> documents = args.Select(item => BsonDocument.Parse(item.ToString())).ToList();
+                var documents = args.Select(item => BsonDocument.Parse(item.ToString())).ToArray();
 
                 if (documents == null || !documents.Any())
                     return Result.Error("Parameter invalid: 业务数据为空，无法执行新增操作").ToJsonResult();

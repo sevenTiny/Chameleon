@@ -42,7 +42,7 @@ namespace Chameleon.DataApi.Controllers
                     case InterfaceTypeEnum.QueryCount:
                         filter = GetFilterDefinitionFromInterface();
                         //before
-                        filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryCount_Before, new object[] { _queryContext.TriggerContext, filter }, filter);
+                        filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryCount_Before, new object[] { _queryContext.TriggerContext, _queryContext.ConditionArgumentsUpperKeyDic, filter }, filter);
                         //execute
                         var countResult = _dataAccessApp.GetCount(_queryContext.InterfaceSetting, filter);
                         //after
@@ -52,7 +52,7 @@ namespace Chameleon.DataApi.Controllers
                     case InterfaceTypeEnum.QuerySingle:
                         filter = GetFilterDefinitionFromInterface();
                         //before
-                        filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QuerySingle_Before, new object[] { _queryContext.TriggerContext, filter }, filter);
+                        filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QuerySingle_Before, new object[] { _queryContext.TriggerContext, _queryContext.ConditionArgumentsUpperKeyDic, filter }, filter);
                         //execute
                         var singleResult = _dataAccessApp.Get(_queryContext.InterfaceSetting, filter);
                         //after
@@ -62,7 +62,7 @@ namespace Chameleon.DataApi.Controllers
                     case InterfaceTypeEnum.QueryList:
                         filter = GetFilterDefinitionFromInterface();
                         //before
-                        filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryList_Before, new object[] { _queryContext.TriggerContext, filter }, filter);
+                        filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryList_Before, new object[] { _queryContext.TriggerContext, _queryContext.ConditionArgumentsUpperKeyDic, filter }, filter);
                         //execute
                         var listResult = _dataAccessApp.GetList(_queryContext.InterfaceSetting, filter);
                         //after
@@ -134,7 +134,7 @@ namespace Chameleon.DataApi.Controllers
                 var filter = GetFilterDefinitionFromInterface();
 
                 //before
-                filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Update_Before, new object[] { _queryContext.TriggerContext, filter }, filter);
+                filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Update_Before, new object[] { _queryContext.TriggerContext, _queryContext.ConditionArgumentsUpperKeyDic, filter }, filter);
                 //execute
                 var result = _dataAccessApp.BatchUpdate(_queryContext.InterfaceSetting, filter, bson);
                 //after
@@ -159,7 +159,7 @@ namespace Chameleon.DataApi.Controllers
                 var filter = GetFilterDefinitionFromInterface();
 
                 //before
-                filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Delete_Before, new object[] { _queryContext.TriggerContext, filter }, filter);
+                filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Delete_Before, new object[] { _queryContext.TriggerContext, _queryContext.ConditionArgumentsUpperKeyDic, filter }, filter);
                 //execute
                 var result = _dataAccessApp.Delete(_queryContext.InterfaceSetting, filter);
                 //after

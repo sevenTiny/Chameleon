@@ -27,6 +27,7 @@ namespace Chameleon.DataApi.Controllers
         protected ITriggerScriptService _triggerScriptService;
         public ApiControllerBase(ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository)
         {
+            _triggerScriptService = triggerScriptService;
             _triggerScriptRepository = triggerScriptRepository;
             _interfaceConditionService = interfaceConditionService;
             _interfaceVerificationRepository = interfaceVerificationRepository;
@@ -88,7 +89,7 @@ namespace Chameleon.DataApi.Controllers
                 case InterfaceTypeEnum.QuerySingle:
                 case InterfaceTypeEnum.QueryList:
                 //查询对象接口
-                    _queryContext.TriggerScripts = _triggerScriptRepository.GetMetaObjectInterfaceListByMetaObjectId(_queryContext.InterfaceSetting.MetaObjectId);
+                    _queryContext.TriggerScripts = _triggerScriptRepository.GetMetaObjectTriggerListByMetaObjectId(_queryContext.InterfaceSetting.MetaObjectId);
                     break;
                 //查询动态脚本接口
                 case InterfaceTypeEnum.DynamicScriptInterface:

@@ -8,11 +8,11 @@
         /// <summary>
         /// 字段编码
         /// </summary>
-        public string FieldCode { get; set; }
+        public string Code { get; set; }
         /// <summary>
         /// 字段显示名称
         /// </summary>
-        public string FieldText { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 字段值
         /// </summary>
@@ -20,6 +20,6 @@
         /// <summary>
         /// 字段显示值
         /// </summary>
-        public string ValueText { get; set; }
+        public string Text { get; set; }
     }
 }

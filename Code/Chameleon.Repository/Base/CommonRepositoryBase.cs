@@ -75,7 +75,7 @@ namespace Chameleon.Repository
             => _dbContext.Queryable<TEntity>().Where(t => t.Id.Equals(id)).FirstOrDefault();
 
         public TEntity GetByCode(string code)
-            => _dbContext.Queryable<TEntity>().Where(t => t.Code.Equals(code)).FirstOrDefault();
+            => _dbContext.Queryable<TEntity>().Where(t => t.Code.Equals(code) && t.IsDeleted == 0).FirstOrDefault();
 
         public List<TEntity> GetListAll()
             => _dbContext.Queryable<TEntity>().ToList();
@@ -93,13 +93,13 @@ namespace Chameleon.Repository
         /// <param name="code"></param>
         /// <returns></returns>
         public TEntity GetByCodeWithoutSameId(Guid id, string code)
-            => _dbContext.Queryable<TEntity>().Where(t => t.Id != id && t.Code.Equals(code)).FirstOrDefault();
+            => _dbContext.Queryable<TEntity>().Where(t => t.Id != id && t.Code.Equals(code) && t.IsDeleted == 0).FirstOrDefault();
 
         public bool CheckCodeExistWithoutSameId(Guid id, string code)
-            => _dbContext.Queryable<TEntity>().Where(t => t.Id != id && t.Code.Equals(code)).Any();
+            => _dbContext.Queryable<TEntity>().Where(t => t.Id != id && t.Code.Equals(code) && t.IsDeleted == 0).Any();
 
         public bool CheckCodeExist(string code)
-            => _dbContext.Queryable<TEntity>().Where(t => t.Code.Equals(code)).Any();
+            => _dbContext.Queryable<TEntity>().Where(t => t.Code.Equals(code) && t.IsDeleted == 0).Any();
 
         public Result BatchDelete(IEnumerable<Guid> ids)
         {
