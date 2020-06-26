@@ -40,7 +40,7 @@
     <PackageReference Include="SevenTiny.Bantina.Configuration.Core" Version="1.0.31" />
     <PackageReference Include="SevenTiny.Bantina.Configuration.MySql" Version="1.0.24" />
     <PackageReference Include="SevenTiny.Bantina.Extensions.AspNetCore" Version="1.0.10" />
-    <PackageReference Include="SevenTiny.Bantina.Logging" Version="1.0.29" />
+    <PackageReference Include="SevenTiny.Bantina.Logging" Version="1.0.30" />
   </ItemGroup>
 
   <ItemGroup>
