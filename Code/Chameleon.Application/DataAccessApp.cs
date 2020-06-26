@@ -324,9 +324,6 @@ namespace Chameleon.Application
 
         public Result<List<Dictionary<string, CloudData>>> GetList(InterfaceSetting interfaceSetting, FilterDefinition<BsonDocument> filter, int pageIndex = 0)
         {
-            //获取到字段列表以编码为Key大写的字典
-            var metaFields = _metaFieldRepository.GetMetaFieldShortCodeUpperDicByMetaObjectId(interfaceSetting.MetaObjectId);
-
             //自定义查询列表
             var interfaceFields = _interfaceFieldsRepository.GetInterfaceFieldMetaFieldUpperKeyDicByInterfaceFieldsId(interfaceSetting.InterfaceFieldsId);
 
