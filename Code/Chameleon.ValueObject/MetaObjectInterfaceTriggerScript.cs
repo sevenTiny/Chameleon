@@ -25,12 +25,24 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using SevenTiny.Bantina;
 using Chameleon.ValueObject;
+using Chameleon.Repository;
 ";
         /// <summary>
         /// 公共的类内的代码
         /// </summary>
         protected string CommonClassCode =>
-@"";
+@"
+    //记录日志
+    Microsoft.Extensions.Logging.ILogger logger = new SevenTiny.Bantina.Logging.LogManager();
+    //MongoDb数据库查询上下文
+    ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
+    /* 
+     *  查询数据的模板
+        var bf = Builders<BsonDocument>.Filter;
+        var filter = bf.And(bf.Eq(""key"",""value""),bf.Eq(""key2"",""value2""));
+        dbContext.GetCollectionBson(""对象编码"").Find(filter);
+    */
+";
     }
     public class MetaObjectInterface_Add_Before : DefaultScriptBase
     {
