@@ -54,7 +54,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             ViewData["InterfaceFields"] = _interfaceFieldsRepository.GetTopInterfaceFields(CurrentMetaObjectId);
             ViewData["InterfaceSort"] = _interfaceSortRepository.GetTopInterfaceSort(CurrentMetaObjectId);
 
-            return View();
+            return View(ResponseModel.Success(data: new InterfaceSetting { PageSize = 300 }));
         }
 
         public IActionResult AddLogic(InterfaceSetting entity)
@@ -64,6 +64,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Name, nameof(entity.Name))
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Code, nameof(entity.Code))
                 .ContinueAssert(_ => entity.Code.IsAlnum(2, 50), "编码不合法，2-50位且只能包含字母和数字（字母开头）")
+                .ContinueAssert(_ => entity.PageSize > 0, "分页页大小不能<=0")
                 .Continue(_ =>
                 {
                     entity.CloudApplicationtId = CurrentApplicationId;
@@ -72,7 +73,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                     entity.MetaObjectCode = CurrentMetaObjectCode;
                     entity.CreateBy = CurrentUserId;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
-                    entity.PageSize = 300;//暂时写死每页300条
+                    entity.PageSize = entity.PageSize;//暂时写死每页300条
 
                     return _InterfaceSettingService.Add(entity);
                 });
@@ -109,6 +110,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                        item.InterfaceVerificationId = entity.InterfaceVerificationId;
                        item.InterfaceFieldsId = entity.InterfaceFieldsId;
                        item.DynamicScriptInterfaceId = entity.DynamicScriptInterfaceId;
+                       item.PageSize = entity.PageSize;
                    });
                });
 
