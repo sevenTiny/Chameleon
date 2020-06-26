@@ -286,21 +286,16 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "QueryList_After";
 
         public override string Script =>
-@"using System;
-using System.Collections.Generic;
-using System.Linq;
-using MongoDB.Driver;
-using MongoDB.Bson;
-using SevenTiny.Bantina;
-using Chameleon.ValueObject;
+@$"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
-{
+{{
+    {CommonClassCode}
     public Result<List<Dictionary<string, CloudData>>> QueryList_After(Dictionary<string, object> triggerContext, Result<List<Dictionary<string, CloudData>>> result)
-    {
+    {{
         return result;
-    }
-}
+    }}
+}}
 ";
     }
     public class DynamicScriptDataSourceScript : DefaultScriptBase
