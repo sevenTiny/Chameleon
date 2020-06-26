@@ -88,8 +88,10 @@ namespace Chameleon.Application
         IInterfaceVerificationRepository _interfaceVerificationRepository;
         IInterfaceVerificationService _interfaceVerificationService;
         IInterfaceFieldsRepository _interfaceFieldsRepository;
-        public DataAccessApp(IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceVerificationRepository interfaceVerificationRepository, IInterfaceVerificationService interfaceVerificationService, IMetaFieldRepository metaFieldRepository, ChameleonDataDbContext chameleonDataDbContext, IInterfaceSettingService interfaceSettingService, IInterfaceConditionService interfaceConditionService, IInterfaceFieldsService interfaceFieldsService, IMetaFieldService metaFieldService)
+        IInterfaceSortRepository _interfaceSortRepository;
+        public DataAccessApp(IInterfaceSortRepository interfaceSortRepository, IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceVerificationRepository interfaceVerificationRepository, IInterfaceVerificationService interfaceVerificationService, IMetaFieldRepository metaFieldRepository, ChameleonDataDbContext chameleonDataDbContext, IInterfaceSettingService interfaceSettingService, IInterfaceConditionService interfaceConditionService, IInterfaceFieldsService interfaceFieldsService, IMetaFieldService metaFieldService)
         {
+            _interfaceSortRepository = interfaceSortRepository;
             _interfaceFieldsRepository = interfaceFieldsRepository;
             _interfaceVerificationRepository = interfaceVerificationRepository;
             _interfaceVerificationService = interfaceVerificationService;
@@ -104,38 +106,31 @@ namespace Chameleon.Application
         /// <summary>
         /// 构造排序
         /// </summary>
-        /// <param name="metaFieldKeyUpperDic"></param>
-        /// <param name="sortSetting">key为字段，value为DESC或ASC</param>
+        /// <param name="interfaceSortId"></param>
         /// <returns></returns>
-        private SortDefinition<BsonDocument> StructureSortDefinition(Dictionary<string, MetaField> metaFieldKeyUpperDic, Dictionary<string, string> sortSetting)
+        private SortDefinition<BsonDocument> StructureSortDefinition(Guid interfaceSortId)
         {
             var builder = new SortDefinitionBuilder<BsonDocument>();
 
-            if (sortSetting == null || !sortSetting.Any())
-                return builder.Ascending("_id");
-
             SortDefinition<BsonDocument> sort = null;
 
-            foreach (var item in sortSetting)
-            {
-                if (!metaFieldKeyUpperDic.ContainsKey(item.Key.ToUpperInvariant()))
-                    throw new KeyNotFoundException($"field {item.Key} is not exist in current MetaObject MetaField List");
+            if (interfaceSortId == Guid.Empty)
+                return builder.Ascending("_id");
 
-                //DESC
-                if ("DESC".Equals(item.Value.ToUpperInvariant()))
+            var sorts = _interfaceSortRepository.GetInterfaceSortByParentId(interfaceSortId) ?? new List<InterfaceSort>(0);
+
+            foreach (var item in sorts)
+            {
+                switch (item.GetSortType())
                 {
-                    if (sort == null)
-                        sort = builder.Descending(item.Key);
-                    else
-                        sort = sort.Descending(item.Key);
-                }
-                //ASC
-                else
-                {
-                    if (sort == null)
-                        sort = builder.Ascending(item.Key);
-                    else
-                        sort = sort.Ascending(item.Key);
+                    case SortTypeEnum.DESC:
+                        sort = sort?.Descending(item.MetaFieldShortCode) ?? builder.Descending(item.MetaFieldShortCode);
+                        break;
+                    case SortTypeEnum.ASC:
+                        sort = sort?.Ascending(item.MetaFieldShortCode) ?? builder.Ascending(item.MetaFieldShortCode);
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -341,12 +336,9 @@ namespace Chameleon.Application
             foreach (var item in interfaceFields.Values)
                 projection = projection.Include(item.MetaFieldShortCode);
 
-            //处理排序（这里后续从配置获取）
-            Dictionary<string, string> sortSetting = null;
-
             int skipSize = (pageIndex - 1) > 0 ? ((pageIndex - 1) * interfaceSetting.PageSize) : 0;
 
-            var datas = TranslatorBsonToCloudData(_chameleonDataDbContext.GetCollectionBson(interfaceSetting.MetaObjectCode).Find(filter).Skip(skipSize).Limit(interfaceSetting.PageSize).Sort(StructureSortDefinition(metaFields, sortSetting)).Project(projection).ToList() ?? new List<BsonDocument>(0), interfaceFields);
+            var datas = TranslatorBsonToCloudData(_chameleonDataDbContext.GetCollectionBson(interfaceSetting.MetaObjectCode).Find(filter).Skip(skipSize).Limit(interfaceSetting.PageSize).Sort(StructureSortDefinition(interfaceSetting.InterfaceSortId)).Project(projection).ToList() ?? new List<BsonDocument>(0), interfaceFields);
 
             var result = Result<List<Dictionary<string, CloudData>>>.Success($"查询成功，共{datas.Count}条记录", datas);
 

@@ -1,5 +1,4 @@
-﻿using Chameleon.Application;
-using Chameleon.Domain;
+﻿using Chameleon.Domain;
 using Chameleon.Entity;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -12,27 +11,23 @@ using System.Linq;
 
 namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
 {
-    public class InterfaceVerificationController : WebControllerBase
+    public class InterfaceSortController : WebControllerBase
     {
-        IInterfaceVerificationService _InterfaceVerificationService;
-        IMetaFieldService _metaFieldService;
-        IInterfaceVerificationRepository _InterfaceVerificationRepository;
-        IInterfaceSettingApp _interfaceSettingApp;
+        readonly IInterfaceSortService _interfaceSortService;
+        IInterfaceSortRepository _interfaceSortRepository;
         IMetaFieldRepository _metaFieldRepository;
-        public InterfaceVerificationController(IMetaFieldRepository metaFieldRepository, IInterfaceSettingApp interfaceSettingApp, IInterfaceVerificationRepository InterfaceVerificationRepository, IInterfaceVerificationService InterfaceVerificationService, IMetaFieldService metaFieldService)
+        public InterfaceSortController(IMetaFieldRepository metaFieldRepository, IInterfaceSortRepository interfaceSortRepository, IInterfaceSortService InterfaceSortService)
         {
             _metaFieldRepository = metaFieldRepository;
-            _interfaceSettingApp = interfaceSettingApp;
-            _InterfaceVerificationRepository = InterfaceVerificationRepository;
-            _metaFieldService = metaFieldService;
-            _InterfaceVerificationService = InterfaceVerificationService;
+            _interfaceSortRepository = interfaceSortRepository;
+            _interfaceSortService = InterfaceSortService;
         }
 
         public IActionResult List(Guid metaObjectId, string metaObjectCode)
         {
             SetCookiesMetaObjectInfo(metaObjectId, metaObjectCode);
 
-            return View(_InterfaceVerificationRepository.GetTopInterfaceVerification(metaObjectId));
+            return View(_interfaceSortRepository.GetTopInterfaceSort(metaObjectId));
         }
 
         public IActionResult Add()
@@ -40,7 +35,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             return View();
         }
 
-        public IActionResult AddLogic(InterfaceVerification entity)
+        public IActionResult AddLogic(InterfaceSort entity)
         {
             var result = Result.Success()
                 .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
@@ -53,23 +48,23 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.CreateBy = CurrentUserId;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
-                    entity.MetaFieldShortCode = "-";
+                    entity.MetaFieldShortCode = Guid.NewGuid().ToString().Replace("-", string.Empty);
 
-                    return _InterfaceVerificationService.Add(entity);
+                    return _interfaceSortService.Add(entity);
                 });
 
             if (!result.IsSuccess)
                 return View("Add", result.ToResponseModel(data: entity));
 
-            return Redirect($"/InterfaceVerification/List?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
+            return Redirect($"/InterfaceSort/List?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
 
         public IActionResult Update(Guid id)
         {
-            return View(ResponseModel.Success(data: _InterfaceVerificationService.GetById(id)));
+            return View(ResponseModel.Success(data: _interfaceSortService.GetById(id)));
         }
 
-        public IActionResult UpdateLogic(InterfaceVerification entity)
+        public IActionResult UpdateLogic(InterfaceSort entity)
         {
             var result = Result.Success()
                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
@@ -78,32 +73,32 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                .Continue(_ =>
                {
                    entity.ModifyBy = CurrentUserId;
-                   return _InterfaceVerificationService.UpdateWithOutCode(entity);
+                   return _interfaceSortService.UpdateWithOutCode(entity);
                });
 
             if (!result.IsSuccess)
                 return View("Update", result.ToResponseModel(entity));
 
-            return Redirect($"/InterfaceVerification/List?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
+            return Redirect($"/InterfaceSort/List?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
 
         public IActionResult LogicDelete(Guid id)
         {
-            return _InterfaceVerificationService.LogicDelete(id).ToJsonResult();
+            return _interfaceSortService.LogicDelete(id).ToJsonResult();
         }
 
         public IActionResult Delete(Guid id)
         {
-            return _InterfaceVerificationService.Delete(id).ToJsonResult();
+            return _interfaceSortService.Delete(id).ToJsonResult();
         }
 
-        public IActionResult VerificationItemAdd(Guid parentId)
+        public IActionResult SortItemAdd(Guid parentId)
         {
             ViewData["MetaFields"] = _metaFieldRepository.GetListByMetaObjectId(CurrentMetaObjectId);
-            return View(Result.Success().ToResponseModel(new InterfaceVerification { ParentId = parentId }));
+            return View(Result.Success().ToResponseModel(new InterfaceSort { ParentId = parentId }));
         }
 
-        public IActionResult VerificationItemAddLogic(Guid parentId, InterfaceVerification entity)
+        public IActionResult SortItemAddLogic(Guid parentId, InterfaceSort entity)
         {
             var result = Result.Success()
                 .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
@@ -116,47 +111,45 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.CreateBy = CurrentUserId;
                     entity.Name = "-";
-                    entity.Code = Guid.NewGuid().ToString();
+                    entity.Code = Guid.NewGuid().ToString().Replace("-", string.Empty);
 
-                    return _InterfaceVerificationService.AddVerificationItem(entity);
+                    return _interfaceSortService.AddSortItem(entity);
                 });
 
             if (!result.IsSuccess)
             {
                 ViewData["MetaFields"] = _metaFieldRepository.GetListByMetaObjectId(CurrentMetaObjectId);
-                return View($"VerificationItemAdd", result.ToResponseModel(data: entity));
+                return View($"SortItemAdd", result.ToResponseModel(data: entity));
             }
 
-            return Redirect($"/InterfaceVerification/VerificationItemList?parentId={entity.ParentId}");
+            return Redirect($"/InterfaceSort/SortItemList?parentId={entity.ParentId}");
         }
 
-        public IActionResult VerificationItemUpdate(Guid id)
+        public IActionResult SortItemUpdate(Guid id)
         {
-            return View(ResponseModel.Success(data: _InterfaceVerificationService.GetById(id)));
+            return View(ResponseModel.Success(data: _interfaceSortService.GetById(id)));
         }
 
-        public IActionResult VerificationItemUpdateLogic(Guid parentId, InterfaceVerification entity)
+        public IActionResult SortItemUpdateLogic(Guid parentId, InterfaceSort entity)
         {
             var result = Result.Success()
                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
                .ContinueAssert(_ => entity.Id != Guid.Empty, "Id Can Not Be Null")
-                .ContinueEnsureArgumentNotNullOrEmpty(entity.RegularExpression, nameof(entity.RegularExpression))
-                .ContinueEnsureArgumentNotNullOrEmpty(entity.VerificationTips, nameof(entity.VerificationTips))
                .Continue(_ =>
                {
                    entity.ModifyBy = CurrentUserId;
-                   return _InterfaceVerificationService.UpdateVerificationItem(entity);
+                   return _interfaceSortService.UpdateSortItem(entity);
                });
 
             if (!result.IsSuccess)
-                return View("VerificationItemUpdate", result.ToResponseModel(entity));
+                return View("SortItemUpdate", result.ToResponseModel(entity));
 
-            return Redirect($"/InterfaceVerification/VerificationItemList?parentId={parentId}");
+            return Redirect($"/InterfaceSort/SortItemList?parentId={parentId}");
         }
 
-        public IActionResult VerificationItemList(Guid parentId)
+        public IActionResult SortItemList(Guid parentId)
         {
-            var selectedFields = _InterfaceVerificationRepository.GetInterfaceVerificationByParentId(parentId);
+            var selectedFields = _interfaceSortRepository.GetInterfaceSortByParentId(parentId);
 
             ViewData["Id"] = parentId;
 

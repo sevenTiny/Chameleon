@@ -24,8 +24,10 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
         IInterfaceFieldsService _interfaceFieldsService;
         IInterfaceVerificationService _interfaceVerificationService;
         IInterfaceConditionService _interfaceConditionService;
-        public InterfaceSettingController(IInterfaceConditionService interfaceConditionService, IInterfaceVerificationService interfaceVerificationService, IInterfaceFieldsService interfaceFieldsService, IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceVerificationRepository interfaceVerificationRepository, IInterfaceConditionRepository interfaceConditionRepository, IInterfaceSettingApp interfaceSettingApp, IInterfaceSettingRepository InterfaceSettingRepository, IInterfaceSettingService InterfaceSettingService, IMetaFieldService metaFieldService)
+        IInterfaceSortRepository _interfaceSortRepository;
+        public InterfaceSettingController(IInterfaceSortRepository interfaceSortRepository, IInterfaceConditionService interfaceConditionService, IInterfaceVerificationService interfaceVerificationService, IInterfaceFieldsService interfaceFieldsService, IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceVerificationRepository interfaceVerificationRepository, IInterfaceConditionRepository interfaceConditionRepository, IInterfaceSettingApp interfaceSettingApp, IInterfaceSettingRepository InterfaceSettingRepository, IInterfaceSettingService InterfaceSettingService, IMetaFieldService metaFieldService)
         {
+            _interfaceSortRepository = interfaceSortRepository;
             _interfaceConditionService = interfaceConditionService;
             _interfaceVerificationService = interfaceVerificationService;
             _interfaceFieldsService = interfaceFieldsService;
@@ -50,6 +52,8 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             ViewData["InterfaceCondition"] = _interfaceConditionRepository.GetTopInterfaceCondition(CurrentMetaObjectId);
             ViewData["InterfaceVerification"] = _interfaceVerificationRepository.GetTopInterfaceVerification(CurrentMetaObjectId);
             ViewData["InterfaceFields"] = _interfaceFieldsRepository.GetTopInterfaceFields(CurrentMetaObjectId);
+            ViewData["InterfaceSort"] = _interfaceSortRepository.GetTopInterfaceSort(CurrentMetaObjectId);
+
             return View();
         }
 
@@ -84,6 +88,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             ViewData["InterfaceCondition"] = _interfaceConditionRepository.GetTopInterfaceCondition(CurrentMetaObjectId);
             ViewData["InterfaceVerification"] = _interfaceVerificationRepository.GetTopInterfaceVerification(CurrentMetaObjectId);
             ViewData["InterfaceFields"] = _interfaceFieldsRepository.GetTopInterfaceFields(CurrentMetaObjectId);
+            ViewData["InterfaceSort"] = _interfaceSortRepository.GetTopInterfaceSort(CurrentMetaObjectId);
 
             return View(ResponseModel.Success(data: _InterfaceSettingService.GetById(id)));
         }

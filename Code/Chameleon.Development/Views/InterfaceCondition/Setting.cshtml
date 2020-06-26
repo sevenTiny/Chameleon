@@ -15,9 +15,6 @@
 <link href="~/css/jqueryTree.css" rel="stylesheet" />
 
 <article class="page-container">
-    <div class="opration">
-        <a class="btn btn-primary radius" href="javascript:addCondition(this);"><i class="Hui-iconfont">&#xe632;</i> 添加</a>
-    </div>
     <div class="row cl" style="margin-top:10px;">
         <div class="col-xs-6 col-sm-6">
             <form class="form form-horizontal" id="form-article-add" method="post" action="/">
@@ -92,6 +89,11 @@
                     <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>值：</label>
                     <div class="formControls col-xs-7 col-sm-8">
                         <input type="text" class="input-text" placeholder="表达式值" value="?" id="conditionValue">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                        <a class="btn btn-primary radius" href="javascript:addCondition(this);"><i class="Hui-iconfont">&#xe632;</i> 添加</a>
                     </div>
                 </div>
                 <div class="row cl">

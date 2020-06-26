@@ -38,7 +38,7 @@ namespace Chameleon.Domain
         Result UpdateWithOutCode(TEntity source, Action<TEntity> updateFieldAction = null);
 
         /// <summary>
-        /// 只有工具才可以调用真实删除接口，业务通常调用LogicDelete接口进行逻辑删除
+        /// 业务通常调用LogicDelete接口进行逻辑删除
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

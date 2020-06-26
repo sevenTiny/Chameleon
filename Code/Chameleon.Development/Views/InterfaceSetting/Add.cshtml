@@ -11,6 +11,7 @@
     List<InterfaceCondition> interfaceConditions = (ViewData["InterfaceCondition"] as List<InterfaceCondition>) ?? new List<InterfaceCondition>(0);
     List<InterfaceVerification> interfaceVerification = (ViewData["InterfaceVerification"] as List<InterfaceVerification>) ?? new List<InterfaceVerification>(0);
     List<InterfaceFields> interfaceFields = (ViewData["InterfaceFields"] as List<InterfaceFields>) ?? new List<InterfaceFields>(0);
+    List<InterfaceSort> interfaceSorts = (ViewData["InterfaceSort"] as List<InterfaceSort>) ?? new List<InterfaceSort>(0);
 }
 @{
     ViewData["Level_1"] = "对象管理";
@@ -93,8 +94,22 @@
                 </span>
             </div>
         </div>
+        <div class="row cl" id="InterfaceSortId">
+            <label class="form-label col-xs-4 col-sm-2">接口排序：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select name="InterfaceSortId" class="input select" id="sl_InterfaceSortId">
+                        <option value="">--请选择--</option>
+                        @foreach (var item in interfaceSorts)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
         <div class="row cl" id="DataSourceId">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>数据源：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>动态脚本：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
                     <select name="DataSourceId" class="select" id="sl_DataSourceId" required>
@@ -143,6 +158,7 @@
     $("#sl_InterfaceConditionId").val('@entity.InterfaceConditionId');
     $("#sl_InterfaceFieldsId").val('@entity.InterfaceFieldsId');
     $("#sl_InterfaceVerificationId").val('@entity.InterfaceVerificationId');
+    $("#sl_InterfaceSortId").val('@entity.InterfaceSortId');
 
     //初始化预置显隐
     interfaceTypeSwitch()
@@ -157,6 +173,9 @@
 
         $("#InterfaceVerificationId").hide()
         $("#sl_InterfaceVerificationId").addClass("ignore")
+
+        $("#InterfaceSortId").hide()
+        $("#sl_InterfaceSortId").addClass("ignore")
 
          $("#DataSourceId").hide()
         $("#sl_DataSourceId").addClass("ignore")
@@ -224,6 +243,9 @@
 
             $("#InterfaceVerificationId").show()
             $("#sl_InterfaceVerificationId").removeClass("ignore")
+
+            $("#InterfaceSortId").show()
+            $("#sl_InterfaceSortId").removeClass("ignore")
         }
         //数据源
         else if (interfaceType == 8) {

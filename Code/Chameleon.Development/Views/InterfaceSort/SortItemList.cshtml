@@ -1,21 +1,22 @@
 ﻿@using Chameleon.Entity;
+@using Chameleon.Infrastructure;
 @{
-    ViewData["Title"] = "VerificationItemList";
+    ViewData["Title"] = "SortItemList";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
     List<MetaField> metaFields = ViewData["MetaFields"] as List<MetaField> ?? new List<MetaField>();
-    List<InterfaceVerification> entities = (Model as List<InterfaceVerification>) ?? new List<InterfaceVerification>();
+    List<InterfaceSort> entities = (Model as List<InterfaceSort>) ?? new List<InterfaceSort>();
 }
 @{
-    ViewData["Level_1"] = "对象管理";
-    ViewData["Level_2"] = "接口参数校验项";
+    ViewData["Level_1"] = "接口排序管理";
+    ViewData["Level_2"] = "排序项";
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="cl pd-20">
     <div class="cl pd-5 bg-1 bk-gray">
         <span class="l">
-            <a class="btn btn-primary radius" href="/InterfaceVerification/VerificationItemAdd?parentId=@ViewData["Id"]"><i class="Hui-iconfont">&#xe600;</i> 添加参数校验项</a>
+            <a class="btn btn-primary radius" href="/InterfaceSort/SortItemAdd?parentId=@ViewData["Id"]"><i class="Hui-iconfont">&#xe600;</i> 添加排序项</a>
         </span>
         <span class="r">共有数据：<strong>@entities?.Count</strong> 条</span>
     </div>
@@ -24,9 +25,8 @@
             <thead>
                 <tr class="text-c">
                     <th>名称</th>
-                    <th>校验字段编码</th>
-                    <th>校验表达式</th>
-                    <th>错误提示语</th>
+                    <th>排序字段编码</th>
+                    <th>排序方式</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -36,11 +36,13 @@
                     <tr class="text-c">
                         <td>@item.Name</td>
                         <td>@item.MetaFieldShortCode</td>
-                        <td>@item.RegularExpression</td>
-                        <td>@item.VerificationTips</td>
+                        @{
+                            var sortType = ((SortTypeEnum)item.SortType).GetDescription();
+                            <td>@sortType</td>
+                        }
                         <td class="f-14 td-manage">
-                            <a style="text-decoration: none" class="ml-5" href="/InterfaceVerification/VerificationItemUpdate/@item.Id" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
-                            <a style="text-decoration: none" class="ml-5" onClick="ajax_delete_table(this, '/InterfaceVerification/Delete/@item.Id')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                            <a style="text-decoration: none" class="ml-5" href="/InterfaceSort/SortItemUpdate/@item.Id" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
+                            <a style="text-decoration: none" class="ml-5" onClick="ajax_delete_table(this, '/InterfaceSort/Delete/@item.Id')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
                         </td>
                     </tr>
                 }
@@ -59,7 +61,7 @@
         "bAutoWidth": false,
         "bStateSave": true,//状态保存
         "aoColumnDefs": [
-            { "orderable": false, "aTargets": [4] }// 不参与排序的列
+            { "orderable": false, "aTargets": [3] }// 不参与排序的列
         ]
     });
 </script>

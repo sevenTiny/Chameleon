@@ -43,7 +43,12 @@ namespace Chameleon.Entity
         [Column]
         public Guid InterfaceFieldsId { get; set; }
         /// <summary>
-        /// 数据源Id
+        /// 接口排序id
+        /// </summary>
+        [Column]
+        public Guid InterfaceSortId { get; set; }
+        /// <summary>
+        /// 脚本接口Id
         /// </summary>
         [Column]
         public Guid DynamicScriptInterfaceId { get; set; }
