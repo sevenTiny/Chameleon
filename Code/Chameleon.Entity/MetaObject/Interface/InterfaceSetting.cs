@@ -98,6 +98,8 @@ namespace Chameleon.Entity
         [Description("查询记录集合")]
         QueryList = 7,
         [Description("动态脚本接口")]
-        DynamicScriptInterface = 8
+        DynamicScriptInterface = 8,
+        [Description("JSON 数据源")]
+        JsonDataSource = 9
     }
 }

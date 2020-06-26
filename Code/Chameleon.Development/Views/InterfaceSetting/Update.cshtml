@@ -42,7 +42,11 @@
                         <option value="">--请选择--</option>
                         @foreach (var item in Enum.GetValues(typeof(InterfaceTypeEnum)))
                         {
-                            if ((InterfaceTypeEnum)item == InterfaceTypeEnum.UnKnown)
+                            if (new[] {
+                                InterfaceTypeEnum.UnKnown ,
+                                InterfaceTypeEnum.DynamicScriptInterface,
+                                InterfaceTypeEnum.JsonDataSource
+                            }.Equals((InterfaceTypeEnum)item))
                                 continue;
 
                             var label = ((InterfaceTypeEnum)item).GetDescription();
@@ -109,16 +113,6 @@
                 </span>
             </div>
         </div>
-        <div class="row cl" id="DataSourceId">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>动态脚本：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span class="select-box">
-                    <select name="DataSourceId" class="select" id="sl_DataSourceId" required>
-                        <option value="">--请选择--</option>
-                    </select>
-                </span>
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">分页 PageSize：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -180,9 +174,6 @@
 
         $("#InterfaceVerificationId").hide()
         $("#sl_InterfaceVerificationId").addClass("ignore")
-
-        $("#DataSourceId").hide()
-        $("#sl_DataSourceId").addClass("ignore")
 
          $("#InterfaceSortId").hide()
         $("#sl_InterfaceSortId").addClass("ignore")
@@ -253,11 +244,6 @@
 
             $("#InterfaceSortId").show()
             $("#sl_InterfaceSortId").removeClass("ignore")
-        }
-        //数据源
-        else if (interfaceType == 8) {
-             $("#DataSourceId").show()
-            $("#sl_DataSourceId").removeClass("ignore")
         }
     }
 </script>
