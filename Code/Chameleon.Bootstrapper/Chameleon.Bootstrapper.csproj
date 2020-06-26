@@ -10,7 +10,7 @@
     <PackageReference Include="SevenTiny.Bantina.Configuration.MySql" Version="1.0.24" />
     <PackageReference Include="SevenTiny.Bantina.Logging" Version="1.0.29" />
     <PackageReference Include="Seventiny.Cloud.ScriptEngine" Version="1.0.50" />
-    <PackageReference Include="SevenTiny.Cloud.ScriptEngine.CSharp" Version="1.0.8" />
+    <PackageReference Include="SevenTiny.Cloud.ScriptEngine.CSharp" Version="1.0.9" />
   </ItemGroup>
 
   <ItemGroup>
