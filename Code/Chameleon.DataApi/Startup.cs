@@ -24,10 +24,12 @@ namespace Chameleon.DataApi
             //×¢ÈëÒµÎñ²ã
             DependencyInjector.Inject(services);
 
-            services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
-            });
+            services.AddControllers().AddNewtonsoftJson();
+
+            //services.AddControllers().AddJsonOptions(options =>
+            //{
+            //    options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

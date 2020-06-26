@@ -14,11 +14,12 @@ namespace Chameleon.Repository
         /// <returns></returns>
         List<TriggerScript> GetMetaObjectTriggerListByMetaObjectId(Guid metaObjectId);
         /// <summary>
-        /// 获取动态脚本接口列表
+        /// 获取动态脚本数据源列表
         /// </summary>
         /// <param name="applicationId"></param>
+        /// <param name="scriptTypeEnum"></param>
         /// <returns></returns>
-        List<TriggerScript> GetDynamicScriptTriggerListByApplicationId(Guid applicationId);
+        List<TriggerScript> GetDataSourceListByApplicationId(Guid applicationId, ScriptTypeEnum scriptTypeEnum);
         /// <summary>
         /// 校验当前对象下是否已经存在一个同服务类型的脚本
         /// </summary>
@@ -38,9 +39,9 @@ namespace Chameleon.Repository
             return _dbContext.Queryable<TriggerScript>().Where(t => t.MetaObjectId.Equals(metaObjectId) && t.ScriptType.Equals(scriptType) && t.IsDeleted == 0).ToList();
         }
 
-        public List<TriggerScript> GetDynamicScriptTriggerListByApplicationId(Guid applicationId)
+        public List<TriggerScript> GetDataSourceListByApplicationId(Guid applicationId, ScriptTypeEnum scriptTypeEnum)
         {
-            var scriptType = (int)ScriptTypeEnum.MetaObjectInterfaceTrigger;
+            var scriptType = (int)scriptTypeEnum;
             return _dbContext.Queryable<TriggerScript>().Where(t => t.CloudApplicationId.Equals(applicationId) && t.ScriptType.Equals(scriptType) && t.IsDeleted == 0).ToList();
         }
 

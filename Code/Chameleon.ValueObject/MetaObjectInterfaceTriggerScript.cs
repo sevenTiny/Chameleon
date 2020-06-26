@@ -303,12 +303,23 @@ public class MetaObjectInterfaceTrigger
 }
 ";
     }
-    public class DynamicScriptInterfaceScript : DefaultScriptBase
+    public class DynamicScriptDataSourceScript : DefaultScriptBase
     {
-        public override string ClassFullName => throw new NotImplementedException();
+        public override string ClassFullName => "DynamicScriptDataSource";
 
-        public override string FunctionName => throw new NotImplementedException();
+        public override string FunctionName => "Get";
 
-        public override string Script => throw new NotImplementedException();
+        public override string Script =>
+@$"{CommonUsing}
+
+public class DynamicScriptDataSource
+{{
+    {CommonClassCode}
+    public Result<object> Get(Dictionary<string, string> argumentsUpperKeyDic)
+    {{
+        return Result<object>.Success();
+    }}
+}}
+";
     }
 }

@@ -27,7 +27,6 @@
                     <th>接口条件</th>
                     <th>接口字段</th>
                     <th>接口校验</th>
-                    <th>动态脚本</th>
                     <th>描述</th>
                     <th>排序</th>
                     <th>分组</th>
@@ -45,7 +44,6 @@
                         <td title="@item.InterfaceConditionId"><a style="color:dodgerblue" href="javascript:layer_open_define('接口条件','/InterfaceCondition/Setting?belongToId=@item.InterfaceConditionId')">@item.InterfaceConditionName</a></td>
                         <td title="@item.InterfaceFieldsId"><a style="color:dodgerblue" href="javascript:layer_open_define('接口字段','/InterfaceFields/Setting?parentMetaFieldsId=@item.InterfaceFieldsId')">@item.InterfaceFieldsName</a></td>
                         <td title="@item.InterfaceVerificationId"><a style="color:dodgerblue" href="javascript:layer_open_define('接口参数校验项','/InterfaceVerification/VerificationItemList?parentId=@item.InterfaceVerificationId')">@item.InterfaceVerificationName</a></td>
-                        <td title="@item.DynamicScriptInterfaceId">@item.DynamicScriptInterfaceName</td>
                         <td>@item.Description</td>
                         <td>@item.SortNumber</td>
                         <td>@item.Group</td>
@@ -67,11 +65,11 @@
 <script type="text/javascript">
     $('.table-sort').dataTable({
         "aLengthMenu": [[50, 100, -1], ["50", "100", "All"]],//二组数组，第一组数量，
-        "aaSorting": [[8, "asc"]],//默认第几个排序
+        "aaSorting": [[7, "asc"]],//默认第几个排序
         "bAutoWidth": false,
         "bStateSave": true,//状态保存
         "aoColumnDefs": [
-            { "orderable": false, "aTargets": [10] }// 不参与排序的列
+            { "orderable": false, "aTargets": [9] }// 不参与排序的列
         ]
     });
 </script>

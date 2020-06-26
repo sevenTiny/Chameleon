@@ -39,18 +39,9 @@
                 <span class="select-box">
                     <select name="InterfaceType" class="input select" onchange="interfaceTypeSwitch(this)" id="InterfaceType" required>
                         <option value="">--请选择--</option>
-                        @foreach (var item in Enum.GetValues(typeof(InterfaceTypeEnum)))
+                        @foreach (var item in InterfaceTypeEnumHelper.GetMetaObjectInterfaceServiceTypes())
                         {
-                            if (new[] {
-                                InterfaceTypeEnum.UnKnown ,
-                                InterfaceTypeEnum.DynamicScriptInterface,
-                                InterfaceTypeEnum.JsonDataSource
-                            }.Equals((InterfaceTypeEnum)item))
-                                continue;
-
-                            var label = ((InterfaceTypeEnum)item).GetDescription();
-
-                            <option value="@Convert.ToInt32(item)">@label</option>
+                            <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
                         }
                     </select>
                 </span>

@@ -29,11 +29,6 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             return View(_triggerScriptRepository.GetMetaObjectTriggerListByMetaObjectId(metaObjectId));
         }
 
-        public IActionResult DynamicScriptTriggerList()
-        {
-            return View(_triggerScriptRepository.GetDynamicScriptTriggerListByApplicationId(CurrentApplicationId));
-        }
-
         public IActionResult MetaObjectTriggerAdd()
         {
             TriggerScript metaObject = new TriggerScript();
@@ -98,46 +93,9 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             return Redirect($"/TriggerScript/MetaObjectInterfaceList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
 
-        public IActionResult DynamicScriptTriggerAdd()
+        public IActionResult GetDefaultMetaObjectTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
         {
-            //获取默认脚本
-            var defaultScript = _triggerScriptService.GetDeefaultDynamicScriptInterfaceTrigger();
-            TriggerScript metaObject = new TriggerScript()
-            {
-                Script = defaultScript.Script,
-                ClassFullName = defaultScript.ClassFullName,
-                FunctionName = defaultScript.FunctionName
-            };
-            return View(ResponseModel.Success(data: metaObject));
-        }
-
-        public IActionResult DynamicScriptTriggerAddLogic(TriggerScript entity)
-        {
-            var result = Result.Success()
-                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
-                .ContinueEnsureArgumentNotNullOrEmpty(entity.Name, nameof(entity.Name))
-                .ContinueEnsureArgumentNotNullOrEmpty(entity.Code, nameof(entity.Code))
-                .ContinueAssert(_ => entity.Code.IsAlnum(2, 50), "编码不合法，2-50位且只能包含字母和数字（字母开头）")
-                .Continue(_ =>
-                {
-                    entity.Id = Guid.NewGuid();
-                    entity.CreateBy = CurrentUserId;
-                    entity.CloudApplicationId = CurrentApplicationId;
-                    entity.Code = string.Concat(CurrentApplicationCode, ".", entity.Code);
-                    entity.ScriptType = (int)ScriptTypeEnum.DynamicScriptInterfaceTrigger;
-                    return _triggerScriptService.Add(entity);
-                });
-
-            if (!result.IsSuccess)
-                return View("Add", result.ToResponseModel(entity));
-
-            return RedirectToAction("List");
-        }
-
-        public IActionResult DynamicScriptTriggerUpdate(Guid id)
-        {
-            var metaObject = _triggerScriptService.GetById(id);
-            return View(ResponseModel.Success(data: metaObject));
+            return Result<DefaultScriptBase>.Success(data: _triggerScriptService.GetDefaultMetaObjectTriggerScript(metaObjectInterfaceServiceTypeEnum)).ToJsonResult();
         }
 
         public IActionResult LogicDelete(Guid id)
@@ -145,11 +103,6 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             _triggerScriptService.LogicDelete(id);
 
             return JsonResultSuccess("删除成功");
-        }
-
-        public IActionResult GetDefaultMetaObjectTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
-        {
-            return Result<DefaultScriptBase>.Success(data: _triggerScriptService.GetDefaultMetaObjectTriggerScript(metaObjectInterfaceServiceTypeEnum)).ToJsonResult();
         }
     }
 }

@@ -2,6 +2,8 @@
 using Chameleon.Infrastructure;
 using Chameleon.Repository;
 using Chameleon.ValueObject;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SevenTiny.Bantina;
 using SevenTiny.Cloud.ScriptEngine;
 using System;
@@ -22,7 +24,7 @@ namespace Chameleon.Domain
         /// 获取默认动态接口触发器脚本
         /// </summary>
         /// <returns></returns>
-        DefaultScriptBase GetDeefaultDynamicScriptInterfaceTrigger();
+        DefaultScriptBase GetDeefaultDynamicScriptDataSourceTrigger();
         /// <summary>
         /// 执行脚本
         /// </summary>
@@ -104,9 +106,9 @@ namespace Chameleon.Domain
             return null;
         }
 
-        public DefaultScriptBase GetDeefaultDynamicScriptInterfaceTrigger()
+        public DefaultScriptBase GetDeefaultDynamicScriptDataSourceTrigger()
         {
-            return new DynamicScriptInterfaceScript();
+            return new DynamicScriptDataSourceScript();
         }
 
         public Result<TResult> ExecuteTriggerScript<TResult>(TriggerScript triggerScript, object[] parameters)

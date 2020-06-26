@@ -68,9 +68,12 @@ namespace Chameleon.DataApi.Controllers
                         //after
                         listResult = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryList_After, new object[] { _queryContext.TriggerContext, listResult }, listResult);
                         return listResult.ToJsonResult();
-                    //查询数据源
-                    case InterfaceTypeEnum.DynamicScriptInterface:
-                        break;
+                    //查询动态数据源
+                    case InterfaceTypeEnum.DynamicScriptDataSource:
+                        return _dataAccessApp.GetDynamicScriptDataSourceResult(_queryContext.InterfaceSetting, _queryContext.ConditionArgumentsUpperKeyDic).ToJsonResult();
+                    //查询Json数据源
+                    case InterfaceTypeEnum.JsonDataSource:
+                        return new JsonResult(_dataAccessApp.GetJsonDataSourceResult(_queryContext.InterfaceSetting));
                     case InterfaceTypeEnum.UnKnown:
                     case InterfaceTypeEnum.Add:
                     case InterfaceTypeEnum.BatchAdd:
@@ -79,8 +82,6 @@ namespace Chameleon.DataApi.Controllers
                     default:
                         return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
                 }
-
-                return Result.Success("success, but no data found").ToJsonResult();
             });
         }
 

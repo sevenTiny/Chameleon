@@ -3,6 +3,7 @@ using SevenTiny.Bantina;
 using SevenTiny.Bantina.Validation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Chameleon.Repository
@@ -21,6 +22,12 @@ namespace Chameleon.Repository
         /// <param name="interfaceCode"></param>
         /// <returns></returns>
         InterfaceSetting GetInterfaceSettingByCodeWithVerify(string interfaceCode);
+        /// <summary>
+        /// 通过DataSourceId删除
+        /// </summary>
+        /// <param name="dataSourceId"></param>
+        /// <returns></returns>
+        Result LogicDeleteByDataSourceId(Guid dataSourceId);
     }
 
     public class InterfaceSettingRepository : MetaObjectRepositoryBase<InterfaceSetting>, IInterfaceSettingRepository
@@ -47,6 +54,27 @@ namespace Chameleon.Repository
             Ensure.ArgumentNotNullOrEmpty(interfaceSetting, nameof(interfaceSetting), $"the interface data of code [{interfaceCode}] not found, please check the validity of code");
 
             return interfaceSetting;
+        }
+
+        public Result LogicDeleteByDataSourceId(Guid dataSourceId)
+        {
+            //空的不删除，只删除类型是数据源的
+            if (dataSourceId == Guid.Empty)
+                return Result.Success();
+
+            var entities = _dbContext.Queryable<InterfaceSetting>().Where(t => t.DataSousrceId == dataSourceId && t.IsDeleted == 0).ToList();
+
+            if (entities == null || !entities.Any())
+                return Result.Success();
+
+            entities.ForEach(t =>
+            {
+                t.IsDeleted = (int)IsDeleted.Deleted;
+
+                _dbContext.Update(t);
+            });
+
+            return Result.Success();
         }
     }
 }

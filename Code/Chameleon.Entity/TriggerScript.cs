@@ -83,7 +83,12 @@ namespace Chameleon.Entity
         /// 动态脚本接口触发器
         /// </summary>
         [Description("动态脚本接口触发器")]
-        DynamicScriptInterfaceTrigger = 2
+        DynamicScriptDataSourceTrigger = 2,
+        /// <summary>
+        /// Json数据源
+        /// </summary>
+        [Description("JSON 数据源")]
+        JsonDataSource = 3
     }
 
     /// <summary>

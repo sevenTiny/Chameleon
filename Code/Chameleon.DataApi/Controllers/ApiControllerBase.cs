@@ -92,7 +92,7 @@ namespace Chameleon.DataApi.Controllers
                     _queryContext.TriggerScripts = _triggerScriptRepository.GetMetaObjectTriggerListByMetaObjectId(_queryContext.InterfaceSetting.MetaObjectId);
                     break;
                 //查询动态脚本接口
-                case InterfaceTypeEnum.DynamicScriptInterface:
+                case InterfaceTypeEnum.DynamicScriptDataSource:
                     _queryContext.TriggerScripts = new List<TriggerScript> { _triggerScriptRepository.GetById(_queryContext.InterfaceSetting.CloudApplicationtId) };
                     break;
                 case InterfaceTypeEnum.UnKnown:

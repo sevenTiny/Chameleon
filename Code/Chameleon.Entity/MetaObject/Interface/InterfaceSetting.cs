@@ -48,10 +48,10 @@ namespace Chameleon.Entity
         [Column]
         public Guid InterfaceSortId { get; set; }
         /// <summary>
-        /// 脚本接口Id
+        /// 数据源Id
         /// </summary>
         [Column]
-        public Guid DynamicScriptInterfaceId { get; set; }
+        public Guid DataSousrceId { get; set; }
         /// <summary>
         /// 页大小
         /// </summary>
@@ -98,8 +98,40 @@ namespace Chameleon.Entity
         [Description("查询记录集合")]
         QueryList = 7,
         [Description("动态脚本接口")]
-        DynamicScriptInterface = 8,
+        DynamicScriptDataSource = 8,
         [Description("JSON 数据源")]
         JsonDataSource = 9
+    }
+
+    public static class InterfaceTypeEnumHelper
+    {
+        /// <summary>
+        /// 获取对象触发器类型
+        /// </summary>
+        /// <returns></returns>
+        public static InterfaceTypeEnum[] GetMetaObjectInterfaceServiceTypes()
+        {
+            return new[] {
+            InterfaceTypeEnum.Add,
+            InterfaceTypeEnum.BatchAdd,
+            InterfaceTypeEnum.Update,
+            InterfaceTypeEnum.Delete,
+            InterfaceTypeEnum.QueryCount,
+            InterfaceTypeEnum.QuerySingle,
+            InterfaceTypeEnum.QueryList,
+            };
+        }
+
+        /// <summary>
+        /// 获取数据源类型
+        /// </summary>
+        /// <returns></returns>
+        public static InterfaceTypeEnum[] GetDataSourceServiceTypes()
+        {
+            return new[] {
+                InterfaceTypeEnum.DynamicScriptDataSource,
+                InterfaceTypeEnum.JsonDataSource
+            };
+        }
     }
 }

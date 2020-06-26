@@ -4,6 +4,7 @@ using Chameleon.Repository;
 using Chameleon.ValueObject;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Newtonsoft.Json.Linq;
 using SevenTiny.Bantina;
 using System;
 using System.Collections.Generic;
@@ -75,6 +76,19 @@ namespace Chameleon.Application
         /// <param name="condition"></param>
         /// <returns></returns>
         Result<int> GetCount(InterfaceSetting interfaceSetting, FilterDefinition<BsonDocument> filter);
+        /// <summary>
+        /// 获取动态脚本执行结果
+        /// </summary>
+        /// <param name="interfaceSetting"></param>
+        /// <param name="argumentsUpperKeyDic"></param>
+        /// <returns></returns>
+        Result<object> GetDynamicScriptDataSourceResult(InterfaceSetting interfaceSetting, Dictionary<string, string> argumentsUpperKeyDic);
+        /// <summary>
+        /// 获取json数据源的json脚本
+        /// </summary>
+        /// <param name="interfaceSetting"></param>
+        /// <returns></returns>
+        object GetJsonDataSourceResult(InterfaceSetting interfaceSetting);
     }
 
     public class DataAccessApp : IDataAccessApp
@@ -89,8 +103,12 @@ namespace Chameleon.Application
         IInterfaceVerificationService _interfaceVerificationService;
         IInterfaceFieldsRepository _interfaceFieldsRepository;
         IInterfaceSortRepository _interfaceSortRepository;
-        public DataAccessApp(IInterfaceSortRepository interfaceSortRepository, IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceVerificationRepository interfaceVerificationRepository, IInterfaceVerificationService interfaceVerificationService, IMetaFieldRepository metaFieldRepository, ChameleonDataDbContext chameleonDataDbContext, IInterfaceSettingService interfaceSettingService, IInterfaceConditionService interfaceConditionService, IInterfaceFieldsService interfaceFieldsService, IMetaFieldService metaFieldService)
+        ITriggerScriptRepository _triggerScriptRepository;
+        ITriggerScriptService _triggerScriptService;
+        public DataAccessApp(ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceSortRepository interfaceSortRepository, IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceVerificationRepository interfaceVerificationRepository, IInterfaceVerificationService interfaceVerificationService, IMetaFieldRepository metaFieldRepository, ChameleonDataDbContext chameleonDataDbContext, IInterfaceSettingService interfaceSettingService, IInterfaceConditionService interfaceConditionService, IInterfaceFieldsService interfaceFieldsService, IMetaFieldService metaFieldService)
         {
+            _triggerScriptService = triggerScriptService;
+            _triggerScriptRepository = triggerScriptRepository;
             _interfaceSortRepository = interfaceSortRepository;
             _interfaceFieldsRepository = interfaceFieldsRepository;
             _interfaceVerificationRepository = interfaceVerificationRepository;
@@ -347,6 +365,36 @@ namespace Chameleon.Application
         public Result<int> GetCount(InterfaceSetting interfaceSetting, FilterDefinition<BsonDocument> filter)
         {
             return Result<int>.Success("查询成功", Convert.ToInt32(_chameleonDataDbContext.GetCollectionBson(interfaceSetting.MetaObjectCode).CountDocuments(filter)));
+        }
+
+        public Result<object> GetDynamicScriptDataSourceResult(InterfaceSetting interfaceSetting, Dictionary<string, string> argumentsUpperKeyDic)
+        {
+            var script = _triggerScriptRepository.GetById(interfaceSetting.DataSousrceId);
+
+            var result = _triggerScriptService.ExecuteTriggerScript<Result<object>>(script, new object[] { argumentsUpperKeyDic });
+
+            return result.IsSuccess ? result.Data : Result<object>.Error(result.Message);
+        }
+
+        public object GetJsonDataSourceResult(InterfaceSetting interfaceSetting)
+        {
+            var entity = _triggerScriptRepository.GetById(interfaceSetting.DataSousrceId);
+
+            try
+            {
+                return JObject.Parse(entity.Script);
+            }
+            catch
+            {
+                try
+                {
+                    return JArray.Parse(entity.Script);
+                }
+                catch (Exception ex)
+                {
+                    return string.Empty;
+                }
+            }
         }
     }
 }
