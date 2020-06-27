@@ -54,7 +54,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             ViewData["InterfaceFields"] = _interfaceFieldsRepository.GetTopInterfaceFields(CurrentMetaObjectId);
             ViewData["InterfaceSort"] = _interfaceSortRepository.GetTopInterfaceSort(CurrentMetaObjectId);
 
-            return View(ResponseModel.Success(data: new InterfaceSetting { PageSize = 300 }));
+            return View(ResponseModel.Success(data: new InterfaceSetting { PageSize = 30 }));
         }
 
         public IActionResult AddLogic(InterfaceSetting entity)
@@ -117,6 +117,26 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                 return View("Update", result.ToResponseModel(entity));
 
             return Redirect($"/InterfaceSetting/List?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
+        }
+
+        /// <summary>
+        /// 接口详情页
+        /// </summary>
+        /// <param name="interfaceCode"></param>
+        /// <returns></returns>
+        public IActionResult InterfaceDetail(string interfaceCode)
+        {
+            if (string.IsNullOrEmpty(interfaceCode))
+                return View();
+
+            var interfaceSetting = _InterfaceSettingRepository.GetByCode(interfaceCode);
+
+            if (interfaceSetting.InterfaceConditionId != Guid.Empty)
+            {
+                ViewData["InterfaceCondition"] = _interfaceConditionRepository.GetInterfaceConditionArgumentNodeByBelongToId(interfaceSetting.InterfaceConditionId);
+            }
+
+            return View(interfaceSetting);
         }
 
         public IActionResult LogicDelete(Guid id)
