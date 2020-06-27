@@ -50,7 +50,7 @@ namespace Chameleon.DataApi.Controllers
                 //execute
                 var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, arg);
                 //after
-                result = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.BatchAdd_After, new object[] { _queryContext.TriggerContext, result }, result);
+                TryExecuteTriggerByServiceType<object>(MetaObjectInterfaceServiceTypeEnum.BatchAdd_After, new object[] { _queryContext.TriggerContext }, null);
 
                 return result.ToJsonResult();
             });

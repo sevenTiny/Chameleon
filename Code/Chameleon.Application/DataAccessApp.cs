@@ -82,7 +82,7 @@ namespace Chameleon.Application
         /// <param name="interfaceSetting"></param>
         /// <param name="argumentsUpperKeyDic"></param>
         /// <returns></returns>
-        Result<object> GetDynamicScriptDataSourceResult(InterfaceSetting interfaceSetting, Dictionary<string, string> argumentsUpperKeyDic);
+        object GetDynamicScriptDataSourceResult(InterfaceSetting interfaceSetting, Dictionary<string, string> argumentsUpperKeyDic);
         /// <summary>
         /// 获取json数据源的json脚本
         /// </summary>
@@ -367,13 +367,13 @@ namespace Chameleon.Application
             return Result<int>.Success("查询成功", Convert.ToInt32(_chameleonDataDbContext.GetCollectionBson(interfaceSetting.MetaObjectCode).CountDocuments(filter)));
         }
 
-        public Result<object> GetDynamicScriptDataSourceResult(InterfaceSetting interfaceSetting, Dictionary<string, string> argumentsUpperKeyDic)
+        public object GetDynamicScriptDataSourceResult(InterfaceSetting interfaceSetting, Dictionary<string, string> argumentsUpperKeyDic)
         {
             var script = _triggerScriptRepository.GetById(interfaceSetting.DataSousrceId);
 
-            var result = _triggerScriptService.ExecuteTriggerScript<Result<object>>(script, new object[] { argumentsUpperKeyDic });
+            var result = _triggerScriptService.ExecuteTriggerScript<object>(script, new object[] { argumentsUpperKeyDic });
 
-            return result.IsSuccess ? result.Data : Result<object>.Error(result.Message);
+            return result.IsSuccess ? result.Data : throw new InvalidOperationException(result.Message);
         }
 
         public object GetJsonDataSourceResult(InterfaceSetting interfaceSetting)

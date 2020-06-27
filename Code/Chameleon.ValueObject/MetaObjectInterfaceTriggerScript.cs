@@ -26,16 +26,24 @@ using MongoDB.Bson;
 using SevenTiny.Bantina;
 using Chameleon.ValueObject;
 using Chameleon.Repository;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 ";
         /// <summary>
         /// 公共的类内的代码
         /// </summary>
         protected string CommonClassCode =>
 @"
-    //记录日志
-    Microsoft.Extensions.Logging.ILogger logger = new SevenTiny.Bantina.Logging.LogManager();
-    //MongoDb数据库查询上下文
-    ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
+    //1. 记录日志
+    ILogger logger = new SevenTiny.Bantina.Logging.LogManager();
+    /* 
+        logger.LogDebug(string message, params object[] args);
+        logger.LogError(string message, params object[] args);
+        logger.LogInformation(string message, params object[] args);
+    */
+    //2. 查询数据
+    //MongoDb数据库查询上下文，需要时放开下行注释使用
+    //ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
     /* 
      *  查询数据的模板
         var bf = Builders<BsonDocument>.Filter;
@@ -55,9 +63,9 @@ using Chameleon.Repository;
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public BsonDocument[] Add_Before(Dictionary<string, object> triggerContext, BsonDocument[] bsonDocuments)
+    public BsonDocument Add_Before(Dictionary<string, object> triggerContext, BsonDocument bsonDocument)
     {{
-        return bsonDocuments;
+        return bsonDocument;
     }}
 }}
 ";
@@ -74,9 +82,9 @@ public class MetaObjectInterfaceTrigger
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public Result Delete_After(Dictionary<string, object> triggerContext, Result result)
+    public void Add_After(Dictionary<string, object> triggerContext)
     {{
-        return result;
+
     }}
 }}
 ";
@@ -93,7 +101,7 @@ public class MetaObjectInterfaceTrigger
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public BsonDocument[] Add_Before(Dictionary<string, object> triggerContext, BsonDocument[] bsonDocuments)
+    public BsonDocument[] BatchAdd_Before(Dictionary<string, object> triggerContext, BsonDocument[] bsonDocuments)
     {{
         return bsonDocuments;
     }}
@@ -112,9 +120,9 @@ public class MetaObjectInterfaceTrigger
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public Result Delete_After(Dictionary<string, object> triggerContext, Result result)
+    public void BatchAdd_After(Dictionary<string, object> triggerContext)
     {{
-        return result;
+
     }}
 }}
 ";
@@ -131,7 +139,7 @@ public class MetaObjectInterfaceTrigger
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public FilterDefinition<BsonDocument> QueryCount_Before(Dictionary<string, object> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
+    public FilterDefinition<BsonDocument> Update_Before(Dictionary<string, object> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter, BsonDocument bsonDocument)
     {{
         return filter;
     }}
@@ -150,9 +158,9 @@ public class MetaObjectInterfaceTrigger
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public Result Delete_After(Dictionary<string, object> triggerContext, Result result)
+    public Result Update_After(Dictionary<string, object> triggerContext)
     {{
-        return result;
+
     }}
 }}
 ";
@@ -169,7 +177,7 @@ public class MetaObjectInterfaceTrigger
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public FilterDefinition<BsonDocument> QueryCount_Before(Dictionary<string, object> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
+    public FilterDefinition<BsonDocument> Delete_Before(Dictionary<string, object> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
     {{
         return filter;
     }}
@@ -188,9 +196,9 @@ public class MetaObjectInterfaceTrigger
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public Result Delete_After(Dictionary<string, object> triggerContext, Result result)
+    public Result Delete_After(Dictionary<string, object> triggerContext)
     {{
-        return result;
+
     }}
 }}
 ";
@@ -226,7 +234,7 @@ public class MetaObjectInterfaceTrigger
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public Result<int> QueryCount_After(Dictionary<string, object> triggerContext, Result<int> result)
+    public int QueryCount_After(Dictionary<string, object> triggerContext, int result)
     {{
         return result;
     }}
@@ -264,7 +272,7 @@ public class MetaObjectInterfaceTrigger
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public Result<Dictionary<string, CloudData>> QuerySingle_After(Dictionary<string, object> triggerContext, Result<Dictionary<string, CloudData>> result)
+    public Dictionary<string, CloudData> QuerySingle_After(Dictionary<string, object> triggerContext, Dictionary<string, CloudData> result)
     {{
         return result;
     }}
@@ -303,7 +311,7 @@ public class MetaObjectInterfaceTrigger
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public Result<List<Dictionary<string, CloudData>>> QueryList_After(Dictionary<string, object> triggerContext, Result<List<Dictionary<string, CloudData>>> result)
+    public List<Dictionary<string, CloudData>> QueryList_After(Dictionary<string, object> triggerContext, List<Dictionary<string, CloudData>> result)
     {{
         return result;
     }}
@@ -322,9 +330,9 @@ public class MetaObjectInterfaceTrigger
 public class DynamicScriptDataSource
 {{
     {CommonClassCode}
-    public Result<object> Get(Dictionary<string, string> argumentsUpperKeyDic)
+    public object Get(Dictionary<string, string> argumentsUpperKeyDic)
     {{
-        return Result<object>.Success();
+        return null;
     }}
 }}
 ";

@@ -88,7 +88,7 @@ namespace Chameleon.DataApi.Controllers
                 case InterfaceTypeEnum.QueryCount:
                 case InterfaceTypeEnum.QuerySingle:
                 case InterfaceTypeEnum.QueryList:
-                //查询对象接口
+                    //查询对象接口
                     _queryContext.TriggerScripts = _triggerScriptRepository.GetMetaObjectTriggerListByMetaObjectId(_queryContext.InterfaceSetting.MetaObjectId);
                     break;
                 //查询动态脚本接口
@@ -99,6 +99,15 @@ namespace Chameleon.DataApi.Controllers
                 default:
                     break;
             }
+
+            //上下文赋值一些查询可能用到的参数
+            _queryContext.TriggerContext.Add("Interface", queryArgs._interface);
+            _queryContext.TriggerContext.Add("PageIndex", queryArgs._pageIndex);
+            _queryContext.TriggerContext.Add("PageSize", _queryContext.InterfaceSetting.PageSize);
+            _queryContext.TriggerContext.Add("MetaObjectCode", _queryContext.InterfaceSetting.MetaObjectCode);
+            _queryContext.TriggerContext.Add("MetaObjectId", _queryContext.InterfaceSetting.MetaObjectId);
+            _queryContext.TriggerContext.Add("CloudApplicationCode", _queryContext.InterfaceSetting.CloudApplicationCode);
+            _queryContext.TriggerContext.Add("CloudApplicationtId", _queryContext.InterfaceSetting.CloudApplicationtId);
         }
 
         /// <summary>
