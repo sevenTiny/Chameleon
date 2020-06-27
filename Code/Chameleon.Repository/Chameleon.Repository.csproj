@@ -1,7 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SevenTiny.Bantina" Version="1.0.62" />
+    <PackageReference Include="SevenTiny.Bantina.Bankinate.Core" Version="1.0.26" />
+    <PackageReference Include="SevenTiny.Bantina.Bankinate.MongoDb" Version="1.0.11" />
+    <PackageReference Include="SevenTiny.Bantina.Bankinate.MySql" Version="1.0.21" />
+    <PackageReference Include="SevenTiny.Bantina.Configuration.Core" Version="1.0.31" />
+    <PackageReference Include="SevenTiny.Bantina.Configuration.MySql" Version="1.0.24" />
+    <PackageReference Include="SevenTiny.Bantina.Logging" Version="1.0.30" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Chameleon.Entity\Chameleon.Entity.csproj" />
+  </ItemGroup>
 
 </Project>

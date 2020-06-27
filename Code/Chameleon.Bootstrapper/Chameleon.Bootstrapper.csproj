@@ -4,4 +4,18 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SevenTiny.Bantina" Version="1.0.62" />
+    <PackageReference Include="SevenTiny.Bantina.Configuration.Core" Version="1.0.31" />
+    <PackageReference Include="SevenTiny.Bantina.Configuration.MySql" Version="1.0.24" />
+    <PackageReference Include="SevenTiny.Bantina.Logging" Version="1.0.30" />
+    <PackageReference Include="Seventiny.Cloud.ScriptEngine" Version="1.0.50" />
+    <PackageReference Include="SevenTiny.Cloud.ScriptEngine.CSharp" Version="1.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Chameleon.Application\Chameleon.Application.csproj" />
+    <ProjectReference Include="..\Chameleon.Repository\Chameleon.Repository.csproj" />
+  </ItemGroup>
+
 </Project>

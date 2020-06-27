@@ -1,0 +1,87 @@
+﻿<!--这里写公共的方法-->
+<script>
+    //ajax删除datatable中数据
+    function ajax_delete_table(obj, url) {
+        layer.confirm('确认要删除吗？', function (index) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.isSuccess) {
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!', { icon: 1, time: 1000 });
+                    } else {
+                        layer.msg(data.message, { icon: 2, time: 1000 });
+                    }
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
+    //ajax操作列表数据，可以提供confirm信息
+    function ajax_operate_table_confirm(obj, url, confirmMsg) {
+        layer.confirm(confirmMsg, function (index) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.isSuccess) {
+                        $(obj).parents("tr").remove();
+                        layer.msg('操作成功!', { icon: 1, time: 1000 });
+                    } else {
+                        layer.msg(data.message, { icon: 2, time: 1000 });
+                    }
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
+    //公共小弹窗
+    function commonPannel(title, url) {
+        //item拿的是该条数据的id
+        layer_show(title, url, window.innerWidth / 1.5, window.innerHeight / 1.5);
+    }
+
+    function layer_open_define(title, url) {
+        layer_open(title, url, 0.8)
+    }
+
+    //title，url，相对于本窗口的乘积 例如0.5，最大是1
+    function layer_open(title, url, sizeAboutWindow) {
+        //layer.open({
+        //     type: 1
+        //     ,title: title //不显示标题栏   title : false/标题
+        //     ,closeBtn: true
+        //     ,area: '300px;'
+        //     ,shade: 0.8
+        //     ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+        //     ,resize: false
+        //     ,btn: ['了解了']
+        //     ,btnAlign: 'c'
+        //     ,moveType: 1 //拖拽模式，0或者1
+        //     ,content: url
+        //});
+
+        var ww = ($(window).width() * sizeAboutWindow) + 'px';
+        var hh = ($(window).height() * sizeAboutWindow) + 'px';
+
+        layer.open({
+            type: 2,
+            area: [ww, hh],
+            fix: false, //不固定
+            maxmin: true,
+            shade: 0.4,
+            title: title,
+            content: url
+        });
+    }
+
+</script>

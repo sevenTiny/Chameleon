@@ -11,6 +11,10 @@
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
+    <PackageReference Include="SevenTiny.Bantina" Version="1.0.62" />
+    <PackageReference Include="SevenTiny.Bantina.Configuration.Core" Version="1.0.31" />
+    <PackageReference Include="SevenTiny.Bantina.Configuration.MySql" Version="1.0.24" />
+    <PackageReference Include="SevenTiny.Bantina.Logging" Version="1.0.30" />
   </ItemGroup>
 
 </Project>
