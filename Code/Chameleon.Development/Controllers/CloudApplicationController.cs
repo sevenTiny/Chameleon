@@ -6,6 +6,8 @@ using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
 using SevenTiny.Bantina.Validation;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
 {
@@ -103,7 +105,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
 
             ViewData["ApplicationCode"] = applicationCode;
             ViewData["ApplicationId"] = applicationId;
-            ViewData["MetaObjects"] = _metaObjectRepository.GetMetaObjectListUnDeletedByApplicationId(applicationId);
+            ViewData["MetaObjects"] = (_metaObjectRepository.GetMetaObjectListUnDeletedByApplicationId(applicationId) ?? new List<MetaObject>(0)).OrderBy(t => t.SortNumber).ToList();
 
             return View();
         }
