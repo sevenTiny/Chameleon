@@ -6,6 +6,7 @@ using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Newtonsoft.Json.Linq;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
 using System.Linq;
@@ -92,7 +93,7 @@ namespace Chameleon.DataApi.Controllers
         /// <param name="arg">数据json</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Post([FromQuery]QueryArgs queryArgs, [FromBody]JsonElement arg)
+        public IActionResult Post([FromQuery]QueryArgs queryArgs, [FromBody]JObject arg)
         {
             return SafeExecute(() =>
             {
@@ -121,7 +122,7 @@ namespace Chameleon.DataApi.Controllers
         /// <param name="arg"></param>
         /// <returns></returns>
         [HttpPut]
-        public IActionResult Update([FromQuery]QueryArgs queryArgs, [FromBody]JsonElement arg)
+        public IActionResult Update([FromQuery]QueryArgs queryArgs, [FromBody]JObject arg)
         {
             return SafeExecute(() =>
             {

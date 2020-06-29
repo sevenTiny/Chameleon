@@ -1,7 +1,7 @@
 import requests
 import datetime
 
-url = 'http://localhost:39011/api/BatchCloudData?_interface=SevenTinyTest.UserInformation.UndeletedList'
+url = 'http://localhost:39011/api/BatchCloudData?_interface=SevenTinyTest.UserInformation.AddUserInformation'
 
 datas = []
 for i in range(1, 100):

@@ -1,7 +1,7 @@
 import requests
 import datetime
 
-url = 'http://localhost:39011/api/CloudData?_interface=SevenTinyTest.UserInformation.UndeletedList'
+url = 'http://localhost:39011/api/CloudData?_interface=SevenTinyTest.UserInformation.AddUser'
 
 i = 18
 

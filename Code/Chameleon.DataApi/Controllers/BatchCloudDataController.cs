@@ -34,7 +34,7 @@ namespace Chameleon.DataApi.Controllers
         /// <param name="args">json数组</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Post([FromQuery]QueryArgs queryArgs, [FromBody]JsonElement[] args)
+        public IActionResult Post([FromQuery]QueryArgs queryArgs, [FromBody]JArray args)
         {
             return SafeExecute(() =>
             {
