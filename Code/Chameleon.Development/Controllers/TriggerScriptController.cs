@@ -22,7 +22,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             _triggerScriptRepository = metaObjectRepository;
         }
 
-        public IActionResult MetaObjectInterfaceList(Guid metaObjectId, string metaObjectCode)
+        public IActionResult MetaObjectTriggerList(Guid metaObjectId, string metaObjectCode)
         {
             SetCookiesMetaObjectInfo(metaObjectId, metaObjectCode);
 
@@ -61,7 +61,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             if (!result.IsSuccess)
                 return View("MetaObjectTriggerAdd", result.ToResponseModel(entity));
 
-            return Redirect($"/TriggerScript/MetaObjectInterfaceList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
+            return Redirect($"/TriggerScript/MetaObjectTriggerList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
 
         public IActionResult MetaObjectTriggerUpdate(Guid id)
@@ -90,7 +90,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
             if (!result.IsSuccess)
                 return View("MetaObjectTriggerUpdate", result.ToResponseModel(entity));
 
-            return Redirect($"/TriggerScript/MetaObjectInterfaceList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
+            return Redirect($"/TriggerScript/MetaObjectTriggerList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
 
         public IActionResult GetDefaultMetaObjectTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)

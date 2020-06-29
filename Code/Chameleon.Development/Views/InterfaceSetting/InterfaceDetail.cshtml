@@ -21,65 +21,66 @@
     string argsExtends = builder.ToString();
 }
 @{
+    ViewData["Level_1"] = "对象设置";
     ViewData["Level_1"] = "接口详情";
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
-    <article class="page-container">
-        <div class="panel panel-default mt-10">
-            <div class="panel-header" style="background-color:#cbe7fc">@entity.Code</div>
-            <div class="panel-body pd-20">
-                <div>
-                    <span>接口名称：@entity.Name</span><br />
+<article class="page-container">
+    <div class="panel panel-default mt-10">
+        <div class="panel-header" style="background-color:#cbe7fc">@entity.Code</div>
+        <div class="panel-body pd-20">
+            <div>
+                <span>接口名称：@entity.Name</span><br />
+                <hr class="mt-10 mb-10" />
+                <span>接口类型：@interfaceTypeDescription</span><br />
+                <hr class="mt-10 mb-10" />
+                @if (InterfaceTypeEnum.Add == interfaceType)
+                {
+                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code">@dataApiUrl/api/CloudData?_interface=@entity.Code</a></span><br />
                     <hr class="mt-10 mb-10" />
-                    <span>接口类型：@interfaceTypeDescription</span><br />
+                    <span>字段值：request body json格式传递</span>
+                }
+                else if (InterfaceTypeEnum.BatchAdd == interfaceType)
+                {
+                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/BatchCloudData?_interface=@entity.Code">@dataApiUrl/api/BatchCloudData?_interface=@entity.Code</a></span><br />
                     <hr class="mt-10 mb-10" />
-                    @if (InterfaceTypeEnum.Add == interfaceType)
-                    {
-                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code">@dataApiUrl/api/CloudData?_interface=@entity.Code</a></span><br />
-                        <hr class="mt-10 mb-10" />
-                        <span>字段值：request body json格式传递</span>
-                    }
-                    else if (InterfaceTypeEnum.BatchAdd == interfaceType)
-                    {
-                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/BatchCloudData?_interface=@entity.Code">@dataApiUrl/api/BatchCloudData?_interface=@entity.Code</a></span><br />
-                        <hr class="mt-10 mb-10" />
-                        <span>字段值：request body json格式传递</span>
-                    }
-                    else if (InterfaceTypeEnum.Update == interfaceType)
-                    {
-                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
-                        <hr class="mt-10 mb-10" />
-                        <span>字段值：request body json格式传递</span>
-                    }
-                    else if (InterfaceTypeEnum.Delete == interfaceType)
-                    {
-                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
-                    }
-                    else if (InterfaceTypeEnum.QuerySingle == interfaceType)
-                    {
-                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
-                    }
-                    else if (InterfaceTypeEnum.QueryList == interfaceType)
-                    {
-                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
-                        <hr class="mt-10 mb-10" />
-                        <span>可选参数：_pageIndex（页码）</span>
-                    }
-                    else if (InterfaceTypeEnum.QueryCount == interfaceType)
-                    {
-                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
-                    }
-                    else if (InterfaceTypeEnum.DynamicScriptDataSource == interfaceType || InterfaceTypeEnum.JsonDataSource == interfaceType)
-                    {
-                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code">@dataApiUrl/api/CloudData?_interface=@entity.Code</a></span><br />
-                    }
+                    <span>字段值：request body json格式传递</span>
+                }
+                else if (InterfaceTypeEnum.Update == interfaceType)
+                {
+                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
                     <hr class="mt-10 mb-10" />
-                    <span>接口描述：@entity.Description</span><br />
-                </div>
+                    <span>字段值：request body json格式传递</span>
+                }
+                else if (InterfaceTypeEnum.Delete == interfaceType)
+                {
+                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
+                }
+                else if (InterfaceTypeEnum.QuerySingle == interfaceType)
+                {
+                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
+                }
+                else if (InterfaceTypeEnum.QueryList == interfaceType)
+                {
+                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
+                    <hr class="mt-10 mb-10" />
+                    <span>可选参数：_pageIndex（页码）</span>
+                }
+                else if (InterfaceTypeEnum.QueryCount == interfaceType)
+                {
+                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
+                }
+                else if (InterfaceTypeEnum.DynamicScriptDataSource == interfaceType || InterfaceTypeEnum.JsonDataSource == interfaceType)
+                {
+                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code">@dataApiUrl/api/CloudData?_interface=@entity.Code</a></span><br />
+                }
+                <hr class="mt-10 mb-10" />
+                <span>接口描述：@entity.Description</span><br />
             </div>
         </div>
-    </article>
+    </div>
+</article>
 
 @await Html.PartialAsync("~/Views/Shared/_FooterScripts.cshtml")
 @await Html.PartialAsync("~/Views/Shared/_CommonScript.cshtml")

@@ -1,13 +1,13 @@
 ﻿@using Chameleon.Entity;
 @using Chameleon.Infrastructure;
 @{
-    ViewData["Title"] = "MetaObjectInterfaceList";
+    ViewData["Title"] = "MetaObjectTriggerList";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
     List<TriggerScript> entities = Model as List<TriggerScript> ?? new List<TriggerScript>();
 }
 @{
-    ViewData["Level_1"] = "首页";
-    ViewData["Level_2"] = "对象触发器列表";
+    ViewData["Level_1"] = "对象设置";
+    ViewData["Level_2"] = "对象触发器管理";
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
