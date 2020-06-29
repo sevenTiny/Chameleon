@@ -109,6 +109,7 @@ namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
                        item.InterfaceConditionId = entity.InterfaceConditionId;
                        item.InterfaceVerificationId = entity.InterfaceVerificationId;
                        item.InterfaceFieldsId = entity.InterfaceFieldsId;
+                       item.InterfaceSortId = entity.InterfaceSortId;
                        item.PageSize = entity.PageSize;
                    });
                });
