@@ -55,31 +55,37 @@ namespace Chameleon.Domain
                     ShortCode ="_id",
                     Name ="数据ID",
                     FieldType=(int)DataType.Text,
+                    SortNumber=-2
                 },
                 new MetaField{
                     ShortCode ="IsDeleted",
                     Name ="是否删除",
                     FieldType=(int)DataType.Boolean,
+                    SortNumber=-1
                 },
                 new MetaField{
                     ShortCode ="CreateBy",
                     Name ="创建人",
                     FieldType= (int)DataType.Int32,
+                    SortNumber=-1
                 },
                 new MetaField{
                     ShortCode ="CreateTime",
                     Name ="创建时间",
                     FieldType= (int)DataType.DateTime,
+                    SortNumber=-1
                 },
                 new MetaField{
                     ShortCode ="ModifyBy",
                     Name ="修改人",
                     FieldType= (int)DataType.Int32,
+                    SortNumber=-1
                 },
                 new MetaField{
                     ShortCode ="ModifyTime",
                     Name ="修改时间",
                     FieldType= (int)DataType.DateTime,
+                    SortNumber=-1
                 }
             };
 
@@ -93,7 +99,6 @@ namespace Chameleon.Domain
                 item.Group = "系统";
                 item.CreateBy = item.ModifyBy = 0;
                 item.CreateTime = item.ModifyTime = DateTime.Now;
-                item.SortNumber = -1;
                 item.Description = "系统字段";
             });
 
