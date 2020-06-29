@@ -59,7 +59,7 @@ using Microsoft.Extensions.Logging;
         public override string FunctionName => "Add_Before";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
@@ -77,7 +77,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "Add_After";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -96,7 +96,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "BatchAdd_Before";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -115,7 +115,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "BatchAdd_After";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -134,7 +134,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "Update_Before";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -153,7 +153,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "Update_After";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -172,7 +172,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "Delete_Before";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -191,7 +191,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "Delete_After";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -210,7 +210,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "QueryCount_Before";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -229,7 +229,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "QueryCount_After";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -248,7 +248,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "QuerySingle_Before";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -267,7 +267,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "QuerySingle_After";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -287,7 +287,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "QueryList_Before";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -306,7 +306,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "QueryList_After";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class MetaObjectInterfaceTrigger
 {{
@@ -325,7 +325,7 @@ public class MetaObjectInterfaceTrigger
         public override string FunctionName => "Get";
 
         public override string Script =>
-@$"{CommonUsing}
+$@"{CommonUsing}
 
 public class DynamicScriptDataSource
 {{
