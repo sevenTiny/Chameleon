@@ -172,25 +172,24 @@ namespace Chameleon.Application
 
             foreach (var element in bsonDocument)
             {
-                CloudData cloudData = null;
+                CloudData cloudData = new CloudData
+                {
+                    Name = element.Name
+                };
 
                 //如果有自定义返回设置
                 if (formatInterfaceFieldsDic != null)
                 {
-                    var upperKey = element.Name.ToUpperInvariant();
+                    var upperKey = element.Name?.ToUpperInvariant();
 
-                    //如果自定义返回设置里没有该字段，则不返回
-                    if (!formatInterfaceFieldsDic.ContainsKey(upperKey))
+                    //如果自定义返回设置里有该字段，则处理自定义的显示
+                    if (!string.IsNullOrEmpty(upperKey) && formatInterfaceFieldsDic.ContainsKey(upperKey))
+                        cloudData.Name = formatInterfaceFieldsDic[upperKey].MetaFieldCustomViewName;
+
+                    //_id字段总是要返回的
+                    if (!"_ID".Equals(upperKey))
                         continue;
-
-                    cloudData = new CloudData
-                    {
-                        Name = formatInterfaceFieldsDic[upperKey].MetaFieldCustomViewName
-                    };
                 }
-
-                if (cloudData == null)
-                    cloudData = new CloudData();
 
                 cloudData.Code = element.Name;
                 cloudData.Value = element.Value?.ToString();
