@@ -26,8 +26,6 @@ namespace Chameleon.Entity
     /// </summary>
     public enum RelationEnum
     {
-        [Description("成为当前选中的兄弟组织")]
-        Brother = 0,
         [Description("成为当前选中的父组织")]
         Parent = 1,
         [Description("成为当前选中的子组织")]
@@ -38,7 +36,7 @@ namespace Chameleon.Entity
     {
         public static RelationEnum[] GetRelationEnums()
         {
-            return new[] { RelationEnum.Brother, RelationEnum.Parent, RelationEnum.Child };
+            return new[] { RelationEnum.Parent, RelationEnum.Child };
         }
     }
 }

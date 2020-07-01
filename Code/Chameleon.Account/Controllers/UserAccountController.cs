@@ -16,8 +16,10 @@ namespace Chameleon.Account.Controllers
     {
         IUserAccountService _userAccountService;
         IUserAccountRepository _userAccountRepository;
-        public UserAccountController(IUserAccountRepository userAccountRepository, IUserAccountService userAccountService)
+        IOrganizationRepository _organizationRepository;
+        public UserAccountController(IOrganizationRepository organizationRepository, IUserAccountRepository userAccountRepository, IUserAccountService userAccountService)
         {
+            _organizationRepository = organizationRepository;
             _userAccountRepository = userAccountRepository;
             _userAccountService = userAccountService;
         }
@@ -29,12 +31,13 @@ namespace Chameleon.Account.Controllers
 
         public IActionResult List()
         {
-            var userList = _userAccountRepository.GetUserAccountList();
+            var userList = _userAccountService.GetUserAccountList();
             return View(userList);
         }
 
         public IActionResult Add()
         {
+            ViewData["Organization"] = _organizationRepository.GetListUnDeleted();
             UserAccount entity = new UserAccount();
             return View(ResponseModel.Success(data: entity));
         }
@@ -62,13 +65,17 @@ namespace Chameleon.Account.Controllers
                 });
 
             if (!result.IsSuccess)
+            {
+                ViewData["Organization"] = _organizationRepository.GetListUnDeleted();
                 return View("Add", result.ToResponseModel(entity));
+            }
 
             return RedirectToAction("List");
         }
 
         public IActionResult Update(Guid id)
         {
+            ViewData["Organization"] = _organizationRepository.GetListUnDeleted();
             var entity = _userAccountRepository.GetById(id);
             return View(ResponseModel.Success(data: entity));
         }
@@ -90,16 +97,21 @@ namespace Chameleon.Account.Controllers
                .Continue(_ =>
                {
                    entity.ModifyBy = CurrentUserId;
-                   return _userAccountService.UpdateWithId(entity.Id, t =>
+                   return _userAccountService.UpdateWithOutCode(entity, t =>
                    {
                        t.Email = entity.Email;
                        t.Phone = entity.Phone;
                        t.Name = entity.Name;
+                       t.Organization = entity.Organization;
+                       t.Role = entity.Role;
                    });
                });
 
             if (!result.IsSuccess)
+            {
+                ViewData["Organization"] = _organizationRepository.GetListUnDeleted();
                 return View("Update", result.ToResponseModel(entity));
+            }
 
             return RedirectToAction("List");
         }

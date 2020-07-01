@@ -5,6 +5,7 @@ using Chameleon.ValueObject;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SevenTiny.Bantina;
+using SevenTiny.Bantina.Extensions;
 using SevenTiny.Bantina.Security;
 using SevenTiny.Cloud.ScriptEngine;
 using System;
@@ -48,13 +49,20 @@ namespace Chameleon.Domain
         /// <param name="userAccount"></param>
         /// <returns></returns>
         string GetViewName(UserAccount userAccount);
+        /// <summary>
+        /// 获取用户列表
+        /// </summary>
+        /// <returns></returns>
+        List<UserAccount> GetUserAccountList();
     }
 
     public class UserAccountService : CommonServiceBase<UserAccount>, IUserAccountService
     {
         IUserAccountRepository _userAccountRepository;
-        public UserAccountService(IUserAccountRepository userAccountRepository) : base(userAccountRepository)
+        IOrganizationRepository _organizationRepository;
+        public UserAccountService(IOrganizationRepository organizationRepository, IUserAccountRepository userAccountRepository) : base(userAccountRepository)
         {
+            _organizationRepository = organizationRepository;
             _userAccountRepository = userAccountRepository;
         }
 
@@ -125,6 +133,23 @@ namespace Chameleon.Domain
                 return userAccount.Email;
 
             return string.Empty;
+        }
+
+        public List<UserAccount> GetUserAccountList()
+        {
+            var userList = _userAccountRepository.GetListUnDeleted();
+
+            if (userList != null)
+            {
+                var orgs = _organizationRepository.GetListUnDeleted()?.SafeToDictionary(k => k.Id, v => v.Name);
+
+                foreach (var item in userList)
+                {
+                    item.OrganizationView = orgs.SafeGet(item.Organization);
+                }
+            }
+
+            return userList;
         }
     }
 }

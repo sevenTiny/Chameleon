@@ -39,6 +39,11 @@ namespace Chameleon.Entity
         [Column]
         public Guid Organization { get; set; }
 
+        /// <summary>
+        /// 翻译用
+        /// </summary>
+        public string OrganizationView { get; set; }
+
         public RoleEnum GetRole() => (RoleEnum)this.Role;
     }
 
@@ -53,5 +58,13 @@ namespace Chameleon.Entity
         Administrator = 1,
         [Description("开发人员")]
         Deveolper = 2,
+    }
+
+    public static class RoleEnumHelper
+    {
+        public static RoleEnum[] GetRelationEnums()
+        {
+            return new[] { RoleEnum.User, RoleEnum.Administrator };
+        }
     }
 }

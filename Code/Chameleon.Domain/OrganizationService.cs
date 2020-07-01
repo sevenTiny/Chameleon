@@ -86,9 +86,6 @@ namespace Chameleon.Domain
                     //根据选择的方式处理新节点
                     switch (relation)
                     {
-                        case RelationEnum.Brother:
-                            newNode.ParentId = chooseNode.ParentId;
-                            break;
                         case RelationEnum.Parent:
                             newNode.ParentId = chooseNode.ParentId;
                             chooseNode.ParentId = newNode.Id;
@@ -98,7 +95,7 @@ namespace Chameleon.Domain
                             newNode.ParentId = chooseNode.Id;
                             break;
                         default:
-                            break;
+                            return Result.Error("关系错误，无法新增组织");
                     }
                 }
 
@@ -125,6 +122,8 @@ namespace Chameleon.Domain
                 {
                     _organizationRepository.LogicDelete(item.Id);
                 }
+
+                _organizationRepository.LogicDelete(nodeId);
             }
 
             return Result.Success();

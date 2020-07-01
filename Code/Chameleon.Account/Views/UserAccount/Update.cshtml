@@ -1,4 +1,5 @@
 ﻿@using Chameleon.Entity;
+@using Chameleon.Infrastructure;
 @using SevenTiny.Bantina.Extensions.AspNetCore;
 @{
     ViewData["Title"] = "Update";
@@ -6,6 +7,8 @@
 
     var result = Model as ResponseModel ?? new ResponseModel();
     var entity = result.Data as UserAccount ?? new UserAccount();
+
+    List<Organization> organizations = (ViewData["Organization"] as List<Organization>) ?? new List<Organization>(0);
 }
 @{
     ViewData["Level_1"] = "对象管理";
@@ -37,7 +40,47 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>组织：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@entity.Organization" placeholder="" name="Organization" required minLength="2" maxlength="50">
+                <span class="select-box">
+                    <select class="input select" value="0" name="Organization" id="Organization" required>
+                        <option value="">--请选择--</option>
+                        @foreach (var item in organizations)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>角色：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select class="input select" value="0" name="Role" id="Role" required>
+                        <option value="">--请选择--</option>
+                        @foreach (var item in RoleEnumHelper.GetRelationEnums())
+                        {
+                            <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">分组：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="@entity.Group" placeholder="" name="group">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">排序值：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="@entity.SortNumber" placeholder="" name="sortNumber">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">描述：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea name="description" class="textarea ignore" placeholder="说点什么...">@entity.Description</textarea>
             </div>
         </div>
         <div class="row cl">
@@ -58,6 +101,7 @@
 @await Html.PartialAsync("~/Views/Shared/_FormValidate.cshtml")
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
-
+    $("#Organization").val('@entity.Organization')
+    $("#Role").val('@entity.Role')
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
