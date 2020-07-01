@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Chameleon.UnitTest", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chameleon.Development", "Chameleon.Development\Chameleon.Development.csproj", "{5843B0E0-1694-4761-A1F1-7E361B31A3CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chameleon.DataApi", "Chameleon.DataApi\Chameleon.DataApi.csproj", "{1DF94CFC-EC9C-412C-960B-F52A1BE60A23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chameleon.DataApi", "Chameleon.DataApi\Chameleon.DataApi.csproj", "{1DF94CFC-EC9C-412C-960B-F52A1BE60A23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chameleon.Account", "Chameleon.Account\Chameleon.Account.csproj", "{8AC42227-9F5E-47FE-BF59-782E44F9D4D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{1DF94CFC-EC9C-412C-960B-F52A1BE60A23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DF94CFC-EC9C-412C-960B-F52A1BE60A23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DF94CFC-EC9C-412C-960B-F52A1BE60A23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AC42227-9F5E-47FE-BF59-782E44F9D4D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AC42227-9F5E-47FE-BF59-782E44F9D4D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AC42227-9F5E-47FE-BF59-782E44F9D4D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AC42227-9F5E-47FE-BF59-782E44F9D4D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +94,7 @@ Global
 		{D3A4A1CA-533C-45BC-BF8C-FA6AEC25FC21} = {C45AB206-118F-4F64-B136-2D5ACCCA07E5}
 		{5843B0E0-1694-4761-A1F1-7E361B31A3CE} = {634219EB-3ACF-4565-8032-BB28256AC656}
 		{1DF94CFC-EC9C-412C-960B-F52A1BE60A23} = {634219EB-3ACF-4565-8032-BB28256AC656}
+		{8AC42227-9F5E-47FE-BF59-782E44F9D4D3} = {634219EB-3ACF-4565-8032-BB28256AC656}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F6F7A19-5FC4-4BCA-99C6-AB135734C7F3}
