@@ -6,9 +6,8 @@ using System.Text;
 
 namespace Chameleon.Repository
 {
-    public interface IUserAccountRepository : IRepositoryBase<UserAccount>
+    public interface IUserAccountRepository : ICommonRepositoryBase<UserAccount>
     {
-        UserAccount GetById(Guid id);
         List<UserAccount> GetUserAccountList();
         /// <summary>
         /// 获取无开发人员的所有人员列表
@@ -29,10 +28,9 @@ namespace Chameleon.Repository
         /// <param name="phone"></param>
         /// <returns></returns>
         bool CheckEmailOrPhoneExist(string email, string phone);
-        Result LogicDelete(Guid id);
     }
 
-    public class UserAccountRepository : RepositoryBase<UserAccount>, IUserAccountRepository
+    public class UserAccountRepository : CommonRepositoryBase<UserAccount>, IUserAccountRepository
     {
         public UserAccountRepository(ChameleonMetaDataDbContext dbContext) : base(dbContext)
         {
@@ -69,24 +67,6 @@ namespace Chameleon.Repository
                 return _dbContext.Queryable<UserAccount>().Where(t => t.IsDeleted == 0 && t.Phone.Equals(phone)).Any();
 
             return result;
-        }
-
-        public UserAccount GetById(Guid id)
-        {
-            return _dbContext.Queryable<UserAccount>().Where(t => t.Id.Equals(id)).FirstOrDefault();
-        }
-
-        public Result LogicDelete(Guid id)
-        {
-            var userAccount = GetById(id);
-
-            if (userAccount != null)
-            {
-                userAccount.IsDeleted = 1;
-                base.Update(userAccount);
-            }
-
-            return Result.Success();
         }
     }
 }

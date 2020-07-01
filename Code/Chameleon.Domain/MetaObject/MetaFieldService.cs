@@ -86,6 +86,12 @@ namespace Chameleon.Domain
                     Name ="修改时间",
                     FieldType= (int)DataType.DateTime,
                     SortNumber=-1
+                },
+                new MetaField{
+                    ShortCode ="Organization",
+                    Name ="组织",
+                    FieldType= (int)DataType.Text,
+                    SortNumber=-1
                 }
             };
 
@@ -114,7 +120,8 @@ namespace Chameleon.Domain
                 { "CreateBy", -1 },
                 { "CreateTime", DateTime.Now },
                 { "ModifyBy", -1},
-                { "ModifyTime", DateTime.Now }
+                { "ModifyTime", DateTime.Now },
+                { "Organization", Guid.Empty.ToString() },
             };
         }
 

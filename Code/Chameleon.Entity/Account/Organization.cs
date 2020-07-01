@@ -10,7 +10,12 @@ namespace Chameleon.Entity
     /// 组织
     /// </summary>
     [Table]
-    public class Organization
+    public class Organization : CommonBase
     {
+        /// <summary>
+        /// 父组织id
+        /// </summary>
+        [Column]
+        public Guid Parent { get; set; }
     }
 }

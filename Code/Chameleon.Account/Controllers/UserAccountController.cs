@@ -52,9 +52,9 @@ namespace Chameleon.Account.Controllers
                 })
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Email, nameof(entity.Email))
                 .ContinueAssert(_ => entity.Email.IsEmail(), "邮箱不合法")
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.Organization, nameof(entity.Organization))
                 .Continue(_ =>
                 {
-                    entity.Id = Guid.NewGuid();
                     entity.CreateBy = CurrentUserId;
                     entity.Password = "Chameleon123456";
                     entity.IsNeedToResetPassword = 1;//手动添加的用户，下次登陆需要修改密码
@@ -86,10 +86,11 @@ namespace Chameleon.Account.Controllers
                 })
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Email, nameof(entity.Email))
                 .ContinueAssert(_ => entity.Email.IsEmail(), "邮箱不合法")
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.Organization, nameof(entity.Organization))
                .Continue(_ =>
                {
                    entity.ModifyBy = CurrentUserId;
-                   return _userAccountService.Update(entity, t =>
+                   return _userAccountService.UpdateWithId(entity.Id, t =>
                    {
                        t.Email = entity.Email;
                        t.Phone = entity.Phone;

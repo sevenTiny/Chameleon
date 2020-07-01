@@ -7,16 +7,11 @@ using System.Text;
 namespace Chameleon.Entity
 {
     /// <summary>
-    /// 公共实体基类
+    /// 用户账号
     /// </summary>
     [Table]
-    public class UserAccount
+    public class UserAccount : CommonBase
     {
-        [Key]
-        [Column]
-        public Guid Id { get; set; }
-        [Column("`Name`")]
-        public string Name { get; set; }
         [Column("Phone")]
         public string Phone { get; set; }
         [Column]
@@ -28,18 +23,6 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public int IsNeedToResetPassword { get; set; }
-        [Column]
-        public int IsDeleted { get; set; } = 0;
-        [Column]
-        public int CreateBy { get; set; } = 0;
-        [Column("`CreateTime`")]
-        public DateTime CreateTime { get; set; } = DateTime.Now;
-        [Column]
-        public int ModifyBy { get; set; } = 0;
-        [Column("`ModifyTime`")]
-        public DateTime ModifyTime { get; set; } = DateTime.Now;
-        [Column]
-        public int TenantId { get; set; } = 0;
         /// <summary>
         /// 角色
         /// </summary>
@@ -50,15 +33,11 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public int Identity { get; set; }
-
-        public IsDeleted GetIsDeleted()
-        {
-            return (IsDeleted)this.IsDeleted;
-        }
-        public void SetIsDeleted(IsDeleted isDeleted)
-        {
-            this.IsDeleted = (int)isDeleted;
-        }
+        /// <summary>
+        /// 所属组织
+        /// </summary>
+        [Column]
+        public Guid Organization { get; set; }
 
         public RoleEnum GetRole() => (RoleEnum)this.Role;
     }

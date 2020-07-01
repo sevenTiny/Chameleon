@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Chameleon.Domain
 {
-    public interface IUserAccountService
+    public interface IUserAccountService : ICommonServiceBase<UserAccount>
     {
         /// <summary>
         /// 添加账号
@@ -48,13 +48,12 @@ namespace Chameleon.Domain
         /// <param name="userAccount"></param>
         /// <returns></returns>
         string GetViewName(UserAccount userAccount);
-        Result Update(UserAccount source, Action<UserAccount> updateFieldAction = null);
     }
 
-    public class UserAccountService : IUserAccountService
+    public class UserAccountService : CommonServiceBase<UserAccount>, IUserAccountService
     {
         IUserAccountRepository _userAccountRepository;
-        public UserAccountService(IUserAccountRepository userAccountRepository)
+        public UserAccountService(IUserAccountRepository userAccountRepository) : base(userAccountRepository)
         {
             _userAccountRepository = userAccountRepository;
         }
@@ -70,11 +69,13 @@ namespace Chameleon.Domain
             if (_userAccountRepository.CheckEmailOrPhoneExist(userAccount.Email, userAccount.Phone))
                 return Result.Error("该联系方式已经被注册");
 
+            userAccount.Id = Guid.NewGuid();
+            userAccount.Code = userAccount.Id.ToString();
             //密码加盐
             userAccount.Password = GetSaltPassword(userAccount.Password);
             userAccount.Role = (int)RoleEnum.User;
 
-            return _userAccountRepository.Add(userAccount);
+            return base.Add(userAccount);
         }
 
         public Result ChangePassword(Guid id, string password)
@@ -82,16 +83,10 @@ namespace Chameleon.Domain
             if (string.IsNullOrWhiteSpace(password))
                 return Result.Error("密码不能为空");
 
-            var userAccount = _userAccountRepository.GetById(id);
-
-            if (userAccount == null)
-                return Result.Error("该账号不存在");
-
-            userAccount.Password = GetSaltPassword(password);
-
-            userAccount.ModifyTime = DateTime.Now;
-
-            return _userAccountRepository.Update(userAccount);
+            return base.UpdateWithId(id, t =>
+            {
+                t.Password = GetSaltPassword(password);
+            });
         }
 
         public Result<UserAccount> VerifyPassword(string phone, string email, string password)
@@ -112,14 +107,10 @@ namespace Chameleon.Domain
 
         public Result PresetPassword(Guid id)
         {
-            var userAccount = _userAccountRepository.GetById(id);
-
-            if (userAccount == null)
-                return Result.Error("该账号不存在");
-
-            userAccount.IsNeedToResetPassword = 1;
-
-            return _userAccountRepository.Update(userAccount);
+            return base.UpdateWithId(id, t =>
+            {
+                t.IsNeedToResetPassword = 1;
+            });
         }
 
         public string GetViewName(UserAccount userAccount)
@@ -134,22 +125,6 @@ namespace Chameleon.Domain
                 return userAccount.Email;
 
             return string.Empty;
-        }
-
-        public Result Update(UserAccount source, Action<UserAccount> updateFieldAction = null)
-        {
-            UserAccount target = _userAccountRepository.GetById(source.Id);
-
-            if (target == null)
-                return Result.Error($"没有查到Id[{source.Id}]对应的数据.");
-
-            //个性化字段赋值
-            updateFieldAction?.Invoke(target);
-
-            target.ModifyBy = source.ModifyBy;
-            target.ModifyTime = DateTime.Now;
-
-            return _userAccountRepository.Update(target);
         }
     }
 }
