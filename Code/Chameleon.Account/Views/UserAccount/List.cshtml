@@ -1,0 +1,68 @@
+﻿@using Chameleon.Entity;
+@using Chameleon.Infrastructure;
+@{
+    ViewData["Title"] = "UserList";
+    Layout = $"~/Views/Shared/_LayoutHeaderStyle.cshtml";
+    List<UserAccount> entities = (Model as List<UserAccount>) ?? new List<UserAccount>();
+}
+@{
+    ViewData["Level_1"] = "用户管理";
+    ViewData["Level_2"] = "用户列表";
+}
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
+
+<article class="cl pd-20">
+    <div class="cl pd-5 bg-1 bk-gray">
+        <span class="l">
+            <a class="btn btn-primary radius" href="/UserAccount/Add"><i class="Hui-iconfont">&#xe600;</i> 添加用户</a>
+        </span>
+        <span class="r">共有数据：<strong>@entities?.Count</strong> 条</span>
+    </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+            <thead>
+                <tr class="text-c">
+                    <th>名称</th>
+                    <th>手机号</th>
+                    <th>邮箱</th>
+                    <th>角色</th>
+                    <th>身份</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in entities)
+                {
+                    <tr class="text-c">
+                        <td>@item.Name</td>
+                        <td>@item.Phone</td>
+                        <td>@item.Email</td>
+                        <td>@item.GetRole().GetDescription()</td>
+                        <td>@item.Identity</td>
+                        <td class="f-14 td-manage">
+                            <a style="text-decoration: none" class="ml-5" href="/UserAccount/Update/@item.Id" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
+                            <a style="text-decoration: none" class="ml-5" onClick="ajax_delete_table(this, '/UserAccount/LogicDelete/@item.Id')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</article>
+
+@await Html.PartialAsync($"~/Views/Shared/_FooterScripts.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_CommonScript.cshtml")
+<script type="text/javascript" src="~/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+    $('.table-sort').dataTable({
+        "aLengthMenu": [[50, 100, -1], ["50", "100", "All"]],//二组数组，第一组数量，
+        "aaSorting": [[4, "desc"]],//默认第几个排序
+        "bAutoWidth": false,
+        "bStateSave": true,//状态保存
+        "aoColumnDefs": [
+            { "orderable": false, "aTargets": [5] }// 不参与排序的列
+        ]
+    });
+</script>
+<!--/请在上方写此页面业务相关的脚本-->

@@ -3,7 +3,7 @@ using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
 using System;
 
-namespace Chameleon.Development.Controllers
+namespace Chameleon.Account.Controllers
 {
     /// <summary>
     /// 控制器基类
@@ -97,61 +97,6 @@ namespace Chameleon.Development.Controllers
                 return metaObjectCode;
             }
         }
-
-        ///// <summary>
-        ///// 请求上下文信息
-        ///// </summary>
-        //private ApplicationContext _applicationContext;
-        //protected ApplicationContext CurrentApplicationContext
-        //{
-        //    get
-        //    {
-        //        if (_applicationContext == null)
-        //        {
-        //            _applicationContext = new ApplicationContext
-        //            {
-        //                ApplicationCode = CurrentApplicationCode,
-        //                TenantId = CurrentTenantId,
-        //                UserId = CurrentUserId,
-        //                UserEmail = CurrentUserEmail
-        //            };
-        //        }
-        //        return _applicationContext;
-        //    }
-        //}
-
-
-        ///// <summary>
-        ///// 从Token串中获取参数
-        ///// </summary>
-        ///// <param name="key"></param>
-        ///// <returns></returns>
-        //private string GetArgumentFromToken(string key)
-        //{
-        //    return HttpContext.GetArgumentFromToken(key);
-        //}
-
-        //protected int CurrentTenantId
-        //{
-        //    get
-        //    {
-        //        var result = Convert.ToInt32(GetArgumentFromToken(AccountConst.KEY_TenantId));
-
-        //        if (result <= 0)
-        //            Response.Redirect("/UserAccount/Login");
-
-        //        return result;
-        //    }
-        //}
-
-        //protected string CurrentTenantName
-        //{
-        //    get
-        //    {
-        //        var result = GetArgumentFromToken(AccountConst.KEY_TenantName);
-        //        return result ?? CurrentTenantId.ToString();
-        //    }
-        //}
 
         protected int CurrentUserId
         {

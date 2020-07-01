@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
+namespace Chameleon.Development.Controllers
 {
     public class InterfaceConditionController : WebControllerBase
     {

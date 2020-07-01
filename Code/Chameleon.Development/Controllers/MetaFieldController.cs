@@ -7,7 +7,7 @@ using SevenTiny.Bantina.Extensions.AspNetCore;
 using SevenTiny.Bantina.Validation;
 using System;
 
-namespace SevenTiny.Cloud.MultiTenant.Development.Controllers
+namespace Chameleon.Development.Controllers
 {
     public class MetaFieldController : WebControllerBase
     {

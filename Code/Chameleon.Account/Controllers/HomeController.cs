@@ -33,5 +33,10 @@ namespace Chameleon.Account.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult Abount()
+        {
+            return View();
+        }
     }
 }
