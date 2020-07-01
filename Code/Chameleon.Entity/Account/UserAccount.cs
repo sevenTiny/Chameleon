@@ -12,7 +12,7 @@ namespace Chameleon.Entity
     [Table]
     public class UserAccount : CommonBase
     {
-        [Column("Phone")]
+        [Column]
         public string Phone { get; set; }
         [Column]
         public string Email { get; set; }
