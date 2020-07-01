@@ -44,8 +44,12 @@ namespace Chameleon.Account.Controllers
             var result = Result.Success()
                 .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Name, nameof(entity.Name))
-                .ContinueEnsureArgumentNotNullOrEmpty(entity.Phone, nameof(entity.Phone))
-                .ContinueAssert(_ => entity.Phone.IsMobilePhone(), "手机号码不合法")
+                .Continue(_ =>
+                {
+                    if (!string.IsNullOrEmpty(entity.Phone))
+                        return _.ContinueAssert(__ => entity.Phone.IsMobilePhone(), "手机号码不合法");
+                    return _;
+                })
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Email, nameof(entity.Email))
                 .ContinueAssert(_ => entity.Email.IsEmail(), "邮箱不合法")
                 .Continue(_ =>
@@ -72,16 +76,25 @@ namespace Chameleon.Account.Controllers
         public IActionResult UpdateLogic(UserAccount entity)
         {
             var result = Result.Success()
-              .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Name, nameof(entity.Name))
-                .ContinueEnsureArgumentNotNullOrEmpty(entity.Phone, nameof(entity.Phone))
-                .ContinueAssert(_ => entity.Phone.IsMobilePhone(), "手机号码不合法")
+                .Continue(_ =>
+                {
+                    if (!string.IsNullOrEmpty(entity.Phone))
+                        return _.ContinueAssert(__ => entity.Phone.IsMobilePhone(), "手机号码不合法");
+                    return _;
+                })
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Email, nameof(entity.Email))
                 .ContinueAssert(_ => entity.Email.IsEmail(), "邮箱不合法")
                .Continue(_ =>
                {
                    entity.ModifyBy = CurrentUserId;
-                   return _userAccountRepository.Update(entity);
+                   return _userAccountService.Update(entity, t =>
+                   {
+                       t.Email = entity.Email;
+                       t.Phone = entity.Phone;
+                       t.Name = entity.Name;
+                   });
                });
 
             if (!result.IsSuccess)
