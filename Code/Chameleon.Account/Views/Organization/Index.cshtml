@@ -1,0 +1,233 @@
+﻿@using Chameleon.Entity;
+@using SevenTiny.Bantina.Extensions.AspNetCore;
+@using Chameleon.Infrastructure;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
+}
+@{
+    ViewData["Level_1"] = "组织管理";
+    ViewData["Level_2"] = "组织设置";
+}
+
+<link href="~/css/jqueryTree.css" rel="stylesheet" />
+
+<article class="page-container">
+    <div class="row cl" style="margin-top:10px;">
+        <div class="col-xs-6 col-sm-6">
+            <form class="form form-horizontal" id="form-article-add" method="post" action="/">
+                <div class="row cl">
+                    <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>当前选中组织：</label>
+                    <div class="formControls col-xs-4 col-sm-5">
+                        <input type="text" class="input-text" style="background-color:#e8e8e8;" id="chooseNodeName" placeholder="在树形图中选择组织" readonly="readonly">
+                        <input type="text" class="input-text" id="chooseNodeId" name="code" hidden>
+                    </div>
+                    <div class="formControls col-xs-2 col-sm-2">
+                        <a class="btn btn-danger-outline radius" href="javascript:delNode();"><i class="Hui-iconfont">&#xe6e2;</i> 删除组织</a>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>组织关系：</label>
+                    <div class="formControls col-xs-7 col-sm-8">
+                        <span class="select-box">
+                            <select name="fieldType" class="input select" value="0" id="relation">
+                                @foreach (var item in RelationEnumHelper.GetRelationEnums())
+                                {
+                                    <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
+                                }
+                            </select>
+                        </span>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>新增组织名称：</label>
+                    <div class="formControls col-xs-7 col-sm-8">
+                        <input type="text" class="input-text" value="" placeholder="" name="name" id="newNodeId" required minLength="2" maxlength="50">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                        <a class="btn btn-primary radius" href="javascript:addCondition(this);"><i class="Hui-iconfont">&#xe632;</i> 添加</a>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <div class="col-xs-12 col-sm-12">
+                        <span class="c-red" id="sp_result_error"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tree well col-xs-6 col-sm-6">
+            <center><label>组织结构展示</label></center>
+            <ul id="rootUL"></ul>
+        </div>
+    </div>
+</article>
+
+@await Html.PartialAsync("~/Views/Shared/_FooterScripts.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_CommonScript.cshtml")
+<!--请在下方写此页面业务相关的脚本-->
+<script>
+    $(function () {
+
+        var json =
+            [{
+                "name": "目前没有组织，点击我（根节点）开始配置",
+                "id": "00000000-0000-0000-0000-000000000000",
+                "parentId": "00000000-0000-0000-0000-000000000000",
+                "icon": "",
+                "children": []
+            }];
+
+        function tree(data) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].parentId == '00000000-0000-0000-0000-000000000000') {
+                    $("#rootUL").append("<li data-name='" + data[i].id + "' title='" + data[i].id + "' titlename='" + data[i].name + "'><span><i class=''></i> " + data[i].name + "</span></li>");
+                } else {
+                    var children = $("li[data-name='" + data[i].parentId + "']").children("ul");
+                    if (children.length == 0) {
+                        $("li[data-name='" + data[i].parentId + "']").append("<ul></ul>")
+                    }
+                    $("li[data-name='" + data[i].parentId + "'] > ul").append(
+                        "<li data-name='" + data[i].id + "' title='" + data[i].id + "' titlename='" + children.name + "'>" +
+                        "<span>" +
+                        "<i class=''></i> " +
+                        data[i].name +
+                        "</span>" +
+                        "</li>")
+                }
+                for (var j = 0; j < data[i].children.length; j++) {
+                    var children = data[i].children[j];
+                    var children2 = $("li[data-name='" + children.parentId + "']").children("ul");
+                    if (children2.length == 0) {
+                        $("li[data-name='" + children.parentId + "']").append("<ul></ul>")
+                    }
+                    $("li[data-name='" + children.parentId + "'] > ul").append(
+                        "<li data-name='" + children.id + "' title='" + children.id + "' titlename='" + children.name + "'>" +
+                        "<span>" +
+                        "<i class=''></i> " +
+                        children.name +
+                        "</span>" +
+                        "</li>")
+                    var children2 = data[i].children[j].children;
+                    tree(children2)
+                }
+                tree(data[i]);
+            }
+        }
+
+        //获取树
+        $.ajax({
+            type: 'GET',
+            url: '/Organization/GetTree',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                if (data.isSuccess) {
+                    if (data.data.length > 0) {
+                        tree(data.data);
+                    } else {
+                        tree(json);
+                    }
+                }
+                bindingClass();
+            },
+            error: function (data) {
+                tree(json);
+                console.error(data.message);
+                bindingClass();
+            },
+        });
+    });
+
+    function bindingClass() {
+        $('.tree li:has(ul)').addClass('parent_li')
+        //$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', '关闭');
+        $('.tree li > span').on('click', function (e) {
+            var title = $(this).parent('li').prop('title');
+            var titleName = $(this).parent('li').attr('titlename');
+            $("#chooseNodeId").val(title);
+            $("#chooseNodeName").val(titleName);
+            e.stopPropagation();
+        });
+    }
+
+    function cleanSpan() {
+        $("#sp_result_error").html("");//清空result msg span
+    }
+
+    var lock = false;
+
+    /* 添加条件 */
+    function addCondition(obj) {
+        cleanSpan();
+        //check parameters
+        if ($('#chooseNodeId').val() == '' || $('#chooseNodeId').val() == null) {
+            $("#sp_result_error").html("请点击选择组织图谱中的组织以便新增时明确组织关系！"); return;
+        }
+        if (!lock) {
+            lock = true;
+            //add
+            $.ajax({
+                type: 'POST',
+                url: '/Organization/AddNode?relation=' + $("#relation").val() + '&chooseId=' + $("#chooseNodeId").val(),
+                dataType: 'json',
+                data: {
+                    'Name': $("#newNodeId").val()
+                },
+                success: function (data) {
+                    if (data.isSuccess) {
+                        layer.msg(data.message, { icon: 1, time: 1000 });
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        $("#sp_result_error").html(data.message);
+                    }
+                    lock = false;
+                },
+                error: function (data) {
+                    $("#sp_result_error").html(data.message);
+                    lock = false;
+                },
+            });
+        } else {
+            layer.msg('您的点击太频繁了！', { icon: 2, time: 1000 });
+        }
+    }
+
+    /**删除节点 */
+    function delNode() {
+        layer.confirm('删除操作将同时删除组织下所有子组织！', function (index) {
+            var nodeId = $('#chooseNodeId').val();
+            if (nodeId == null || nodeId == '') {
+                layer.msg('请在组织图谱中选择要删除的组织！', { icon: 2, time: 1000 });
+                return;
+            }
+            if (!lock) {
+                lock = true;
+                $.ajax({
+                    type: 'POST',
+                    url: '/Organization/DelNode?nodeId=' + nodeId,
+                    dataType: 'json',
+                    success: function (data) {
+                        layer.msg(data.message, { icon: 1, time: 1000 });
+                        if (data.isSuccess) {
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 1000);
+                        }
+                        lock = false;
+                    },
+                    error: function (data) {
+                        console.log(data.message);
+                        lock = false;
+                    }
+                });
+            } else {
+                layer.msg('您的点击太频繁了！', { icon: 2, time: 1000 });
+            }
+        });
+    }
+</script>
+
