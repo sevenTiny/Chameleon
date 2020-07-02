@@ -2,6 +2,7 @@
 using Chameleon.Infrastructure;
 using Chameleon.Infrastructure.Consts;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
@@ -13,8 +14,7 @@ namespace Chameleon.Account.Controllers
     /// <summary>
     /// 控制器基类
     /// </summary>
-    //[DevelopmentAuthFilter]
-    //[Authorize]
+    //[Authorize("Role")]
     public class WebControllerBase : Controller
     {
         protected JsonResult JsonResultSuccess(string msg = "操作成功")
@@ -33,9 +33,9 @@ namespace Chameleon.Account.Controllers
             var value = auth?.FirstOrDefault(t => t.Type.Equals(key))?.Value;
 
             if (string.IsNullOrEmpty(value))
-                Response.Redirect($"/UserAccount/Login?redirect=/Home/Index");
+                Response.Redirect($"/UserAccount/SignIn?redirect=/Home/Index");
 
-            return string.Empty;
+            return value;
         }
 
         protected long CurrentUserId

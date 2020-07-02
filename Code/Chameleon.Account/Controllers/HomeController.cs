@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Chameleon.Account.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Chameleon.Account.Controllers
 {
@@ -33,6 +34,12 @@ namespace Chameleon.Account.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [AllowAnonymous]
+        public IActionResult Http403()
+        {
+            return View();
         }
 
         public IActionResult Abount()
