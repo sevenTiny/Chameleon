@@ -1,7 +1,10 @@
 ﻿using Chameleon.Entity;
 using Chameleon.Infrastructure;
+using Chameleon.Infrastructure.Configs;
+using Chameleon.Infrastructure.Consts;
 using Chameleon.Repository;
 using Chameleon.ValueObject;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SevenTiny.Bantina;
@@ -10,6 +13,8 @@ using SevenTiny.Bantina.Security;
 using SevenTiny.Cloud.ScriptEngine;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace Chameleon.Domain
@@ -54,6 +59,12 @@ namespace Chameleon.Domain
         /// </summary>
         /// <returns></returns>
         List<UserAccount> GetUserAccountList();
+        /// <summary>
+        /// 获取token
+        /// </summary>
+        /// <param name="userAccount"></param>
+        /// <returns></returns>
+        Result<string> GetToken(UserAccount userAccount);
     }
 
     public class UserAccountService : CommonServiceBase<UserAccount>, IUserAccountService
@@ -68,7 +79,7 @@ namespace Chameleon.Domain
 
         private string GetSaltPassword(string password)
         {
-            return MD5Helper.GetMd5Hash(string.Concat("Chameleon_", password, "_Chameleon"));
+            return MD5Helper.GetMd5Hash(string.Concat(AccountConst.SALT_BEFORE, password, AccountConst.SALT_AFTER));
         }
 
         public Result AddUserAccount(UserAccount userAccount)
@@ -82,6 +93,8 @@ namespace Chameleon.Domain
             //密码加盐
             userAccount.Password = GetSaltPassword(userAccount.Password);
             userAccount.Role = (int)RoleEnum.User;
+
+            userAccount.UserId = TimeHelper.GetTimeStamp();
 
             return base.Add(userAccount);
         }
@@ -150,6 +163,38 @@ namespace Chameleon.Domain
             }
 
             return userList;
+        }
+
+        public Result<string> GetToken(UserAccount userAccount)
+        {
+            // push the user’s name into a claim, so we can identify the user later on.
+            var claims = new[]
+            {
+                //用户Id
+                new Claim(AccountConst.KEY_UserId,userAccount.UserId.ToString()),
+                //用户邮箱
+                new Claim(AccountConst.KEY_UserEmail, userAccount.Email),
+                //用户名
+                new Claim(AccountConst.KEY_UserName, userAccount.Name),
+                //用户系统身份
+                new Claim(AccountConst.KEY_ChameleonRole, userAccount.Role.ToString()),
+                //用户组织
+                new Claim(AccountConst.KEY_Organization, userAccount.Organization.ToString())
+            };
+            //sign the token using a secret key.This secret will be shared between your API and anything that needs to check that the token is legit.
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AccountConfig.Instance.SecurityKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            //.NET Core’s JwtSecurityToken class takes on the heavy lifting and actually creates the token.
+            var token = new JwtSecurityToken(
+                issuer: AccountConfig.Instance.TokenIssuer,
+                audience: AccountConfig.Instance.TokenAudience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(AccountConfig.Instance.TokenExpiredMinutesTimeSpan),
+                signingCredentials: creds);
+
+            string tokenStr = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return Result<string>.Success("get token success", tokenStr);
         }
     }
 }

@@ -26,11 +26,11 @@ namespace Chameleon.Entity
         [Column]
         public int IsDeleted { get; set; } = 0;
         [Column]
-        public int CreateBy { get; set; } = 0;
+        public long CreateBy { get; set; } = 0;
         [Column("`CreateTime`")]
         public DateTime CreateTime { get; set; } = DateTime.Now;
         [Column]
-        public int ModifyBy { get; set; } = 0;
+        public long ModifyBy { get; set; } = 0;
         [Column("`ModifyTime`")]
         public DateTime ModifyTime { get; set; } = DateTime.Now;
         [Column]

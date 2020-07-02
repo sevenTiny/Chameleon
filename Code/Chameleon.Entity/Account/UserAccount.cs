@@ -13,6 +13,8 @@ namespace Chameleon.Entity
     public class UserAccount : CommonBase
     {
         [Column]
+        public long UserId { get; set; }
+        [Column]
         public string Phone { get; set; }
         [Column]
         public string Email { get; set; }

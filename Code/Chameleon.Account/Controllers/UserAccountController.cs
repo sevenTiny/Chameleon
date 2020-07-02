@@ -9,6 +9,8 @@ using SevenTiny.Bantina.Extensions.AspNetCore;
 using Chameleon.Entity;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Validation;
+using Microsoft.AspNetCore.Authorization;
+using Chameleon.Infrastructure.Consts;
 
 namespace Chameleon.Account.Controllers
 {
@@ -22,11 +24,6 @@ namespace Chameleon.Account.Controllers
             _organizationRepository = organizationRepository;
             _userAccountRepository = userAccountRepository;
             _userAccountService = userAccountService;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         public IActionResult List()
@@ -123,12 +120,20 @@ namespace Chameleon.Account.Controllers
             return JsonResultSuccess("删除成功");
         }
 
+        [AllowAnonymous]
         public IActionResult SignIn(string redirect)
         {
             ViewData["Redirect"] = redirect;
             return View();
         }
 
+        /// <summary>
+        /// 登陆
+        /// </summary>
+        /// <param name="userAccount"></param>
+        /// <param name="redirect"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
         public IActionResult SignInLogic(UserAccount userAccount, string redirect)
         {
             ViewData["Redirect"] = redirect;
@@ -136,21 +141,36 @@ namespace Chameleon.Account.Controllers
             if (string.IsNullOrEmpty(userAccount.Email) || string.IsNullOrEmpty(userAccount.Password) || string.IsNullOrEmpty(redirect))
                 return View("SignIn", Result<UserAccount>.Error("参数错误", userAccount).ToResponseModel());
 
+            //如果校验密码成功，则会返回账号信息
             var checkResult = _userAccountService.VerifyPassword(null, userAccount.Email, userAccount.Password);
 
-            checkResult.Data = userAccount;
-
             if (!checkResult.IsSuccess)
+            {
+                checkResult.Data = userAccount;
                 return View("SignIn", checkResult.ToResponseModel());
+            }
+
+            //get token
+            var token = _userAccountService.GetToken(checkResult.Data).Data;
+            //set token to cookie
+            Response.Cookies.Append(AccountConst.KEY_AccessToken, token);
+            //concat url
+            if (redirect.Contains('?'))
+                redirect = $"{redirect}&{AccountConst.KEY_AccessToken}={token}";
+            else
+                redirect = $"{redirect}?{AccountConst.KEY_AccessToken}={token}";
 
             return Redirect(redirect);
         }
 
         public IActionResult SignOut()
         {
+            Response.Cookies.Delete(AccountConst.KEY_AccessToken);
+
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult SignUp()
         {
             return View();

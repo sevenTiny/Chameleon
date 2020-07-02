@@ -9,7 +9,7 @@ using Chameleon.Account.Models;
 
 namespace Chameleon.Account.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : WebControllerBase
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -20,6 +20,7 @@ namespace Chameleon.Account.Controllers
 
         public IActionResult Index()
         {
+            SetUserInfoToViewData();
             return View();
         }
 
