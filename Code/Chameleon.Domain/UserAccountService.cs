@@ -107,7 +107,7 @@ namespace Chameleon.Domain
             if (userAccount == null)
                 return Result<UserAccount>.Error("账号不存在");
 
-            if (userAccount.Password.Equals(GetSaltPassword(password)))
+            if (!userAccount.Password.Equals(GetSaltPassword(password)))
                 return Result<UserAccount>.Error("密码不正确");
 
             return Result<UserAccount>.Success(data: userAccount);

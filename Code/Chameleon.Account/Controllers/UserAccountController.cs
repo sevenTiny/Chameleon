@@ -122,5 +122,38 @@ namespace Chameleon.Account.Controllers
 
             return JsonResultSuccess("删除成功");
         }
+
+        public IActionResult SignIn(string redirect)
+        {
+            ViewData["Redirect"] = redirect;
+            return View();
+        }
+
+        public IActionResult SignInLogic(UserAccount userAccount, string redirect)
+        {
+            ViewData["Redirect"] = redirect;
+
+            if (string.IsNullOrEmpty(userAccount.Email) || string.IsNullOrEmpty(userAccount.Password) || string.IsNullOrEmpty(redirect))
+                return View("SignIn", Result<UserAccount>.Error("参数错误", userAccount).ToResponseModel());
+
+            var checkResult = _userAccountService.VerifyPassword(null, userAccount.Email, userAccount.Password);
+
+            checkResult.Data = userAccount;
+
+            if (!checkResult.IsSuccess)
+                return View("SignIn", checkResult.ToResponseModel());
+
+            return Redirect(redirect);
+        }
+
+        public IActionResult SignOut()
+        {
+            return View();
+        }
+
+        public IActionResult SignUp()
+        {
+            return View();
+        }
     }
 }
