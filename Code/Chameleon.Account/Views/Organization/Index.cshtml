@@ -165,6 +165,9 @@
         if ($('#chooseNodeId').val() == '' || $('#chooseNodeId').val() == null) {
             $("#sp_result_error").html("请点击选择组织图谱中的组织以便新增时明确组织关系！"); return;
         }
+        if ($('#newNodeId').val() == '' || $('#newNodeId').val() == null) {
+            $("#sp_result_error").html("请输入组织名称！"); return;
+        }
         if (!lock) {
             lock = true;
             //add
