@@ -14,7 +14,7 @@ namespace Chameleon.Account.Controllers
     /// <summary>
     /// 控制器基类
     /// </summary>
-    //[Authorize("Role")]
+    [Authorize]
     public class WebControllerBase : Controller
     {
         protected JsonResult JsonResultSuccess(string msg = "操作成功")

@@ -1,24 +1,20 @@
+using Chameleon.Bootstrapper;
+using Chameleon.Entity;
+using Chameleon.Infrastructure.Configs;
+using Chameleon.Infrastructure.Consts;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using System.Threading.Tasks;
-using Chameleon.Bootstrapper;
-using Chameleon.Entity;
-using Chameleon.Infrastructure.Configs;
-using Chameleon.Infrastructure.Consts;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Chameleon.Account
 {
@@ -34,14 +30,6 @@ namespace Chameleon.Account
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //添加策略鉴权模式
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("Role", policy => policy.RequireAssertion(context =>
-            //    {
-            //        return true;
-            //    }));
-            //});
             //添加授权
             services.AddAuthentication(s =>
             {
@@ -59,54 +47,43 @@ namespace Chameleon.Account
                     {
                         //如果request请求中有，则直接从request获取
                         string tokenFromRequest = context.Request.Query[AccountConst.KEY_AccessToken];
+
                         if (!string.IsNullOrEmpty(tokenFromRequest))
-                        {
                             context.Token = tokenFromRequest;
-                            return Task.CompletedTask;
-                        }
+
                         //如果cookie中有token，则直接从cookie获取
                         string tokenFromCookie = context.Request.Cookies[AccountConst.KEY_AccessToken];
+
                         if (!string.IsNullOrEmpty(tokenFromCookie))
-                        {
                             context.Token = tokenFromCookie;
-                            return Task.CompletedTask;
-                        }
+
                         return Task.CompletedTask;
                     },
                     OnChallenge = context =>
                     {
-                        return Task.CompletedTask;
                         //此处代码为终止.Net Core默认的返回类型和数据结果，这个很重要哦，必须
                         context.HandleResponse();
-                        //re-login
-                        if (context.Response.StatusCode == 401)
-                        {
-                            //未登录重新登陆
-                            context.Response.Redirect("/UserAccount/SignIn?redirect=/Home/Index");
-                        }
-                        else if (context.Response.StatusCode == 403)
-                        {
-                            //无权限跳转到拒绝页面
-                            context.Response.Redirect("/Home/Http403");
-                        }
-                        else
-                        {
-                            //无权限跳转到拒绝页面
-                            context.Response.Redirect("/Home/Http403");
-                        }
+                        //如果token验证失败，则跳转登陆地址
+                        context.Response.Redirect("/UserAccount/SignIn?redirect=/Home/Index");
+
                         return Task.CompletedTask;
                     },
                     OnAuthenticationFailed = context =>
                     {
                         //Token expired
                         if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                        {
                             context.Response.Headers.Add("Token-Expired", "true");
-                        }
+
                         return Task.CompletedTask;
                     },
                     OnTokenValidated = context =>
                     {
+                        //这里通过了token的校验，开始校验当前登陆用户有没有权限访问Account系统权限
+                        var role = context.Principal.Claims.FirstOrDefault(t => t.Type.Equals(AccountConst.KEY_ChameleonRole))?.Value;
+
+                        if (role == null || new[] { RoleEnum.Administrator, RoleEnum.Deveolper }.Contains((RoleEnum)int.Parse(role)))
+                            context.Response.Redirect($"/Home/Http403");
+
                         return Task.CompletedTask;
                     }
                 };
@@ -170,19 +147,12 @@ namespace Chameleon.Account
 
             app.UseRouting();
 
+            ///添加jwt验证
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseSession();
-
-            //app.Use((context, next) =>
-            //{
-            //    var value = context.AuthenticateAsync()?.Result?.Principal?.Claims;
-
-            //    if (value == null)
-            //        context.Response.Redirect($"/UserAccount/SignIn?redirect=/Home/Index");
-
-            //    return Task.CompletedTask;
-            //});
 
             app.UseEndpoints(endpoints =>
             {
