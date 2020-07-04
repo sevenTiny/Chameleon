@@ -78,10 +78,23 @@ namespace Chameleon.Account
                     },
                     OnTokenValidated = context =>
                     {
+                        //这里注册登陆也没有权限了
+                        if (context.HttpContext.Request.Path.HasValue)
+                        {
+                            if (new[] {
+                                "/Home/Http403",
+                                "/UserAccount/SignIn",
+                                "/UserAccount/SignInLogic",
+                                "/UserAccount/SignOut",
+                                "/UserAccount/SignUp",
+                            }.Contains(context.HttpContext.Request.Path.Value))
+                                return Task.CompletedTask;
+                        }
+
                         //这里通过了token的校验，开始校验当前登陆用户有没有权限访问Account系统权限
                         var role = context.Principal.Claims.FirstOrDefault(t => t.Type.Equals(AccountConst.KEY_ChameleonRole))?.Value;
 
-                        if (role == null || new[] { RoleEnum.Administrator, RoleEnum.Deveolper }.Contains((RoleEnum)int.Parse(role)))
+                        if (role == null || !new[] { RoleEnum.Administrator, RoleEnum.Deveolper }.Contains((RoleEnum)int.Parse(role)))
                             context.Response.Redirect($"/Home/Http403");
 
                         return Task.CompletedTask;

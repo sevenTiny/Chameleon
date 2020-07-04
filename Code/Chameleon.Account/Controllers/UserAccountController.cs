@@ -167,7 +167,7 @@ namespace Chameleon.Account.Controllers
         {
             Response.Cookies.Delete(AccountConst.KEY_AccessToken);
 
-            return View();
+            return Redirect("/UserAccount/SignIn?redirect=/Home/Index");
         }
 
         [AllowAnonymous]
