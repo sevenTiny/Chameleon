@@ -4,6 +4,7 @@ using Chameleon.DataApi.Models;
 using Chameleon.Domain;
 using Chameleon.Entity;
 using Chameleon.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -17,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace Chameleon.DataApi.Controllers
 {
+    [Authorize]
     public class ApiControllerBase : ApiControllerCommonBase
     {
         protected IDataAccessApp _dataAccessApp;
