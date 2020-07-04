@@ -97,6 +97,9 @@ namespace Chameleon.Development.Controllers
 
         public IActionResult Detail(Guid applicationId, string applicationCode)
         {
+            //获取用户信息到页面
+            SetUserInfoToViewData();
+
             if (string.IsNullOrEmpty(applicationCode))
                 return Redirect("/CloudApplication/Select");
 

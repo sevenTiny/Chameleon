@@ -1,4 +1,6 @@
-﻿namespace Chameleon.Infrastructure.Consts
+﻿using Chameleon.Infrastructure.Configs;
+
+namespace Chameleon.Infrastructure.Consts
 {
     public static class AccountConst
     {
@@ -17,5 +19,26 @@
         public const string KEY_AccessToken = "_AccessToken";
         public const string KEY_ChameleonRole = "ChameleonRole";
         public const string KEY_Organization = "Organization";
+
+        /// <summary>
+        /// 登陆并跳转的url
+        /// </summary>
+        public static string AccountSignInUrl = string.Concat(UrlsConfig.Instance.Account, "/UserAccount/SignIn?redirect=");
+        /// <summary>
+        /// 403页面地址
+        /// </summary>
+        public static string Http403Url = string.Concat(UrlsConfig.Instance.Account, "/Home/Http403");
+        /// <summary>
+        /// 切换开发态用户地址
+        /// </summary>
+        public static string SwitchDeveolpmentAccountUrl = string.Concat(AccountSignInUrl, UrlsConfig.Instance.Development, "/Home/Index");
+        /// <summary>
+        /// 切换Account系统用户地址
+        /// </summary>
+        public static string SwitchAccountAccountUrl = string.Concat(AccountSignInUrl, UrlsConfig.Instance.Account, "/Home/Index");
+        /// <summary>
+        /// 退出地址
+        /// </summary>
+        public static string SignOutUrl = string.Concat(UrlsConfig.Instance.Account, "/UserAccount/SignOut");
     }
 }

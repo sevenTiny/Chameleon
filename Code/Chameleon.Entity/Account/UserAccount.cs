@@ -34,7 +34,7 @@ namespace Chameleon.Entity
         /// 身份
         /// </summary>
         [Column]
-        public int Identity { get; set; }
+        public Guid Identity { get; set; }
         /// <summary>
         /// 所属组织
         /// </summary>

@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SevenTiny.Bantina;
-using SevenTiny.Bantina.Extensions.AspNetCore;
+﻿using Chameleon.Bootstrapper;
+using Microsoft.AspNetCore.Authorization;
 using System;
 
 namespace Chameleon.Development.Controllers
@@ -8,15 +7,9 @@ namespace Chameleon.Development.Controllers
     /// <summary>
     /// 控制器基类
     /// </summary>
-    //[DevelopmentAuthFilter]
-    //[Authorize]
-    public class WebControllerBase : Controller
+    [Authorize]
+    public class WebControllerBase : WebControllerCommonBase
     {
-        protected JsonResult JsonResultSuccess(string msg = "操作成功")
-        {
-            return Result.Success(msg).ToJsonResult();
-        }
-
         /// <summary>
         /// 将当前操作的应用信息存储到cookies中
         /// </summary>
@@ -97,115 +90,5 @@ namespace Chameleon.Development.Controllers
                 return metaObjectCode;
             }
         }
-
-        ///// <summary>
-        ///// 请求上下文信息
-        ///// </summary>
-        //private ApplicationContext _applicationContext;
-        //protected ApplicationContext CurrentApplicationContext
-        //{
-        //    get
-        //    {
-        //        if (_applicationContext == null)
-        //        {
-        //            _applicationContext = new ApplicationContext
-        //            {
-        //                ApplicationCode = CurrentApplicationCode,
-        //                TenantId = CurrentTenantId,
-        //                UserId = CurrentUserId,
-        //                UserEmail = CurrentUserEmail
-        //            };
-        //        }
-        //        return _applicationContext;
-        //    }
-        //}
-
-
-        ///// <summary>
-        ///// 从Token串中获取参数
-        ///// </summary>
-        ///// <param name="key"></param>
-        ///// <returns></returns>
-        //private string GetArgumentFromToken(string key)
-        //{
-        //    return HttpContext.GetArgumentFromToken(key);
-        //}
-
-        //protected int CurrentTenantId
-        //{
-        //    get
-        //    {
-        //        var result = Convert.ToInt32(GetArgumentFromToken(AccountConst.KEY_TenantId));
-
-        //        if (result <= 0)
-        //            Response.Redirect("/UserAccount/Login");
-
-        //        return result;
-        //    }
-        //}
-
-        //protected string CurrentTenantName
-        //{
-        //    get
-        //    {
-        //        var result = GetArgumentFromToken(AccountConst.KEY_TenantName);
-        //        return result ?? CurrentTenantId.ToString();
-        //    }
-        //}
-
-        protected int CurrentUserId
-        {
-            get
-            {
-                return 0;
-
-                //var result = Convert.ToInt32(GetArgumentFromToken(AccountConst.KEY_UserId));
-
-                //if (result <= 0)
-                //    Response.Redirect($"{UrlsConfig.Instance.Account}/UserAccount/Login?_redirectUrl={UrlsConfig.Instance.DevelopmentWebUrl}/Home/Index");
-
-                //return result;
-            }
-        }
-
-        //protected string CurrentUserEmail
-        //{
-        //    get
-        //    {
-        //        var result = GetArgumentFromToken(AccountConst.KEY_UserEmail);
-
-        //        if (string.IsNullOrEmpty(result))
-        //            Response.Redirect("/UserAccount/Login");
-
-        //        return result;
-        //    }
-        //}
-
-        //protected string CurrentUserName
-        //{
-        //    get
-        //    {
-        //        var result = GetArgumentFromToken(AccountConst.KEY_UserName);
-        //        return result ?? CurrentUserEmail;
-        //    }
-        //}
-
-        //protected int CurrentIdentity
-        //{
-        //    get
-        //    {
-        //        var result = Convert.ToInt32(GetArgumentFromToken(AccountConst.KEY_SystemIdentity));
-        //        return result;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 将用户信息存到ViewData里面用于页面展示
-        ///// </summary>
-        //protected void SetUserInfoToViewData()
-        //{
-        //    ViewData["UserIdentity"] = SystemIdentityTranslator.ToChinese(CurrentIdentity);
-        //    ViewData["UserName"] = CurrentUserName;
-        //}
     }
 }

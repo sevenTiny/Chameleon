@@ -1,4 +1,5 @@
 ﻿using Chameleon.Application;
+using Chameleon.Bootstrapper;
 using Chameleon.DataApi.Models;
 using Chameleon.Domain;
 using Chameleon.Entity;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Chameleon.DataApi.Controllers
 {
-    public class ApiControllerBase : ControllerBase
+    public class ApiControllerBase : ApiControllerCommonBase
     {
         protected IDataAccessApp _dataAccessApp;
         protected IInterfaceSettingRepository _interfaceSettingRepository;

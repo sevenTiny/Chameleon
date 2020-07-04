@@ -21,7 +21,9 @@ namespace Chameleon.Account.Controllers
 
         public IActionResult Index()
         {
+            //获取用户信息到页面
             SetUserInfoToViewData();
+
             return View();
         }
 

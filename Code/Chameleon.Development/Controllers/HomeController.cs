@@ -9,7 +9,7 @@ using Chameleon.Development.Models;
 
 namespace Chameleon.Development.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : WebControllerBase
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -21,11 +21,6 @@ namespace Chameleon.Development.Controllers
         public IActionResult Index()
         {
             return Redirect("/CloudApplication/Select");
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
