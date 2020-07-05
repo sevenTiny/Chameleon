@@ -40,7 +40,7 @@ namespace Chameleon.Bootstrapper
 
             if (string.IsNullOrEmpty(value))
             {
-                Response.Redirect(string.Concat(AccountConst.AccountSignInUrl, Request.Host, Request.Path), true);
+                Response.Redirect(string.Concat(AccountConst.AccountSignInUrl, Request.Host, Request.Path));
             }
 
             return value;

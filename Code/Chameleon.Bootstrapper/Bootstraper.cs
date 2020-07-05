@@ -68,7 +68,7 @@ namespace Chameleon.Bootstrapper
                         //此处代码为终止.Net Core默认的返回类型和数据结果，这个很重要哦，必须
                         context.HandleResponse();
                         //如果token验证失败，则跳转登陆地址
-                        context.Response.Redirect(string.Concat(AccountConst.AccountSignInUrl, context.Request.Host, context.Request.Path), true);
+                        context.Response.Redirect(string.Concat(AccountConst.AccountSignInUrl, context.Request.Host, context.Request.Path));
 
                         return Task.CompletedTask;
                     },

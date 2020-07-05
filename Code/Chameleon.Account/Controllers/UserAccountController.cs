@@ -160,7 +160,7 @@ namespace Chameleon.Account.Controllers
             else
                 redirect = $"{redirect}?{AccountConst.KEY_AccessToken}={token}";
 
-            return RedirectPermanent(redirect);
+            return Redirect(redirect);
         }
 
         public IActionResult SignOut()
