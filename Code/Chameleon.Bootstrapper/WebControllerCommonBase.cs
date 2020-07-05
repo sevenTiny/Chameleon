@@ -3,6 +3,7 @@ using Chameleon.Infrastructure;
 using Chameleon.Infrastructure.Consts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
@@ -14,6 +15,7 @@ namespace Chameleon.Bootstrapper
     /// <summary>
     /// 控制器基类
     /// </summary>
+    [EnableCors]
     public class WebControllerCommonBase : Controller
     {
         public WebControllerCommonBase()

@@ -118,6 +118,20 @@ namespace Chameleon.Bootstrapper
                 };
             });
 
+            services.AddCors(options =>
+                options.AddDefaultPolicy(policy =>
+                    policy.WithOrigins(new[]
+                    {
+                        UrlsConfig.Instance.Account,
+                        UrlsConfig.Instance.DataApi,
+                        UrlsConfig.Instance.Development
+                    })
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    )
+                );
+
             //session support
             services.AddDistributedMemoryCache();
 
@@ -172,6 +186,9 @@ namespace Chameleon.Bootstrapper
 
             app.UseSession();
             app.UseCookiePolicy();
+
+            app.UseCors();
+            app.UseHttpsRedirection();
         }
     }
 }

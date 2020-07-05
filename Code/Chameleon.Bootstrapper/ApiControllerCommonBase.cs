@@ -1,6 +1,7 @@
 ﻿using Chameleon.Entity;
 using Chameleon.Infrastructure.Consts;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
@@ -11,6 +12,7 @@ using System.Text;
 
 namespace Chameleon.Bootstrapper
 {
+    [EnableCors]
     public class ApiControllerCommonBase : ControllerBase
     {
         protected JsonResult JsonResultSuccess(string msg = "操作成功")
