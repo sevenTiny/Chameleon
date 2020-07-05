@@ -120,12 +120,14 @@ namespace Chameleon.Bootstrapper
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
-                    policy.WithOrigins(new[]
-                    {
-                        UrlsConfig.Instance.Account,
-                        UrlsConfig.Instance.DataApi,
-                        UrlsConfig.Instance.Development
-                    })
+                    policy
+                    //.WithOrigins(new[]
+                    //{
+                    //    UrlsConfig.Instance.Account,
+                    //    UrlsConfig.Instance.DataApi,
+                    //    UrlsConfig.Instance.Development
+                    //})
+                    .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
