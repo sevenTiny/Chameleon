@@ -18,7 +18,25 @@ namespace Chameleon.DataApi.Controllers
     [ApiController]
     public class CloudDataController : ApiControllerBase
     {
-        public CloudDataController(ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository) : base(triggerScriptService, triggerScriptRepository, interfaceConditionService, interfaceSettingRepository, dataAccessApp, interfaceVerificationService, interfaceVerificationRepository)
+        public CloudDataController(
+            IOrganizationService organizationService,
+            ITriggerScriptService triggerScriptService,
+            ITriggerScriptRepository triggerScriptRepository,
+            IInterfaceConditionService interfaceConditionService,
+            IInterfaceSettingRepository interfaceSettingRepository,
+            IDataAccessApp dataAccessApp,
+            IInterfaceVerificationService interfaceVerificationService,
+            IInterfaceVerificationRepository interfaceVerificationRepository) :
+            base(
+                organizationService,
+                triggerScriptService,
+                triggerScriptRepository,
+                interfaceConditionService,
+                interfaceSettingRepository,
+                dataAccessApp,
+                interfaceVerificationService,
+                interfaceVerificationRepository
+                )
         {
         }
 
