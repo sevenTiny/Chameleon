@@ -19,6 +19,12 @@ namespace Chameleon.Domain
         List<Organization> GetTree();
         Result AddNode(RelationEnum relation, Guid chooseNodeId, Organization entity);
         Result DeleteNode(Guid nodeId);
+        /// <summary>
+        /// 获取有权限的所有组织id
+        /// </summary>
+        /// <param name="userOrganization"></param>
+        /// <returns></returns>
+        List<Guid> GetPermissionOrganizations(Guid userOrganization);
     }
 
     public class OrganizationService : CommonServiceBase<Organization>, IOrganizationService
@@ -127,6 +133,34 @@ namespace Chameleon.Domain
             }
 
             return Result.Success();
+        }
+
+        public List<Guid> GetPermissionOrganizations(Guid userOrganization)
+        {
+            //获取所有子节点
+            var nodes = _organizationRepository.GetListUnDeleted();
+
+            if (nodes == null || !nodes.Any())
+                return new List<Guid> { userOrganization };
+
+            //结果
+            var result = new List<Guid>();
+
+            result.AddRange(GetTree(nodes, userOrganization));
+
+            return result.Distinct().ToList();
+
+            IEnumerable<Guid> GetTree(List<Organization> source, Guid parentId)
+            {
+                var childs = source.Where(t => t.ParentId == parentId).ToList();
+
+                if (childs == null)
+                    return new List<Guid>(0);
+
+                childs.ForEach(t => result.AddRange(GetTree(source, t.Id)));
+
+                return childs.Select(t => t.Id);
+            }
         }
     }
 }

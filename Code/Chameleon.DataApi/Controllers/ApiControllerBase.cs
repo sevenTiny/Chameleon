@@ -3,6 +3,8 @@ using Chameleon.Bootstrapper;
 using Chameleon.DataApi.Models;
 using Chameleon.Domain;
 using Chameleon.Entity;
+using Chameleon.Infrastructure.Configs;
+using Chameleon.Infrastructure.Consts;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,8 +30,10 @@ namespace Chameleon.DataApi.Controllers
         protected IInterfaceConditionService _interfaceConditionService;
         protected ITriggerScriptRepository _triggerScriptRepository;
         protected ITriggerScriptService _triggerScriptService;
-        public ApiControllerBase(ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository)
+        protected IOrganizationService _organizationService;
+        public ApiControllerBase(IOrganizationService organizationService, ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository)
         {
+            _organizationService = organizationService;
             _triggerScriptService = triggerScriptService;
             _triggerScriptRepository = triggerScriptRepository;
             _interfaceConditionService = interfaceConditionService;
@@ -111,6 +115,7 @@ namespace Chameleon.DataApi.Controllers
             _queryContext.TriggerContext.Add("MetaObjectId", _queryContext.InterfaceSetting.MetaObjectId);
             _queryContext.TriggerContext.Add("CloudApplicationCode", _queryContext.InterfaceSetting.CloudApplicationCode);
             _queryContext.TriggerContext.Add("CloudApplicationtId", _queryContext.InterfaceSetting.CloudApplicationtId);
+            _queryContext.TriggerContext.Add("Organization", CurrentOrganization);
         }
 
         /// <summary>
@@ -156,7 +161,13 @@ namespace Chameleon.DataApi.Controllers
             }
 
             //构造条件
-            return _interfaceConditionService.GetFilterDefinitionByCondition(_queryContext.InterfaceSetting.InterfaceConditionId, _queryContext.ConditionArgumentsUpperKeyDic);
+            var filter = _interfaceConditionService.GetFilterDefinitionByCondition(_queryContext.InterfaceSetting.InterfaceConditionId, _queryContext.ConditionArgumentsUpperKeyDic);
+
+            //如果开启Mou功能，则拼接MOU权限，有权限的组织下的数据才能被查到
+            if (ChameleonSettingConfig.Instance.MouEnable == 1)
+                filter = Builders<BsonDocument>.Filter.And(filter, Builders<BsonDocument>.Filter.In(AccountConst.KEY_Organization, _organizationService.GetPermissionOrganizations(CurrentOrganization)));
+
+            return filter;
         }
     }
 }

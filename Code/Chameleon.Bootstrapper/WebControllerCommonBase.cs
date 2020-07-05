@@ -18,7 +18,7 @@ namespace Chameleon.Bootstrapper
     {
         public WebControllerCommonBase()
         {
-            
+
         }
 
         protected JsonResult JsonResultSuccess(string msg = "操作成功")
@@ -37,7 +37,7 @@ namespace Chameleon.Bootstrapper
             var value = auth?.FirstOrDefault(t => t.Type.Equals(key))?.Value;
 
             if (string.IsNullOrEmpty(value))
-                Response.Redirect($"/UserAccount/SignIn?redirect=/Home/Index");
+                Response.Redirect(string.Concat(AccountConst.AccountSignInUrl, Request.Host, Request.Path));
 
             return value;
         }
@@ -71,6 +71,17 @@ namespace Chameleon.Bootstrapper
             get
             {
                 return Convert.ToInt32(GetArgumentFromToken(AccountConst.KEY_ChameleonRole));
+            }
+        }
+
+        /// <summary>
+        /// 当前登陆人的组织
+        /// </summary>
+        protected Guid CurrentOrganization
+        {
+            get
+            {
+                return Guid.Parse(GetArgumentFromToken(AccountConst.KEY_Organization));
             }
         }
 
