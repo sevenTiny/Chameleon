@@ -38,8 +38,7 @@ namespace Chameleon.Bootstrapper
 
             if (string.IsNullOrEmpty(value))
             {
-                Response.StatusCode = 301;
-                Response.Redirect(string.Concat(AccountConst.AccountSignInUrl, Request.Host, Request.Path));
+                Response.Redirect(string.Concat(AccountConst.AccountSignInUrl, Request.Host, Request.Path), true);
             }
 
             return value;
