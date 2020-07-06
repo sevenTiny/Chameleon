@@ -9,6 +9,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
+using System;
 using System.Linq;
 using System.Text.Json;
 
@@ -124,6 +125,17 @@ namespace Chameleon.DataApi.Controllers
 
                 //before
                 var args = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Add_Before, new object[] { _queryContext.TriggerContext, bson }, bson);
+
+                //系统字段赋值
+                if (args != null)
+                {
+                    args["Organization"] = CurrentOrganization.ToString();
+                    args["CreateBy"] = CurrentUserId;
+                    args["CreateTime"] = DateTime.Now;
+                    args["ModifyBy"] = CurrentUserId;
+                    args["ModifyTime"] = DateTime.Now;
+                }
+
                 //execute
                 var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, new[] { args });
                 //after
@@ -155,6 +167,12 @@ namespace Chameleon.DataApi.Controllers
 
                 //before
                 filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.Update_Before, new object[] { _queryContext.TriggerContext, _queryContext.ConditionArgumentsUpperKeyDic, filter, bson }, filter);
+                //系统字段赋值
+                if (bson != null)
+                {
+                    bson["ModifyBy"] = CurrentUserId;
+                    bson["ModifyTime"] = DateTime.Now;
+                }
                 //execute
                 var result = _dataAccessApp.BatchUpdate(_queryContext.InterfaceSetting, filter, bson);
                 //after

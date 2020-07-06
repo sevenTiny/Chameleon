@@ -59,7 +59,7 @@ namespace Chameleon.Entity
         [Description("管理员")]
         Administrator = 1,
         [Description("开发人员")]
-        Deveolper = 2,
+        Developer = 2,
     }
 
     public static class RoleEnumHelper
@@ -67,6 +67,11 @@ namespace Chameleon.Entity
         public static RoleEnum[] GetRelationEnums()
         {
             return new[] { RoleEnum.User, RoleEnum.Administrator };
+        }
+
+        public static RoleEnum[] GetAllRelationEnums()
+        {
+            return new[] { RoleEnum.User, RoleEnum.Administrator, RoleEnum.Developer };
         }
     }
 }

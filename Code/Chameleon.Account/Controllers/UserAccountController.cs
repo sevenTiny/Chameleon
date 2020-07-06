@@ -28,8 +28,13 @@ namespace Chameleon.Account.Controllers
 
         public IActionResult List()
         {
-            var userList = _userAccountService.GetUserAccountList();
-            return View(userList);
+            List<UserAccount> result = _userAccountService.GetUserAccountList();
+
+            //如果不是开发者，则移除开发者人员的显示
+            if (!IsDeveloper)
+                result = result.Where(t => t.GetRole() != RoleEnum.Developer).ToList();
+
+            return View(result);
         }
 
         public IActionResult Add()
@@ -72,6 +77,7 @@ namespace Chameleon.Account.Controllers
 
         public IActionResult Update(Guid id)
         {
+            GetUserRoleToViewData();
             ViewData["Organization"] = _organizationRepository.GetListUnDeleted();
             var entity = _userAccountRepository.GetById(id);
             return View(ResponseModel.Success(data: entity));
@@ -106,6 +112,7 @@ namespace Chameleon.Account.Controllers
 
             if (!result.IsSuccess)
             {
+                GetUserRoleToViewData();
                 ViewData["Organization"] = _organizationRepository.GetListUnDeleted();
                 return View("Update", result.ToResponseModel(entity));
             }
@@ -172,11 +179,11 @@ namespace Chameleon.Account.Controllers
             return Redirect(redirect);
         }
 
-        public IActionResult SignOut()
+        public IActionResult SignOut(string redirect)
         {
             Response.Cookies.Delete(AccountConst.KEY_AccessToken);
 
-            return Redirect("/UserAccount/SignIn?redirect=/Home/Index");
+            return Redirect("/UserAccount/SignIn?redirect=" + redirect ?? "/Home/Index");
         }
 
         [AllowAnonymous]

@@ -8,6 +8,9 @@
     var result = Model as ResponseModel ?? new ResponseModel();
     var entity = result.Data as UserAccount ?? new UserAccount();
 
+    //根据当前用户角色确定可选角色范围
+    RoleEnum[] roleEnums = (RoleEnum)Convert.ToInt32(ViewData["UserRole"]) == RoleEnum.Developer ? RoleEnumHelper.GetAllRelationEnums() : RoleEnumHelper.GetRelationEnums();
+
     List<Organization> organizations = (ViewData["Organization"] as List<Organization>) ?? new List<Organization>(0);
 }
 @{
@@ -57,7 +60,7 @@
                 <span class="select-box">
                     <select class="input select" value="0" name="Role" id="Role" required>
                         <option value="">--请选择--</option>
-                        @foreach (var item in RoleEnumHelper.GetRelationEnums())
+                        @foreach (var item in roleEnums)
                         {
                             <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
                         }

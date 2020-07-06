@@ -43,7 +43,7 @@ namespace Chameleon.Repository
 
         public List<UserAccount> GetUserAccountListNoDeveolper()
         {
-            var deveolperRole = (int)RoleEnum.Deveolper;
+            var deveolperRole = (int)RoleEnum.Developer;
             return _dbContext.Queryable<UserAccount>().Where(t => t.IsDeleted == 0 && t.Role != deveolperRole).ToList();
         }
 

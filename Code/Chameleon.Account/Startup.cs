@@ -1,4 +1,5 @@
 using Chameleon.Bootstrapper;
+using Chameleon.Infrastructure.Enums;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +20,7 @@ namespace Chameleon.Account
         public void ConfigureServices(IServiceCollection services)
         {
             //注入配置
-            Bootstraper.ConfigureServices(services);
+            Bootstraper.ConfigureServices(ChameleonSystemEnum.Account, services);
 
             services.AddControllersWithViews();
             services.AddMvc().AddRazorRuntimeCompilation();
@@ -29,7 +30,7 @@ namespace Chameleon.Account
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //注入中间件
-            Bootstraper.Configure(app, env);
+            Bootstraper.Configure(ChameleonSystemEnum.Account, app, env);
 
             app.UseEndpoints(endpoints =>
             {

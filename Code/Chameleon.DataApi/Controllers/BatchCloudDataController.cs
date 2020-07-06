@@ -65,6 +65,20 @@ namespace Chameleon.DataApi.Controllers
 
                 //before
                 var arg = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.BatchAdd_Before, new object[] { _queryContext.TriggerContext, documents }, documents);
+
+                //系统字段赋值
+                if (arg != null && arg.Any())
+                {
+                    foreach (var item in arg)
+                    {
+                        item["Organization"] = CurrentOrganization.ToString();
+                        item["CreateBy"] = CurrentUserId;
+                        item["CreateTime"] = DateTime.Now;
+                        item["ModifyBy"] = CurrentUserId;
+                        item["ModifyTime"] = DateTime.Now;
+                    }
+                }
+
                 //execute
                 var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, arg);
                 //after

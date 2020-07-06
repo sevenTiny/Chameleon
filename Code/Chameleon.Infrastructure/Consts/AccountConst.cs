@@ -31,14 +31,18 @@ namespace Chameleon.Infrastructure.Consts
         /// <summary>
         /// 切换开发态用户地址
         /// </summary>
-        public static string SwitchDeveolpmentAccountUrl = string.Concat(AccountSignInUrl, UrlsConfig.Instance.Development, "/Home/Index");
+        public static string SwitchDevelopmentAccountUrl = string.Concat(AccountSignInUrl, UrlsConfig.Instance.Development);
         /// <summary>
         /// 切换Account系统用户地址
         /// </summary>
-        public static string SwitchAccountAccountUrl = string.Concat(AccountSignInUrl, UrlsConfig.Instance.Account, "/Home/Index");
+        public static string SwitchAccountAccountUrl = string.Concat(AccountSignInUrl, UrlsConfig.Instance.Account);
         /// <summary>
-        /// 退出地址
+        /// 退出开发态地址
         /// </summary>
-        public static string SignOutUrl = string.Concat(UrlsConfig.Instance.Account, "/UserAccount/SignOut");
+        public static string SignOutDevelopmentUrl = string.Concat(UrlsConfig.Instance.Account, "/UserAccount/SignOut?redirect=", UrlsConfig.Instance.Development);
+        /// <summary>
+        /// 退出account地址
+        /// </summary>
+        public static string SignOutAccountUrl = string.Concat(UrlsConfig.Instance.Account, "/UserAccount/SignOut?redirect=", UrlsConfig.Instance.Account);
     }
 }

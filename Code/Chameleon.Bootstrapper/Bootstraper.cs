@@ -4,6 +4,7 @@ using Chameleon.Entity;
 using Chameleon.Infrastructure;
 using Chameleon.Infrastructure.Configs;
 using Chameleon.Infrastructure.Consts;
+using Chameleon.Infrastructure.Enums;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -29,10 +30,21 @@ namespace Chameleon.Bootstrapper
     public static class Bootstraper
     {
         /// <summary>
+        /// 默认放行的路径
+        /// </summary>
+        private static string[] _AllowAnonymousPath = new[] {
+                                "/Home/Http403",
+                                "/UserAccount/SignIn",
+                                "/UserAccount/SignInLogic",
+                                "/UserAccount/SignOut",
+                                "/UserAccount/SignUp",
+                                };
+
+        /// <summary>
         /// 配置服务
         /// </summary>
         /// <param name="services"></param>
-        public static void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(ChameleonSystemEnum chameleonSystemEnum, IServiceCollection services)
         {
             //添加授权
             services.AddAuthentication(s =>
@@ -89,25 +101,30 @@ namespace Chameleon.Bootstrapper
                     },
                     OnTokenValidated = context =>
                     {
-                        //这里注册登陆也没有权限了
-                        if (context.HttpContext.Request.Path.HasValue)
+                        if (chameleonSystemEnum == ChameleonSystemEnum.Account && context.HttpContext.Request.Path.HasValue)
                         {
+                            //这里默认放行路径，不走角色过滤
                             //这几个路由是account里面的
-                            if (new[] {
-                                "/Home/Http403",
-                                "/UserAccount/SignIn",
-                                "/UserAccount/SignInLogic",
-                                "/UserAccount/SignOut",
-                                "/UserAccount/SignUp",
-                            }.Contains(context.HttpContext.Request.Path.Value))
+                            if (_AllowAnonymousPath.Contains(context.HttpContext.Request.Path.Value))
                                 return Task.CompletedTask;
                         }
 
                         //这里通过了token的校验，开始校验当前登陆用户有没有权限访问Account系统权限
                         var role = context.Principal.Claims.FirstOrDefault(t => t.Type.Equals(AccountConst.KEY_ChameleonRole))?.Value;
 
-                        if (role == null || !new[] { RoleEnum.Administrator, RoleEnum.Deveolper }.Contains((RoleEnum)int.Parse(role)))
+                        if (string.IsNullOrEmpty(role))
                             context.Response.Redirect(AccountConst.Http403Url);
+
+                        if (chameleonSystemEnum == ChameleonSystemEnum.Account)
+                        {
+                            if (!new[] { RoleEnum.Administrator, RoleEnum.Developer }.Contains((RoleEnum)int.Parse(role)))
+                                context.Response.Redirect(AccountConst.Http403Url);
+                        }
+                        else if (chameleonSystemEnum == ChameleonSystemEnum.Development)
+                        {
+                            if ((RoleEnum)int.Parse(role) != RoleEnum.Developer)
+                                context.Response.Redirect(AccountConst.Http403Url);
+                        }
 
                         return Task.CompletedTask;
                     }
@@ -173,7 +190,7 @@ namespace Chameleon.Bootstrapper
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(ChameleonSystemEnum chameleonSystemEnum, IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

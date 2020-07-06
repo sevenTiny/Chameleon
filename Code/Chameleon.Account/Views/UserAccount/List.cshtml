@@ -38,7 +38,20 @@
                         <td>@item.Name</td>
                         <td>@item.Email</td>
                         <td>@item.Phone</td>
-                        <td>@item.GetRole().GetDescription()</td>
+                        @{
+                            if (item.GetRole() == RoleEnum.Developer)
+                            {
+                                <td><span class="badge badge-danger radius">@item.GetRole().GetDescription()</span></td>
+                            }
+                            else if (item.GetRole() == RoleEnum.Administrator)
+                            {
+                                <td><span class="label label-primary radius">@item.GetRole().GetDescription()</span></td>
+                            }
+                            else
+                            {
+                                <td><span class="label label-default radius">@item.GetRole().GetDescription()</span></td>
+                            }
+                        }
                         <td>@item.OrganizationView</td>
                         <td>@item.SortNumber</td>
                         <td class="f-14 td-manage">
