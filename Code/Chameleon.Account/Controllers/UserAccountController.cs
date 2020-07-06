@@ -156,9 +156,18 @@ namespace Chameleon.Account.Controllers
             Response.Cookies.Append(AccountConst.KEY_AccessToken, token);
             //concat url
             if (redirect.Contains('?'))
+            {
                 redirect = $"{redirect}&{AccountConst.KEY_AccessToken}={token}";
+            }
             else
+            {
+                redirect = redirect.Replace(@"\", "/");
+
+                if (redirect.LastOrDefault().Equals('/'))
+                    redirect = redirect.Substring(0, redirect.LastIndexOf('/'));
+
                 redirect = $"{redirect}?{AccountConst.KEY_AccessToken}={token}";
+            }
 
             return Redirect(redirect);
         }
