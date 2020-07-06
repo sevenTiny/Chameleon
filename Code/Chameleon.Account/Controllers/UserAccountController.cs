@@ -152,6 +152,8 @@ namespace Chameleon.Account.Controllers
 
             //get token
             var token = _userAccountService.GetToken(checkResult.Data).Data;
+            //set token to cookie
+            Response.Cookies.Append(AccountConst.KEY_AccessToken, token);
             //concat url
             if (redirect.Contains('?'))
             {
