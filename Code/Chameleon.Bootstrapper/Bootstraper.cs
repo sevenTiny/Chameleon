@@ -53,13 +53,20 @@ namespace Chameleon.Bootstrapper
                         string tokenFromRequest = context.Request.Query[AccountConst.KEY_AccessToken];
 
                         if (!string.IsNullOrEmpty(tokenFromRequest))
+                        {
                             context.Token = tokenFromRequest;
+                            //set token to cookie
+                            context.Response.Cookies.Append(AccountConst.KEY_AccessToken, tokenFromRequest);
+                        }
+                        //如果url没有找到，则降级从cookie获取
+                        else
+                        {
+                            //如果cookie中有token，则直接从cookie获取
+                            string tokenFromCookie = context.Request.Cookies[AccountConst.KEY_AccessToken];
 
-                        //如果cookie中有token，则直接从cookie获取
-                        string tokenFromCookie = context.Request.Cookies[AccountConst.KEY_AccessToken];
-
-                        if (!string.IsNullOrEmpty(tokenFromCookie))
-                            context.Token = tokenFromCookie;
+                            if (!string.IsNullOrEmpty(tokenFromCookie))
+                                context.Token = tokenFromCookie;
+                        }
 
                         return Task.CompletedTask;
                     },
