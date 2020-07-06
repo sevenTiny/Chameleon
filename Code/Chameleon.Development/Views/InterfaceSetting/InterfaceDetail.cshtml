@@ -1,6 +1,7 @@
 ﻿@using Chameleon.Entity;
 @using SevenTiny.Bantina.Extensions.AspNetCore;
 @using Chameleon.Infrastructure;
+@using Chameleon.Infrastructure.Configs;
 @using System.Text;
 @{
     ViewData["Title"] = "InterfaceDetail";
@@ -11,7 +12,7 @@
     List<InterfaceCondition> interfaceConditions = (ViewData["InterfaceCondition"] as List<InterfaceCondition>) ?? new List<InterfaceCondition>(0);
     var interfaceType = entity.GetInterfaceType();
     var interfaceTypeDescription = ((InterfaceTypeEnum)entity.InterfaceType).GetDescription();
-    var dataApiUrl = string.Empty;
+    var dataApiUrl = UrlsConfig.Instance.DataApi;
 
     StringBuilder builder = new StringBuilder();
     foreach (var item in interfaceConditions)
