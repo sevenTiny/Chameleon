@@ -44,6 +44,12 @@ namespace Chameleon.Account.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public IActionResult Http404()
+        {
+            return View();
+        }
+
         public IActionResult Abount()
         {
             return View();
