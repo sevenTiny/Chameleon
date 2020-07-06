@@ -75,6 +75,7 @@
     //隐藏全部标签
     function hideAll() {
         $("#div_RegularExpression").hide()
+        $("#ipt_RegularExpression").addClass("ignore")
     }
 
     //切换接口类型
@@ -89,6 +90,7 @@
         //custom
         if (interfaceType == 0) {
             $("#div_RegularExpression").show()
+            $("#ipt_RegularExpression").removeClass("ignore")
         }
     }
 </script>
