@@ -57,7 +57,7 @@ namespace Chameleon.Entity
         Double = 9,
         [Description("货币")]
         Decimal = 10,
-        [Description("数据源")]
-        DataSource = 11,
+        //[Description("数据源")]
+        //DataSource = 11,
     }
 }
