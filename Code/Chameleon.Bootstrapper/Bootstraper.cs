@@ -189,7 +189,6 @@ namespace Chameleon.Bootstrapper
             app.UseCookiePolicy();
 
             app.UseCors();
-            app.UseHttpsRedirection();
         }
     }
 }
