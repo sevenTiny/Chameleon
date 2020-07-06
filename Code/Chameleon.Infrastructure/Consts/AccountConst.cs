@@ -21,9 +21,13 @@ namespace Chameleon.Infrastructure.Consts
         public const string KEY_Organization = "Organization";
 
         /// <summary>
+        /// 登陆Url
+        /// </summary>
+        public static string AccountSignInUrl = string.Concat(UrlsConfig.Instance.Account, "/UserAccount/SignIn");
+        /// <summary>
         /// 登陆并跳转的url
         /// </summary>
-        public static string AccountSignInUrl = string.Concat(UrlsConfig.Instance.Account, "/UserAccount/SignIn?redirect=");
+        public static string AccountSignInAndRedirectUrl = string.Concat(UrlsConfig.Instance.Account, "/UserAccount/SignIn?redirect=");
         /// <summary>
         /// 403页面地址
         /// </summary>
@@ -31,11 +35,11 @@ namespace Chameleon.Infrastructure.Consts
         /// <summary>
         /// 切换开发态用户地址
         /// </summary>
-        public static string SwitchDevelopmentAccountUrl = string.Concat(AccountSignInUrl, UrlsConfig.Instance.Development);
+        public static string SwitchDevelopmentAccountUrl = string.Concat(AccountSignInAndRedirectUrl, UrlsConfig.Instance.Development);
         /// <summary>
         /// 切换Account系统用户地址
         /// </summary>
-        public static string SwitchAccountAccountUrl = string.Concat(AccountSignInUrl, UrlsConfig.Instance.Account);
+        public static string SwitchAccountAccountUrl = string.Concat(AccountSignInAndRedirectUrl, UrlsConfig.Instance.Account);
         /// <summary>
         /// 退出开发态地址
         /// </summary>

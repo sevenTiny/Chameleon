@@ -36,7 +36,7 @@ namespace Chameleon.Bootstrapper
             var value = auth?.FirstOrDefault(t => t.Type.Equals(key))?.Value;
 
             if (string.IsNullOrEmpty(value))
-                Response.Redirect(string.Concat(AccountConst.AccountSignInUrl, Request.Host, Request.Path));
+                Response.Redirect(string.Concat(AccountConst.AccountSignInAndRedirectUrl, Request.Host, Request.Path));
 
             return value;
         }

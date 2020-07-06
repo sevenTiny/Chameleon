@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Chameleon.Infrastructure.Consts;
+@{
     ViewData["Title"] = "403";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 }
@@ -8,4 +9,10 @@
         <span class="va-m"> 403</span>
     </p>
     <p class="error-description">不好意思，您没有权限访问~</p>
+    <p class="error-info">
+        您可以：
+        <a href="javascript:;" onclick="history.go(-1)" class="c-primary">&lt; 返回上一页</a>
+        <span class="ml-20">|</span>
+        <a href="@AccountConst.AccountSignInUrl" class="c-primary ml-20">切换账号 &gt;</a>
+    </p>
 </article>
