@@ -66,7 +66,7 @@ namespace Chameleon.Domain
                 new MetaField{
                     ShortCode ="CreateBy",
                     Name ="创建人",
-                    FieldType= (int)DataType.Int32,
+                    FieldType= (int)DataType.Int64,
                     SortNumber=-1
                 },
                 new MetaField{
@@ -78,7 +78,7 @@ namespace Chameleon.Domain
                 new MetaField{
                     ShortCode ="ModifyBy",
                     Name ="修改人",
-                    FieldType= (int)DataType.Int32,
+                    FieldType= (int)DataType.Int64,
                     SortNumber=-1
                 },
                 new MetaField{
