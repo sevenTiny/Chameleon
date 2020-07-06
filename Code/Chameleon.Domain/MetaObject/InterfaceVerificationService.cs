@@ -1,13 +1,8 @@
 ﻿using Chameleon.Entity;
-using Chameleon.Infrastructure;
 using Chameleon.Repository;
 using SevenTiny.Bantina;
-using SevenTiny.Bantina.Extensions;
 using SevenTiny.Bantina.Validation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Chameleon.Domain
@@ -72,15 +67,34 @@ namespace Chameleon.Domain
             {
                 item.VerificationTips = entity.VerificationTips;
                 item.RegularExpression = entity.RegularExpression;
+                item.RegularType = entity.RegularType;
             });
         }
 
         public bool IsMatch(InterfaceVerification interfaceVerification, string input)
         {
-            //用正则表达式校验
-            if (!string.IsNullOrEmpty(interfaceVerification.RegularExpression))
+            //如果是自定义的，则走自定义校验
+            if (interfaceVerification.GetRegularType() == RegularTypeEnum.Custom)
             {
-                return Regex.IsMatch(input, interfaceVerification.RegularExpression);
+                //用正则表达式校验
+                if (!string.IsNullOrEmpty(interfaceVerification.RegularExpression))
+                    return Regex.IsMatch(input, interfaceVerification.RegularExpression);
+            }
+            //系统内置的，则按系统规则校验
+            else
+            {
+                switch (interfaceVerification.GetRegularType())
+                {
+                    case RegularTypeEnum.NotNullOrEmpty:
+                        return !string.IsNullOrEmpty(input);
+                    case RegularTypeEnum.Email:
+                        return input.IsEmail();
+                    case RegularTypeEnum.TelPhone:
+                        return input.IsTelPhone();
+                    case RegularTypeEnum.Custom:
+                    default:
+                        throw new ArgumentException("regular type not found");
+                }
             }
 
             return true;

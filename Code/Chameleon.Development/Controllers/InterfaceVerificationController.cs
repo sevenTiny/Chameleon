@@ -145,6 +145,7 @@ namespace Chameleon.Development.Controllers
                .Continue(_ =>
                {
                    entity.ModifyBy = CurrentUserId;
+
                    return _InterfaceVerificationService.UpdateVerificationItem(entity);
                });
 

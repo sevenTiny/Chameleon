@@ -25,6 +25,19 @@
             </div>
         </div>
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>校验方式：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select name="RegularType" class="input select" onchange="typeSwitch(this)" id="sl_RegularType" required>
+                        @foreach (var item in RegularTypeEnumHelper.GetRegularTypeEnums().ToArray())
+                        {
+                            <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl" id="div_RegularExpression">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>校验表达式：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="@entity.RegularExpression" name="RegularExpression" required minLength="2" maxlength="200">
@@ -54,6 +67,29 @@
 @await Html.PartialAsync("~/Views/Shared/_FormValidate.cshtml")
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
+    $("#sl_RegularType").val('@entity.RegularType');
 
+    //初始化预置显隐
+    typeSwitch()
+
+    //隐藏全部标签
+    function hideAll() {
+        $("#div_RegularExpression").hide()
+    }
+
+    //切换接口类型
+    function typeSwitch() {
+        //接口类型
+        var interfaceType = $("#sl_RegularType").val()
+
+        //先隐藏全部
+        hideAll()
+
+        //根据不同场景显示不同的表单
+        //custom
+        if (interfaceType == 0) {
+            $("#div_RegularExpression").show()
+        }
+    }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

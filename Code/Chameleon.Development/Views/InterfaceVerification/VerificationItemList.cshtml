@@ -1,4 +1,5 @@
 ﻿@using Chameleon.Entity;
+@using Chameleon.Infrastructure;
 @{
     ViewData["Title"] = "VerificationItemList";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
@@ -25,6 +26,7 @@
                 <tr class="text-c">
                     <th>名称</th>
                     <th>校验字段编码</th>
+                    <th>校验方式</th>
                     <th>校验表达式</th>
                     <th>错误提示语</th>
                     <th>操作</th>
@@ -36,6 +38,7 @@
                     <tr class="text-c">
                         <td>@item.Name</td>
                         <td>@item.MetaFieldShortCode</td>
+                        <td>@item.GetRegularType().GetDescription()</td>
                         <td>@item.RegularExpression</td>
                         <td>@item.VerificationTips</td>
                         <td class="f-14 td-manage">

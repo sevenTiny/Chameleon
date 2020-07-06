@@ -9,6 +9,8 @@
     ResponseModel result = Model as ResponseModel ?? new ResponseModel() { IsSuccess = true };
     InterfaceVerification entity = result.Data as InterfaceVerification ?? new InterfaceVerification();
     List<MetaField> metafields = ViewData["MetaFields"] as List<MetaField> ?? new List<MetaField>();
+
+    var regularTypes = RegularTypeEnumHelper.GetRegularTypeEnums().ToArray();
 }
 @{
     ViewData["Level_1"] = "接口校验管理";
@@ -23,7 +25,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>字段：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
-                    <select class="input select" value="0" onchange="fieldTypeSwitch(this)" name="MetaFieldId" id="MetaFieldId">
+                    <select class="input select" value="0" name="MetaFieldId" id="MetaFieldId">
                         @foreach (var item in metafields)
                         {
                             <option value="@item.Id">@item.ShortCode（@item.Name）</option>
@@ -33,9 +35,22 @@
             </div>
         </div>
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>校验方式：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select name="RegularType" class="input select" onchange="typeSwitch(this)" id="sl_RegularType" required>
+                        @foreach (var item in regularTypes)
+                        {
+                            <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl" id="div_RegularExpression">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>校验表达式：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@entity.RegularExpression" name="RegularExpression" required minLength="2" maxlength="200">
+                <input type="text" class="input-text" value="@entity.RegularExpression" id="ipt_RegularExpression" name="RegularExpression" required minLength="2" maxlength="200">
             </div>
         </div>
         <div class="row cl">
@@ -62,5 +77,31 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
     $("#MetaFieldId").val('@entity.MetaFieldId')
+    $("#sl_RegularType").val('@entity.RegularType');
+
+    //初始化预置显隐
+    typeSwitch()
+
+    //隐藏全部标签
+    function hideAll() {
+        $("#div_RegularExpression").hide()
+        $("#ipt_RegularExpression").addClass("ignore")
+    }
+
+    //切换接口类型
+    function typeSwitch() {
+        //接口类型
+        var interfaceType = $("#sl_RegularType").val()
+
+        //先隐藏全部
+        hideAll()
+
+        //根据不同场景显示不同的表单
+        //custom
+        if (interfaceType == 0) {
+            $("#div_RegularExpression").show()
+            $("#ipt_RegularExpression").removeClass("ignore")
+        }
+    }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
