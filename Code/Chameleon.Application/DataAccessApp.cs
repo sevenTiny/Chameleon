@@ -187,7 +187,7 @@ namespace Chameleon.Application
                         cloudData.Name = formatInterfaceFieldsDic[upperKey].MetaFieldCustomViewName;
 
                     //_id字段总是要返回的
-                    if (!"_ID".Equals(upperKey))
+                    else if (!"_ID".Equals(upperKey))
                         continue;
                 }
 

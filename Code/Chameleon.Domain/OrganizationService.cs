@@ -24,7 +24,7 @@ namespace Chameleon.Domain
         /// </summary>
         /// <param name="userOrganization"></param>
         /// <returns></returns>
-        List<Guid> GetPermissionOrganizations(Guid userOrganization);
+        List<string> GetPermissionOrganizations(Guid userOrganization);
     }
 
     public class OrganizationService : CommonServiceBase<Organization>, IOrganizationService
@@ -135,31 +135,31 @@ namespace Chameleon.Domain
             return Result.Success();
         }
 
-        public List<Guid> GetPermissionOrganizations(Guid userOrganization)
+        public List<string> GetPermissionOrganizations(Guid userOrganization)
         {
+            //结果
+            var result = new List<string> { userOrganization.ToString() };
+
             //获取所有子节点
             var nodes = _organizationRepository.GetListUnDeleted();
 
             if (nodes == null || !nodes.Any())
-                return new List<Guid> { userOrganization };
-
-            //结果
-            var result = new List<Guid>();
+                return result;
 
             result.AddRange(GetTree(nodes, userOrganization));
 
             return result.Distinct().ToList();
 
-            IEnumerable<Guid> GetTree(List<Organization> source, Guid parentId)
+            List<string> GetTree(List<Organization> source, Guid parentId)
             {
                 var childs = source.Where(t => t.ParentId == parentId).ToList();
 
-                if (childs == null)
-                    return new List<Guid>(0);
+                if (childs == null || !childs.Any())
+                    return new List<string>(0);
 
                 childs.ForEach(t => result.AddRange(GetTree(source, t.Id)));
 
-                return childs.Select(t => t.Id);
+                return childs.Select(t => t.Id.ToString()).ToList();
             }
         }
     }
