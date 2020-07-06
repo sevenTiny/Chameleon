@@ -145,7 +145,7 @@ namespace Chameleon.Account.Controllers
         {
             ViewData["Redirect"] = redirect;
 
-            if (string.IsNullOrEmpty(userAccount.Email) || string.IsNullOrEmpty(userAccount.Password) || string.IsNullOrEmpty(redirect))
+            if (string.IsNullOrEmpty(userAccount.Email) || string.IsNullOrEmpty(userAccount.Password))
                 return View("SignIn", Result<UserAccount>.Error("参数错误", userAccount).ToResponseModel());
 
             //如果校验密码成功，则会返回账号信息
@@ -161,6 +161,10 @@ namespace Chameleon.Account.Controllers
             var token = _userAccountService.GetToken(checkResult.Data).Data;
             //set token to cookie
             Response.Cookies.Append(AccountConst.KEY_AccessToken, token);
+
+            if (string.IsNullOrEmpty(redirect))
+                redirect = "/Home/Index";
+
             //concat url
             if (redirect.Contains('?'))
             {
