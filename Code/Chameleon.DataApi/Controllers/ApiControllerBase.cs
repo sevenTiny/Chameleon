@@ -149,14 +149,14 @@ namespace Chameleon.DataApi.Controllers
             var verificationDic = _interfaceVerificationRepository.GetMetaFieldUpperKeyDicByInterfaceVerificationId(_queryContext.InterfaceSetting.InterfaceVerificationId);
 
             //校验条件是否满足校验
-            foreach (var item in _queryContext.ConditionArgumentsUpperKeyDic)
+            foreach (var item in verificationDic)
             {
-                if (verificationDic.ContainsKey(item.Key))
+                if (_queryContext.ConditionArgumentsUpperKeyDic.ContainsKey(item.Key))
                 {
-                    var verification = verificationDic[item.Key];
+                    var arg = _queryContext.ConditionArgumentsUpperKeyDic[item.Key];
 
-                    if (!_interfaceVerificationService.IsMatch(verification, item.Value))
-                        throw new ArgumentException(!string.IsNullOrEmpty(verification.VerificationTips) ? verification.VerificationTips : $"Key[{item.Key}]对应的值[{item.Value}]格式不正确");
+                    if (!_interfaceVerificationService.IsMatch(item.Value, arg))
+                        throw new ArgumentException(!string.IsNullOrEmpty(item.Value.VerificationTips) ? item.Value.VerificationTips : $"Key[{item.Key}]对应的值[{arg}]格式不正确");
                 }
             }
 

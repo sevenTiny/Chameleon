@@ -223,6 +223,9 @@ namespace Chameleon.Application
                 if (bsonDocument == null)
                     return Result.Error("数据为空，插入终止");
 
+                //已经校验过的项，用于统计是否还有没有传递的参数但校验项里存在
+                List<string> hasBeenVarifyItems = new List<string>(verificationDic.Count);
+
                 BsonDocument bsonElementsToAdd = new BsonDocument();
 
                 foreach (var bsonElement in bsonDocument)
@@ -238,6 +241,9 @@ namespace Chameleon.Application
                         var verification = verificationDic[upperKey];
                         if (!_interfaceVerificationService.IsMatch(verification, Convert.ToString(bsonElement.Value)))
                             return Result.Error(!string.IsNullOrEmpty(verification.VerificationTips) ? verification.VerificationTips : $"字段[{bsonElement.Name}]传递的值[{bsonElement.Value}]格式不正确");
+
+                        //这个参数校验过了
+                        hasBeenVarifyItems.Add(upperKey);
                     }
 
                     //检查字段的值是否符合字段类型
@@ -247,6 +253,13 @@ namespace Chameleon.Application
                         bsonElementsToAdd.Add(new BsonElement(metaFields[upperKey].ShortCode, BsonValue.Create(checkResult.Data)));
                     else
                         return Result.Error($"字段[{bsonElement.Name}]传递的值[{bsonElement.Value}]不符合字段定义的类型");
+                }
+
+                //如果有没走校验项的，那么一定是没传这个参数
+                if (hasBeenVarifyItems.Count != verificationDic.Count)
+                {
+                    var notVerifyItems = verificationDic.Keys.Except(hasBeenVarifyItems).Select(t => verificationDic[t]).ToList();
+                    return Result.Error(string.Join(",", notVerifyItems.Select(t => !string.IsNullOrEmpty(t.VerificationTips) ? t.VerificationTips : $"字段[{t.MetaFieldShortCode}]必填")));
                 }
 
                 //获取系统内置的bson元素
@@ -287,6 +300,9 @@ namespace Chameleon.Application
             //获取到字段列表以编码为Key大写的字典
             var metaFields = _metaFieldRepository.GetMetaFieldShortCodeUpperDicByMetaObjectId(interfaceSetting.MetaObjectId);
 
+            //已经校验过的项，用于统计是否还有没有传递的参数但校验项里存在
+            List<string> hasBeenVarifyItems = new List<string>(verificationDic.Count);
+
             BsonDocument bsonElementsToModify = new BsonDocument();
 
             foreach (var bsonElement in bsonDocument)
@@ -303,6 +319,9 @@ namespace Chameleon.Application
 
                     if (!_interfaceVerificationService.IsMatch(verification, Convert.ToString(bsonElement.Value)))
                         return Result.Error(!string.IsNullOrEmpty(verification.VerificationTips) ? verification.VerificationTips : $"字段[{bsonElement.Name}]传递的值[{bsonElement.Value}]格式不正确");
+
+                    //这个参数校验过了
+                    hasBeenVarifyItems.Add(upperKey);
                 }
 
                 //检查字段的值是否符合字段类型
@@ -314,6 +333,14 @@ namespace Chameleon.Application
                     return Result.Error($"字段[{bsonElement.Name}]传递的值[{bsonElement.Value}]不符合字段定义的类型");
             }
 
+            //如果有没走校验项的，那么一定是没传这个参数
+            if (hasBeenVarifyItems.Count != verificationDic.Count)
+            {
+                var notVerifyItems = verificationDic.Keys.Except(hasBeenVarifyItems).Select(t => verificationDic[t]).ToList();
+                return Result.Error(string.Join(",", notVerifyItems.Select(t => !string.IsNullOrEmpty(t.VerificationTips) ? t.VerificationTips : $"字段[{t.MetaFieldShortCode}]必填")));
+            }
+
+            //设置系统字段及其默认值
             bsonElementsToModify["ModifyTime"] = DateTime.Now;
 
             //设置更新并执行更新操作
