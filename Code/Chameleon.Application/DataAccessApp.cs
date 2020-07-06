@@ -314,6 +314,8 @@ namespace Chameleon.Application
                     return Result.Error($"字段[{bsonElement.Name}]传递的值[{bsonElement.Value}]不符合字段定义的类型");
             }
 
+            bsonElementsToModify["ModifyTime"] = DateTime.Now;
+
             //设置更新并执行更新操作
             var updateDefinitions = bsonElementsToModify.Select(item => Builders<BsonDocument>.Update.Set(item.Name, item.Value)).ToArray();
 

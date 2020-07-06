@@ -131,9 +131,7 @@ namespace Chameleon.DataApi.Controllers
                 {
                     args["Organization"] = CurrentOrganization.ToString();
                     args["CreateBy"] = CurrentUserId;
-                    args["CreateTime"] = DateTime.Now;
                     args["ModifyBy"] = CurrentUserId;
-                    args["ModifyTime"] = DateTime.Now;
                 }
 
                 //execute
@@ -171,7 +169,6 @@ namespace Chameleon.DataApi.Controllers
                 if (bson != null)
                 {
                     bson["ModifyBy"] = CurrentUserId;
-                    bson["ModifyTime"] = DateTime.Now;
                 }
                 //execute
                 var result = _dataAccessApp.BatchUpdate(_queryContext.InterfaceSetting, filter, bson);

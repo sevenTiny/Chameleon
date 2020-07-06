@@ -11,7 +11,7 @@ for i in range(1, 1000):
         age = 1
 
     data = {
-        'Name': '??'+str(i),
+        'Name': 'User'+str(i),
         'Age': i,
         'JoinTime': str(datetime.datetime.now()),
         'Sex': 1

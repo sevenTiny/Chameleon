@@ -73,9 +73,7 @@ namespace Chameleon.DataApi.Controllers
                     {
                         item["Organization"] = CurrentOrganization.ToString();
                         item["CreateBy"] = CurrentUserId;
-                        item["CreateTime"] = DateTime.Now;
                         item["ModifyBy"] = CurrentUserId;
-                        item["ModifyTime"] = DateTime.Now;
                     }
                 }
 

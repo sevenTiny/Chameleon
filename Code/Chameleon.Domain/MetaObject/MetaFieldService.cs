@@ -166,9 +166,9 @@ namespace Chameleon.Domain
                     isSuccess = double.TryParse(Convert.ToString(value), out double doubleVal);
                     resultData = doubleVal;
                     break;
-                case DataType.DataSource:
-                    isSuccess = false;
-                    break;
+                //case DataType.DataSource:
+                //    isSuccess = false;
+                //    break;
                 case DataType.Decimal:
                     isSuccess = decimal.TryParse(Convert.ToString(value), out decimal decimalVal);
                     resultData = decimalVal;
