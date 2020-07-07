@@ -1,0 +1,88 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
+    ViewData["Title"] = "GeneralRegularExpresion";
+}
+@{
+    ViewData["Level_1"] = "常用C#正则表达式表";
+}
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
+
+<article class="cl pd-20">
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+            <thead class="text-c">
+                <tr>
+                    <th>功能</th>
+                    <th>正则表达式</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Email邮箱</td>
+                    <td>^\w+([-+.]\w+)*@@\w+([-.]\w+)*\.\w+([-.]\w+)*$</td>
+                </tr>
+                <tr>
+                    <td>MobilePhone</td>
+                    <td>^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$</td>
+                </tr>
+                <tr>
+                    <td>TelPhone</td>
+                    <td>^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$</td>
+                </tr>
+                <tr>
+                    <td>URL</td>
+                    <td>^((https?|ftp|news):\/\/)?([a-z]([a-z0-9\-]*[\.。])+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel)|(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&]*)?)?(#[a-z][a-z0-9_]*)?$</td>
+                </tr>
+                <tr>
+                    <td>IpAddress</td>
+                    <td>^(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|[1-9])\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)$</td>
+                </tr>
+                <tr>
+                    <td>ID_Card</td>
+                    <td>^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$</td>
+                </tr>
+                <tr>
+                    <td>字母开头，允许5-16字节，允许字母数字下划线</td>
+                    <td>^[a-zA-Z][a-zA-Z0-9_]{4,15}$</td>
+                </tr>
+                <tr>
+                    <td>以字母开头，长度在6~18之间，只能包含字母、数字和下划线</td>
+                    <td>^[a-zA-Z]\w{5,17}$</td>
+                </tr>
+                <tr>
+                    <td>必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间</td>
+                    <td>^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$</td>
+                </tr>
+                <tr>
+                    <td>日期</td>
+                    <td>^\d{4}-\d{1,2}-\d{1,2}</td>
+                </tr>
+                <tr>
+                    <td>中文汉字</td>
+                    <td>[\u4e00-\u9fa5]</td>
+                </tr>
+                <tr>
+                    <td>QQ号</td>
+                    <td>[1-9][0-9]{4,}</td>
+                </tr>
+                <tr>
+                    <td>邮政编码</td>
+                    <td>[1-9]\d{5}(?!\d)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</article>
+@await Html.PartialAsync("~/Views/Shared/_FooterScripts.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_CommonScript.cshtml")
+<script type="text/javascript" src="~/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script src="~/lib/jquery-ui/jquery-ui.js"></script>
+<script>
+    $('.table-sort').dataTable({
+        "aLengthMenu": [[100, -1], ["100", "All"]],//二组数组，第一组数量，
+        "aaSorting": [],//默认第几个排序
+        "bAutoWidth": false,
+        "bStateSave": true,//状态保存
+        "aoColumnDefs": []
+    });
+</script>

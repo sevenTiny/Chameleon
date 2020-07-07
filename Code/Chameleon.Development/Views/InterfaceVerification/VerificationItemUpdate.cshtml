@@ -39,8 +39,11 @@
         </div>
         <div class="row cl" id="div_RegularExpression">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>校验表达式：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@entity.RegularExpression" name="RegularExpression" required minLength="2" maxlength="200">
+            <div class="formControls col-xs-7 col-sm-8">
+                <input type="text" class="input-text" value="@entity.RegularExpression" id="ipt_RegularExpression" name="RegularExpression" placeholder="请输入C#语言支持的正则表达式" required minLength="2" maxlength="200">
+            </div>
+            <div class="formControls col-xs-1 col-sm-1">
+                <a style="color:dodgerblue" target="_blank" href="/InterfaceVerification/GeneralRegularExpresion">常用正则</a>
             </div>
         </div>
         <div class="row cl">

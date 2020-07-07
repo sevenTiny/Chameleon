@@ -163,5 +163,14 @@ namespace Chameleon.Development.Controllers
 
             return View(selectedFields);
         }
+
+        /// <summary>
+        /// 常用正则表达式
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult GeneralRegularExpresion()
+        {
+            return View();
+        }
     }
 }
