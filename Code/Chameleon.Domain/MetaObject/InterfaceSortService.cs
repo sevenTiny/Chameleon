@@ -56,6 +56,7 @@ namespace Chameleon.Domain
             return base.UpdateWithId(entity.Id, item =>
             {
                 item.SortType = entity.SortType;
+                item.SortNumber = entity.SortNumber;
             });
         }
     }

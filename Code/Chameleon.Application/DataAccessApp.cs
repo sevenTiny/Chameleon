@@ -135,7 +135,8 @@ namespace Chameleon.Application
             if (interfaceSortId == Guid.Empty)
                 return builder.Ascending("_id");
 
-            var sorts = _interfaceSortRepository.GetInterfaceSortByParentId(interfaceSortId) ?? new List<InterfaceSort>(0);
+            //按排序项排序
+            var sorts = _interfaceSortRepository.GetInterfaceSortByParentId(interfaceSortId)?.OrderBy(t => t.SortNumber)?.ToList() ?? new List<InterfaceSort>(0);
 
             foreach (var item in sorts)
             {
