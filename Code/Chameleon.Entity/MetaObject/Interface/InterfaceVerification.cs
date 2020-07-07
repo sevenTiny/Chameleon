@@ -51,14 +51,36 @@ namespace Chameleon.Entity
 
     public enum RegularTypeEnum
     {
-        [Description("自定义")]
+        [Description("自定义正则表达式")]
         Custom = 0,
         [Description("不为空")]
         NotNullOrEmpty = 1,
         [Description("邮箱")]
         Email = 2,
+        [Description("座机")]
+        TelPhone = 3,
         [Description("手机")]
-        TelPhone = 3
+        MobilePhone = 4,
+        [Description("URL")]
+        URL = 5,
+        [Description("IpAddress")]
+        IpAddress = 6,
+        [Description("ID_Card")]
+        ID_Card = 7,
+        [Description("字母开头，允许5-16字节，允许字母数字下划线")]
+        AccountName = 8,
+        [Description("以字母开头，长度在6~18之间，只能包含字母、数字和下划线")]
+        Password = 9,
+        [Description("大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间")]
+        StrongCipher = 10,
+        [Description("日期 yyyy-MM-dd 格式")]
+        DataFormat = 11,
+        [Description("中文汉字")]
+        ChineseCharactor = 12,
+        [Description("QQ号")]
+        QQ_Number = 13,
+        [Description("邮政编码")]
+        PostalCode = 14,
     }
 
     public class RegularTypeEnumHelper
@@ -72,7 +94,7 @@ namespace Chameleon.Entity
         }
 
         /// <summary>
-        /// 这里包含了支持的表达式类型
+        /// 这里包含了系统支持的表达式类型
         /// </summary>
         private static Dictionary<RegularTypeEnum, string> RegularExpressionMapping = new Dictionary<RegularTypeEnum, string>
         {

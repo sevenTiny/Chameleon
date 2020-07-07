@@ -73,31 +73,42 @@ namespace Chameleon.Domain
 
         public bool IsMatch(InterfaceVerification interfaceVerification, string input)
         {
-            //如果是自定义的，则走自定义校验
-            if (interfaceVerification.GetRegularType() == RegularTypeEnum.Custom)
+            switch (interfaceVerification.GetRegularType())
             {
-                //用正则表达式校验
-                if (!string.IsNullOrEmpty(interfaceVerification.RegularExpression))
-                    return Regex.IsMatch(input, interfaceVerification.RegularExpression);
+                //如果是自定义的，则走自定义校验
+                case RegularTypeEnum.Custom when !string.IsNullOrEmpty(interfaceVerification.RegularExpression):
+                    return input.IsXXX_ByRegex(interfaceVerification.RegularExpression);
+                case RegularTypeEnum.NotNullOrEmpty:
+                    return !string.IsNullOrEmpty(input);
+                case RegularTypeEnum.Email:
+                    return input.IsEmail();
+                case RegularTypeEnum.TelPhone:
+                    return input.IsTelPhone();
+                case RegularTypeEnum.MobilePhone:
+                    return input.IsMobilePhone();
+                case RegularTypeEnum.URL:
+                    return input.IsURL();
+                case RegularTypeEnum.IpAddress:
+                    return input.IsIpAddress();
+                case RegularTypeEnum.ID_Card:
+                    return input.IsID_Card();
+                case RegularTypeEnum.AccountName:
+                    return input.IsAccountName();
+                case RegularTypeEnum.Password:
+                    return input.IsPassword();
+                case RegularTypeEnum.StrongCipher:
+                    return input.IsStrongCipher();
+                case RegularTypeEnum.DataFormat:
+                    return input.IsDataFormat();
+                case RegularTypeEnum.ChineseCharactor:
+                    return input.IsChineseCharactor();
+                case RegularTypeEnum.QQ_Number:
+                    return input.IsQQ_Number();
+                case RegularTypeEnum.PostalCode:
+                    return input.IsPostalCode();
+                default:
+                    throw new ArgumentException("regular type not found");
             }
-            //系统内置的，则按系统规则校验
-            else
-            {
-                switch (interfaceVerification.GetRegularType())
-                {
-                    case RegularTypeEnum.NotNullOrEmpty:
-                        return !string.IsNullOrEmpty(input);
-                    case RegularTypeEnum.Email:
-                        return input.IsEmail();
-                    case RegularTypeEnum.TelPhone:
-                        return input.IsTelPhone();
-                    case RegularTypeEnum.Custom:
-                    default:
-                        throw new ArgumentException("regular type not found");
-                }
-            }
-
-            return true;
         }
     }
 }
