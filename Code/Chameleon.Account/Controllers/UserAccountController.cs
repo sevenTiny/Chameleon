@@ -204,12 +204,12 @@ namespace Chameleon.Account.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult SignInLogicJson(UserAccount userAccount, string redirect)
+        public JsonResult SignInLogicJson(UserAccount userAccount, string redirect)
         {
             ViewData["Redirect"] = redirect;
 
             if (string.IsNullOrEmpty(userAccount.Email) || string.IsNullOrEmpty(userAccount.Password))
-                return View("SignIn", Result<UserAccount>.Error("参数错误", userAccount).ToResponseModel());
+                return Result<UserAccount>.Error("参数错误", userAccount).ToJsonResult();
 
             //如果校验密码成功，则会返回账号信息
             var checkResult = _userAccountService.VerifyPassword(null, userAccount.Email, userAccount.Password);
@@ -251,7 +251,7 @@ namespace Chameleon.Account.Controllers
             if (!result.IsSuccess)
                 return result.ToJsonResult();
 
-            return Result<string>.Success("操作成功", "/UserAccount/SignIn?redirect=" + redirect).ToJsonResult();
+            return Result<string>.Success("重置成功", "/UserAccount/SignIn?redirect=" + redirect).ToJsonResult();
         }
 
         public IActionResult SignOut(string redirect)
@@ -262,9 +262,33 @@ namespace Chameleon.Account.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult SignUp()
+        public IActionResult SignUp(string redirect)
         {
+            ViewData["Redirect"] = redirect;
             return View();
+        }
+
+        [AllowAnonymous]
+        public JsonResult SignUpLogic(UserAccount entity, string redirect)
+        {
+            var result = Result.Success()
+                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.Name, nameof(entity.Name))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.Email, nameof(entity.Email))
+                .ContinueAssert(_ => entity.Email.IsEmail(), "邮箱不合法")
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.Password, nameof(entity.Password))
+                .ContinueAssert(_ => Regex.IsMatch(entity.Password, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$"), "必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-20之间")
+                .Continue(_ =>
+                {
+                    //为保证登陆用户没有数据权限，这里给一个不大会有的值
+                    entity.Organization = Guid.Parse("11111111-1111-1111-1111-111111111111");
+                    return _userAccountService.AddUserAccount(entity);
+                });
+
+            if (!result.IsSuccess)
+                return result.ToJsonResult();
+
+            return Result<string>.Success("注册成功", "/UserAccount/SignIn?redirect=" + redirect).ToJsonResult();
         }
 
         public IActionResult SetNextTimeResetPassword(Guid id)
