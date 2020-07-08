@@ -11,6 +11,7 @@ using SevenTiny.Bantina;
 using SevenTiny.Bantina.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Chameleon.Infrastructure.Consts;
+using System.Text.RegularExpressions;
 
 namespace Chameleon.Account.Controllers
 {
@@ -185,6 +186,11 @@ namespace Chameleon.Account.Controllers
                 return View("SignIn", checkResult.ToResponseModel());
             }
 
+            //如果需要修改密码，则跳转到密码修改页面（这个操作是强制的，因为校验密码时候重置密码的也算校验成功，如果没有这步判断会有安全风险）
+            if (checkResult.Data.IsNeedToResetPassword == 1)
+                return Redirect($"/UserAccount/ResetPassword?redirect={redirect}&id={userAccount.Id}");
+
+            //获取token并处理跳转地址
             redirect = GetReidrectFullPath(checkResult.Data, redirect);
 
             return Redirect(redirect);
@@ -211,9 +217,41 @@ namespace Chameleon.Account.Controllers
             if (!checkResult.IsSuccess)
                 return checkResult.ToJsonResult();
 
+            //如果需要修改密码，则跳转到密码修改页面（这个操作是强制的，因为校验密码时候重置密码的也算校验成功，如果没有这步判断会有安全风险）
+            if (checkResult.Data.IsNeedToResetPassword == 1)
+                return Result<string>.Success("该账号需要重置密码", $"/UserAccount/ResetPassword?redirect={redirect}&id={checkResult.Data.Id}").ToJsonResult();
+
+            //获取token并处理跳转地址
             redirect = GetReidrectFullPath(checkResult.Data, redirect);
 
             return Result<string>.Success("登陆成功", redirect).ToJsonResult();
+        }
+
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string id, string redirect)
+        {
+            ViewData["Id"] = id;
+            ViewData["Redirect"] = redirect;
+            return View();
+        }
+
+        [AllowAnonymous]
+        public JsonResult ResetPasswordLogic(UserAccount entity, string redirect)
+        {
+            var result = Result.Success()
+                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.Id, nameof(entity.Id))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.Password, nameof(entity.Password))
+                .ContinueAssert(_ => Regex.IsMatch(entity.Password, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$"), "必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-20之间")
+                .Continue(_ =>
+                {
+                    return _userAccountService.ResetPassword(entity.Id, entity.Password);
+                });
+
+            if (!result.IsSuccess)
+                return result.ToJsonResult();
+
+            return Result<string>.Success("操作成功", "/UserAccount/SignIn?redirect=" + redirect).ToJsonResult();
         }
 
         public IActionResult SignOut(string redirect)
@@ -227,6 +265,14 @@ namespace Chameleon.Account.Controllers
         public IActionResult SignUp()
         {
             return View();
+        }
+
+        public IActionResult SetNextTimeResetPassword(Guid id)
+        {
+            return Result.Success("操作成功")
+                .ContinueEnsureArgumentNotNullOrEmpty(id, nameof(id))
+                .Continue(_ => _userAccountService.SetNextTimeResetPassword(id))
+                .ToJsonResult();
         }
     }
 }

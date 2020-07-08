@@ -46,6 +46,13 @@ namespace Chameleon.Domain
         /// 重置密码
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        Result ResetPassword(Guid id, string password);
+        /// <summary>
+        /// 重置密码
+        /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
         Result PresetPassword(Guid id);
         /// <summary>
@@ -65,6 +72,12 @@ namespace Chameleon.Domain
         /// <param name="userAccount"></param>
         /// <returns></returns>
         Result<string> GetToken(UserAccount userAccount);
+        /// <summary>
+        /// 设置下次登陆重置密码
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Result SetNextTimeResetPassword(Guid id);
     }
 
     public class UserAccountService : CommonServiceBase<UserAccount>, IUserAccountService
@@ -99,6 +112,32 @@ namespace Chameleon.Domain
             return base.Add(userAccount);
         }
 
+        public Result SetNextTimeResetPassword(Guid id)
+        {
+            return base.UpdateWithId(id, t =>
+            {
+                t.IsNeedToResetPassword = 1;
+            });
+        }
+
+        public Result ResetPassword(Guid id, string password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+                return Result.Error("密码不能为空");
+
+            var user = base.GetById(id);
+            //判断该账号是否被设置成了修改密码,如果不是，则
+
+            if (user.IsNeedToResetPassword != 1)
+                return Result.Error("该账号无需重置密码，请联系管理员处理");
+
+            return base.UpdateWithId(id, t =>
+            {
+                t.IsNeedToResetPassword = 0;
+                t.Password = GetSaltPassword(password);
+            });
+        }
+
         public Result ChangePassword(Guid id, string password)
         {
             if (string.IsNullOrWhiteSpace(password))
@@ -119,6 +158,10 @@ namespace Chameleon.Domain
 
             if (userAccount == null)
                 return Result<UserAccount>.Error("账号不存在");
+
+            //如果需要重置密码，也算登陆成功，但是在登陆控制器里做判断强制跳转到修改密码页面
+            if (userAccount.IsNeedToResetPassword == 1)
+                return Result<UserAccount>.Success("密码已被重置，需要修改密码", userAccount);
 
             if (!userAccount.Password.Equals(GetSaltPassword(password)))
                 return Result<UserAccount>.Error("密码不正确");
