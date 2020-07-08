@@ -35,7 +35,10 @@
                 {
                     <tr class="text-c">
                         <td>@item.Name</td>
-                        <td>@item.Code</td>
+                        @{
+                            string shortCode = item.Code.Contains(".") ? item.Code.Split('.')[2] : item.Code;
+                            <td title="@item.Code">@shortCode</td>
+                        }
                         <td>@item.Description</td>
                         <td>@item.Group</td>
                         <td>@item.SortNumber</td>
