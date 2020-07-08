@@ -10,5 +10,10 @@ namespace Chameleon.Infrastructure.Configs
         /// </summary>
         [ConfigProperty]
         public int MouEnable { get; set; }
+        /// <summary>
+        /// 默认接口页大小
+        /// </summary>
+        [ConfigProperty]
+        public int DefaultInterfacePageSize { get; set; } = 15;
     }
 }

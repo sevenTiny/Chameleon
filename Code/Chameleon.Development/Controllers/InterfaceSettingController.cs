@@ -1,6 +1,7 @@
 ﻿using Chameleon.Application;
 using Chameleon.Domain;
 using Chameleon.Entity;
+using Chameleon.Infrastructure.Configs;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
@@ -54,7 +55,7 @@ namespace Chameleon.Development.Controllers
             ViewData["InterfaceFields"] = _interfaceFieldsRepository.GetTopInterfaceFields(CurrentMetaObjectId);
             ViewData["InterfaceSort"] = _interfaceSortRepository.GetTopInterfaceSort(CurrentMetaObjectId);
 
-            return View(ResponseModel.Success(data: new InterfaceSetting { PageSize = 30 }));
+            return View(ResponseModel.Success(data: new InterfaceSetting { PageSize = ChameleonSettingConfig.Instance.DefaultInterfacePageSize }));
         }
 
         public IActionResult AddLogic(InterfaceSetting entity)
@@ -73,7 +74,7 @@ namespace Chameleon.Development.Controllers
                     entity.MetaObjectCode = CurrentMetaObjectCode;
                     entity.CreateBy = CurrentUserId;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
-                    entity.PageSize = entity.PageSize;//暂时写死每页300条
+                    entity.PageSize = entity.PageSize;//暂时写死每页数目
 
                     return _InterfaceSettingService.Add(entity);
                 });
