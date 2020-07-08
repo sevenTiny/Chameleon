@@ -134,6 +134,34 @@ namespace Chameleon.Account.Controllers
             return View();
         }
 
+        private string GetReidrectFullPath(UserAccount userAccount, string redirect)
+        {
+            //get token
+            var token = _userAccountService.GetToken(userAccount).Data;
+            //set token to cookie
+            Response.Cookies.Append(AccountConst.KEY_AccessToken, token);
+
+            if (string.IsNullOrEmpty(redirect))
+                redirect = "/Home/Index";
+
+            //concat url
+            if (redirect.Contains('?'))
+            {
+                redirect = $"{redirect}&{AccountConst.KEY_AccessToken}={token}";
+            }
+            else
+            {
+                redirect = redirect.Replace(@"\", "/");
+
+                if (redirect.LastOrDefault().Equals('/'))
+                    redirect = redirect.Substring(0, redirect.LastIndexOf('/'));
+
+                redirect = $"{redirect}?{AccountConst.KEY_AccessToken}={token}";
+            }
+
+            return redirect;
+        }
+
         /// <summary>
         /// 登陆
         /// </summary>
@@ -157,30 +185,35 @@ namespace Chameleon.Account.Controllers
                 return View("SignIn", checkResult.ToResponseModel());
             }
 
-            //get token
-            var token = _userAccountService.GetToken(checkResult.Data).Data;
-            //set token to cookie
-            Response.Cookies.Append(AccountConst.KEY_AccessToken, token);
-
-            if (string.IsNullOrEmpty(redirect))
-                redirect = "/Home/Index";
-
-            //concat url
-            if (redirect.Contains('?'))
-            {
-                redirect = $"{redirect}&{AccountConst.KEY_AccessToken}={token}";
-            }
-            else
-            {
-                redirect = redirect.Replace(@"\", "/");
-
-                if (redirect.LastOrDefault().Equals('/'))
-                    redirect = redirect.Substring(0, redirect.LastIndexOf('/'));
-
-                redirect = $"{redirect}?{AccountConst.KEY_AccessToken}={token}";
-            }
+            redirect = GetReidrectFullPath(checkResult.Data, redirect);
 
             return Redirect(redirect);
+        }
+
+        /// <summary>
+        /// 登陆（用于前端界面ajax处理）
+        /// </summary>
+        /// <param name="userAccount"></param>
+        /// <param name="redirect"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult SignInLogicJson(UserAccount userAccount, string redirect)
+        {
+            ViewData["Redirect"] = redirect;
+
+            if (string.IsNullOrEmpty(userAccount.Email) || string.IsNullOrEmpty(userAccount.Password))
+                return View("SignIn", Result<UserAccount>.Error("参数错误", userAccount).ToResponseModel());
+
+            //如果校验密码成功，则会返回账号信息
+            var checkResult = _userAccountService.VerifyPassword(null, userAccount.Email, userAccount.Password);
+
+            if (!checkResult.IsSuccess)
+                return checkResult.ToJsonResult();
+
+            redirect = GetReidrectFullPath(checkResult.Data, redirect);
+
+            return Result<string>.Success("登陆成功", redirect).ToJsonResult();
         }
 
         public IActionResult SignOut(string redirect)
