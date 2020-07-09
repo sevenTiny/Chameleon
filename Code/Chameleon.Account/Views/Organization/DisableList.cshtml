@@ -6,7 +6,7 @@
 }
 @{
     ViewData["Level_1"] = "组织管理";
-    ViewData["Level_2"] = "禁用的组织列表";
+    ViewData["Level_2"] = "停用的组织列表";
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
@@ -21,6 +21,7 @@
                     <th>ID</th>
                     <th>组织名称</th>
                     <th>修改时间</th>
+                    <th>状态</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -31,6 +32,7 @@
                         <td>@item.Id</td>
                         <td>@item.Name</td>
                         <td>@item.ModifyTime</td>
+                        <td><span class="label label-default radius">停用</span></td>
                         <td class="f-14 td-manage">
                             <a style="text-decoration: none" class="ml-5" onClick="ajax_operate_table_confirm(this,'/Organization/EnableNode?nodeId=@item.Id','启用组织将同时启用组织的下级组织，确定启用？')" title="启用组织"><i class="Hui-iconfont">&#xe66b;</i></a>
                         </td>
@@ -52,7 +54,7 @@
         "bStateSave": true,//状态保存
         "aoColumnDefs": [
             { "bVisible": false, "aTargets": [0] }, //控制列的隐藏显示
-            { "orderable": false, "aTargets": [3] }// 不参与排序的列
+            { "orderable": false, "aTargets": [4] }// 不参与排序的列
         ]
     });
 </script>
