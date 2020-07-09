@@ -26,10 +26,10 @@
                     <li class="dropDown dropDown_hover">
                         <a href="#" class="dropDown_A"> @ViewData["UserName"] <i class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
-                            <li><a href="/CloudApplication/List" target="_blank">应用管理</a></li>
+                            <li><a href="/System/Log" target="_blank">查看日志</a></li>
+                            <li><a href="/CloudApplication/List">应用管理</a></li>
                             <li><a href="@UrlsConfig.Instance.Account" target="_blank">后台管理系统</a></li>
                             <li><a href="@UrlsConfig.Instance.Office" target="_blank">前台首页</a></li>
-                            <li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
                             <li><a href="@AccountConst.SwitchDevelopmentAccountUrl">切换账户</a></li>
                             <li><a href="@AccountConst.SignOutDevelopmentUrl">退出</a></li>
                         </ul>
@@ -58,16 +58,17 @@
             <dt><i class="Hui-iconfont">&#xe61a; </i> 数据源<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href="javascript:mainFrameOpen('/DataSource/DynamicScriptTriggerList')">脚本数据源</a></li>
-                    <li><a href="javascript:mainFrameOpen('/DataSource/JsonDataSourceList')">Json数据源</a></li>
+                    <li><a href="javascript:mainFrameOpen('/DataSource/DynamicScriptTriggerList')"><i class="Hui-iconfont">&#xe6ee;</i> 脚本数据源</a></li>
+                    <li><a href="javascript:mainFrameOpen('/DataSource/JsonDataSourceList')"><i class="Hui-iconfont">&#xe6d2;</i> Json数据源</a></li>
                 </ul>
             </dd>
         </dl>
         <dl id="menu-picture">
-            <dt><i class="Hui-iconfont">&#xe63e; </i> 文件管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dt><i class="Hui-iconfont">&#xe603; </i> 应用发布<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="picture-list.html" data-title="图片管理" href="javascript:void(0)">图片管理</a></li>
+                    <li><a href="javascript:mainFrameOpen('/Home/About')"><i class="Hui-iconfont">&#xe644;</i> 数据导出</a></li>
+                    <li><a href="javascript:mainFrameOpen('/Home/About')"><i class="Hui-iconfont">&#xe645;</i> 数据导入</a></li>
                 </ul>
             </dd>
         </dl>
