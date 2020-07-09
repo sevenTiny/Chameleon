@@ -1,5 +1,6 @@
 ﻿@using Chameleon.Entity;
 @using Chameleon.Infrastructure.Consts;
+@using Chameleon.Infrastructure.Configs;
 @{
     ViewData["Title"] = "Home";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
@@ -21,6 +22,7 @@
                     <li class="dropDown dropDown_hover">
                         <a href="#" class="dropDown_A"> @ViewData["UserName"] <i class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
+                            <li><a href="@UrlsConfig.Instance.Office" target="_blank">前台首页</a></li>
                             <li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
                             <li><a href="@AccountConst.SwitchAccountAccountUrl">切换账户</a></li>
                             <li><a href="@AccountConst.SignOutAccountUrl">退出</a></li>
