@@ -117,7 +117,9 @@ namespace Chameleon.Domain
             //个性化字段赋值
             updateFieldAction?.Invoke(target);
 
-            return _commonRepositoryBase.Update(target);
+            _commonRepositoryBase.Update(target);
+
+            return Result.Success("操作成功");
         }
 
         public Result UpdateWithOutCode(TEntity source, Action<TEntity> updateFieldAction = null)
