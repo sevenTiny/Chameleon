@@ -29,7 +29,7 @@ namespace Chameleon.Repository
         public Result Add(TEntity entity)
         {
             _dbContext.Add(entity);
-            return Result.Success();
+            return Result.Success("操作成功");
         }
 
         public Result<IEnumerable<TEntity>> BatchAdd(IEnumerable<TEntity> entities)
@@ -41,13 +41,13 @@ namespace Chameleon.Repository
         public Result Update(TEntity entity)
         {
             _dbContext.Update(entity);
-            return Result.Success();
+            return Result.Success("操作成功");
         }
 
         public Result Delete(TEntity entity)
         {
             _dbContext.Delete<TEntity>(entity);
-            return Result.Success();
+            return Result.Success("操作成功");
         }
 
         public void TransactionBegin()

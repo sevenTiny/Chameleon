@@ -252,10 +252,6 @@
                         "</span>" +
                         "</li>")
 
-                    //var children2 = data[i].children[j].children;
-
-                    //tree(children2)
-
                     var children2 = data[i].children[j].children;
 
                     tree(children2)
@@ -367,8 +363,7 @@
             },
             success: function (data) {
                 if (data.isSuccess) {
-                    //!!!这里这个弹层为啥不行
-                    //layer.msg(data.message, { icon: 1, time: 1000 });
+                    layer.msg(data.message, { icon: 1, time: 1000 });
                     setTimeout(function () {
                         window.location.reload();
                     }, 1000);
