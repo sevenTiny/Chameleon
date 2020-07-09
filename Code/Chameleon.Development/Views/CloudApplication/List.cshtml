@@ -11,10 +11,11 @@
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
+<link href="~/lib/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
 <article class="cl pd-20">
     <div class="cl pd-5 bg-1 bk-gray">
         <span class="l">
-            <a class="btn btn-secondary-outline radius" href="javascript:window.location='/CloudApplication/Select';"><i class="Hui-iconfont">&#xe66b;</i> 返回</a>
+            <a class="btn btn-secondary-outline radius" href="javascript:window.location='/Home/Index';"><i class="Hui-iconfont">&#xe66b;</i> 返回</a>
             <a class="btn btn-primary radius" href="/CloudApplication/Add"><i class="Hui-iconfont">&#xe600;</i> 添加应用</a>
         </span>
         <span class="r">共有数据：<strong>@applications.Count</strong> 条</span>
@@ -24,6 +25,7 @@
             <thead>
                 <tr class="text-c">
                     <th>ID</th>
+                    <th>图标</th>
                     <th>名称</th>
                     <th>编码</th>
                     <th>描述</th>
@@ -37,6 +39,10 @@
                 {
                     <tr class="text-c">
                         <td>@item.Id</td>
+                        @{
+                            string icon = string.IsNullOrEmpty(item.Icon) ? "cloud" : item.Icon;
+                            <td><span class="fa fa-@icon"></span></td>
+                        }
                         <td><a href="javascript:window.parent.location.href='/CloudApplication/Detail?applicationId=@item.Id&applicationCode=@item.Code';" class="text-primary" title="切换应用" data-toggle="tooltip" data-placement="top">@item.Name</a></td>
                         <td>@item.Code</td>
                         <td>@item.Description</td>
@@ -60,10 +66,10 @@
 <script type="text/javascript">
     $('.table-sort').dataTable({
         "aLengthMenu": [[50, 100, -1], ["50", "100", "All"]],//二组数组，第一组数量
-        "aaSorting": [[4, "asc"], [0, "asc"]],//默认第几个排序
+        "aaSorting": [[5, "asc"], [0, "asc"]],//默认第几个排序
         "bStateSave": true,//状态保存
         "aoColumnDefs": [
-            { "orderable": false, "aTargets": [6] }// 不参与排序的列
+            { "orderable": false, "aTargets": [1, 7] }// 不参与排序的列
         ]
     });
 </script>

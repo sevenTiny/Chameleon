@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Chameleon.Development.Models;
+using Chameleon.Domain;
 
 namespace Chameleon.Development.Controllers
 {
@@ -13,14 +14,18 @@ namespace Chameleon.Development.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        ICloudApplicationService _cloudApplicationService;
+        public HomeController(ICloudApplicationService cloudApplicationService, ILogger<HomeController> logger)
         {
+            _cloudApplicationService = cloudApplicationService;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            return Redirect("/CloudApplication/Select");
+            //未删除的应用
+            ViewData["CloudApplicationList"] = _cloudApplicationService.GetListUnDeleted();
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
