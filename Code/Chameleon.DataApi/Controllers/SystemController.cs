@@ -16,5 +16,15 @@ namespace Chameleon.DataApi.Controllers
             var currentLog = LoggerHelper.GetCurrentLog();
             return Content(currentLog);
         }
+
+        /// <summary>
+        /// 清理配置文件
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult ClearConfig()
+        {
+            var msg = ConfigHelper.ClearConfigFiles();
+            return Content(msg);
+        }
     }
 }
