@@ -17,7 +17,7 @@ namespace Chameleon.Account.Controllers
         /// 获取当前的日志
         /// </summary>
         /// <returns></returns>
-        public IActionResult Current()
+        public IActionResult Log()
         {
             var currentLog = LoggerHelper.GetCurrentLog();
             return Content(currentLog);
