@@ -22,8 +22,9 @@ namespace Chameleon.Account.Controllers
             _organizationService = organizationService;
         }
 
-        public IActionResult Index()
+        public IActionResult Setting()
         {
+            ViewData["EnableList"] = _organizationRepository.GetEnableList();
             return View();
         }
 
@@ -45,11 +46,44 @@ namespace Chameleon.Account.Controllers
                 .ToJsonResult();
         }
 
-        public IActionResult DelNode(Guid nodeId)
+        public IActionResult UpdateNode(Guid chooseId, Organization organization)
         {
-            _organizationService.DeleteNode(nodeId);
+            return Result.Success("修改成功")
+                .ContinueEnsureArgumentNotNullOrEmpty(organization, nameof(organization))
+                .ContinueEnsureArgumentNotNullOrEmpty(organization.Name, nameof(organization.Name))
+                .Continue(_ =>
+                {
+                    organization.ModifyBy = CurrentUserId;
+                    return _organizationService.UpdateWithId(chooseId, t =>
+                    {
+                        t.Name = organization.Name;
+                    });
+                })
+                .ToJsonResult();
+        }
 
-            return JsonResultSuccess("删除成功");
+        public IActionResult AjustRelation(int relation, Guid chooseId, Guid ajustId)
+        {
+            return _organizationService.AjustRelation((RelationEnum)relation, chooseId, ajustId).ToJsonResult();
+        }
+
+        public IActionResult DisableNode(Guid nodeId)
+        {
+            _organizationService.DisableNode(nodeId);
+
+            return JsonResultSuccess("禁用成功");
+        }
+
+        public IActionResult EnableNode(Guid nodeId)
+        {
+            _organizationService.EnableNode(nodeId);
+
+            return JsonResultSuccess("启用成功");
+        }
+
+        public IActionResult DisableList()
+        {
+            return View(_organizationRepository.GetDisableList());
         }
     }
 }

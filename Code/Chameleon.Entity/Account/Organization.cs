@@ -17,6 +17,11 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public Guid ParentId { get; set; }
+        /// <summary>
+        /// 是否禁用，禁用=1
+        /// </summary>
+        [Column]
+        public int Disable { get; set; }
 
         public List<Organization> Children { get; set; }
     }

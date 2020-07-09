@@ -1,0 +1,450 @@
+﻿@using Chameleon.Entity;
+@using SevenTiny.Bantina.Extensions.AspNetCore;
+@using Chameleon.Infrastructure;
+@{
+    ViewData["Title"] = "Setting";
+    Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
+    //启用的列表
+    var enableList = (ViewData["EnableList"] as List<Organization>) ?? new List<Organization>(0);
+}
+@{
+    ViewData["Level_1"] = "组织管理";
+    ViewData["Level_2"] = "组织设置";
+}
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
+
+<link href="~/css/jqueryTree.css" rel="stylesheet" />
+<style>
+    .clearfix:after {
+        content: "\20";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden
+    }
+
+    .clearfix {
+        zoom: 1
+    }
+
+    .tabBar {
+        border-bottom: 2px solid #bdbcbc;
+    }
+
+        .tabBar span {
+            background-color: #e8e8e8;
+            cursor: pointer;
+            display: inline-block;
+            float: left;
+            font-weight: bold;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 15px
+        }
+
+            .tabBar span.current {
+                /*background-color: #222;*/
+                background-color: #bdbcbc;
+                color: #fff
+            }
+
+    .tabCon {
+        display: none
+    }
+</style>
+
+<article class="page-container">
+    <div class="row cl" style="margin-top:10px;">
+        <div class="col-xs-11 col-sm-11">
+            <span style="color:#ef4545">*注意：调整组织可能导致人员数据权限发生变化（部分数据出现由于组织丢失而没有访问权限）</span>
+        </div>
+    </div>
+    <div class="row cl" style="margin-top:10px;">
+        <div class="col-xs-5 col-sm-5">
+            <form class="form form-horizontal" id="form-article-add" method="post" action="/">
+                <div class="row cl">
+                    <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>选中组织：</label>
+                    <div class="formControls col-xs-6 col-sm-8">
+                        <input type="text" class="input-text" style="background-color:#e8e8e8;" id="chooseNodeName" placeholder="在树形图中点击选择组织" readonly="readonly">
+                        <input type="text" class="input-text" id="chooseNodeId" name="code" hidden>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <article class="page-container">
+                        <div id="tab_demo" class="HuiTab">
+                            <div class="tabBar clearfix">
+                                <span>新增组织</span>
+                                <span>编辑组织</span>
+                                <span>调整组织</span>
+                                <span>禁用组织</span>
+                            </div>
+                            <div class="tabCon">
+                                <div class="form form-horizontal mt-20">
+                                    <div class="row cl">
+                                        <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>新增位置：</label>
+                                        <div class="formControls col-xs-7 col-sm-8">
+                                            <span class="select-box">
+                                                <select name="fieldType" class="input select" value="0" id="relation">
+                                                    @foreach (var item in RelationEnumHelper.GetRelationEnums())
+                                                    {
+                                                        <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
+                                                    }
+                                                </select>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row cl">
+                                        <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>新增组织名称：</label>
+                                        <div class="formControls col-xs-7 col-sm-8">
+                                            <input type="text" class="input-text" id="newNodeId">
+                                        </div>
+                                    </div>
+                                    <div class="row cl">
+                                        <div class="col-xs-8 col-sm-9 col-xs-offset-5 col-sm-offset-3">
+                                            <a class="btn btn-primary radius" href="javascript:addCondition(this);"><i class="Hui-iconfont">&#xe632;</i> 新增组织</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tabCon">
+                                <div class="form form-horizontal mt-20">
+                                    <div class="row cl">
+                                        <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>新组织名称：</label>
+                                        <div class="formControls col-xs-7 col-sm-8">
+                                            <input type="text" class="input-text" id="newNodeName">
+                                        </div>
+                                    </div>
+                                    <div class="row cl">
+                                        <div class="col-xs-8 col-sm-9 col-xs-offset-5 col-sm-offset-3">
+                                            <a class="btn btn-primary radius" href="javascript:updateCondition(this);"><i class="Hui-iconfont">&#xe632;</i> 编辑组织</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tabCon">
+                                <div class="form form-horizontal mt-20">
+                                    <div class="row cl">
+                                        <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>待调整组织：</label>
+                                        <div class="formControls col-xs-7 col-sm-8">
+                                            <span class="select-box">
+                                                <select name="fieldType" class="input select" id="ajustId">
+                                                    @foreach (var item in enableList)
+                                                    {
+                                                        <option value="@item.Id">@item.Name</option>
+                                                    }
+                                                </select>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row cl">
+                                        <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>调整位置：</label>
+                                        <div class="formControls col-xs-7 col-sm-8">
+                                            <span class="select-box">
+                                                <select name="fieldType" class="input select" value="0" id="ajustRelation">
+                                                    @foreach (var item in RelationEnumHelper.GetRelationEnums())
+                                                    {
+                                                        <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
+                                                    }
+                                                </select>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row cl">
+                                        <div class="col-xs-8 col-sm-9 col-xs-offset-5 col-sm-offset-3">
+                                            <a class="btn btn-primary radius" href="javascript:ajustCondition(this);"><i class="Hui-iconfont">&#xe632;</i> 调整位置</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tabCon">
+                                <div class="row cl">
+                                    <div class="col-xs-8 col-sm-9">
+                                        <a class="btn btn-danger-outline radius" href="javascript:disableNode();"><i class="Hui-iconfont">&#xe6dd;</i> 禁用组织</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <div class="row cl">
+                    <div class="col-xs-12 col-sm-12">
+                        <span class="c-red" id="sp_result_error"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tree well col-xs-7 col-sm-7">
+            <center><label>组织结构展示</label></center>
+            <ul id="rootUL"></ul>
+        </div>
+    </div>
+</article>
+
+@await Html.PartialAsync("~/Views/Shared/_FooterScripts.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_CommonScript.cshtml")
+<!--请在下方写此页面业务相关的脚本-->
+<script>
+    jQuery.Huitab = function (tabBar, tabCon, class_name, tabEvent, i) {
+        var $tab_menu = $(tabBar);
+        // 初始化操作
+        $tab_menu.removeClass(class_name);
+        $(tabBar).eq(i).addClass(class_name);
+        $(tabCon).hide();
+        $(tabCon).eq(i).show();
+
+        $tab_menu.bind(tabEvent, function () {
+            $tab_menu.removeClass(class_name);
+            $(this).addClass(class_name);
+            var index = $tab_menu.index(this);
+            $(tabCon).hide();
+            $(tabCon).eq(index).show()
+        })
+    }
+
+
+
+    $(function () {
+        //tab
+        // #tab_demo 父级id
+        // #tab_demo .tabBar span 控制条
+        // #tab_demo .tabCon 内容区
+        // click 事件 点击切换，可以换成mousemove 移动鼠标切换
+        // 1	默认第2个tab为当前状态（从0开始）
+        $.Huitab("#tab_demo .tabBar span", "#tab_demo .tabCon", "current", "click", "0")
+
+        var json =
+            [{
+                "name": "目前没有组织，点击我（根节点）开始配置",
+                "id": "00000000-0000-0000-0000-000000000000",
+                "parentId": "00000000-0000-0000-0000-000000000000",
+                "icon": "",
+                "children": []
+            }];
+
+        function tree(data) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].parentId == '00000000-0000-0000-0000-000000000000') {
+                    $("#rootUL").append("<li data-name='" + data[i].id + "' title='" + data[i].id + "' titlename='" + data[i].name + "'><span><i class=''></i> " + data[i].name + "</span></li>");
+                } else {
+                    var children = $("li[data-name='" + data[i].parentId + "']").children("ul");
+                    if (children.length == 0) {
+                        $("li[data-name='" + data[i].parentId + "']").append("<ul></ul>")
+                    }
+                    $("li[data-name='" + data[i].parentId + "'] > ul").append(
+                        "<li data-name='" + data[i].id + "' title='" + data[i].id + "' titlename='" + data[i].name + "'>" +
+                        "<span>" +
+                        "<i class=''></i> " +
+                        data[i].name +
+                        "</span>" +
+                        "</li>")
+                }
+                for (var j = 0; j < data[i].children.length; j++) {
+                    var children = data[i].children[j];
+                    var children2 = $("li[data-name='" + children.parentId + "']").children("ul");
+                    if (children2.length == 0) {
+                        $("li[data-name='" + children.parentId + "']").append("<ul></ul>")
+                    }
+                    $("li[data-name='" + children.parentId + "'] > ul").append(
+                        "<li data-name='" + children.id + "' title='" + children.id + "' titlename='" + children.name + "'>" +
+                        "<span>" +
+                        "<i class=''></i> " +
+                        children.name +
+                        "</span>" +
+                        "</li>")
+
+                    //var children2 = data[i].children[j].children;
+
+                    //tree(children2)
+
+                    var children2 = data[i].children[j].children;
+
+                    tree(children2)
+                }
+                tree(data[i]);
+            }
+        }
+
+        //获取树
+        $.ajax({
+            type: 'GET',
+            url: '/Organization/GetTree',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                if (data.isSuccess) {
+                    if (data.data.length > 0) {
+                        tree(data.data);
+                    } else {
+                        tree(json);
+                    }
+                }
+                bindingClass();
+            },
+            error: function (data) {
+                tree(json);
+                console.error(data.message);
+                bindingClass();
+            },
+        });
+    });
+
+    function bindingClass() {
+        $('.tree li:has(ul)').addClass('parent_li')
+        //$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', '关闭');
+        $('.tree li > span').on('click', function (e) {
+            var title = $(this).parent('li').prop('title');
+            var titleName = $(this).parent('li').attr('titlename');
+            $("#chooseNodeId").val(title);
+            $("#chooseNodeName").val(titleName);
+            e.stopPropagation();
+        });
+    }
+
+    function cleanSpan() {
+        $("#sp_result_error").html("");//清空result msg span
+    }
+
+    var lock = false;
+
+    /* 添加条件 */
+    function addCondition(obj) {
+        cleanSpan();
+        //check parameters
+        if ($('#chooseNodeId').val() == '' || $('#chooseNodeId').val() == null) {
+            $("#sp_result_error").html("请点击选择组织图谱中的组织！"); return;
+        }
+        if ($('#newNodeId').val() == '' || $('#newNodeId').val() == null) {
+            $("#sp_result_error").html("请输入新增组织名称！"); return;
+        }
+        if (!lock) {
+            lock = true;
+            //add
+            $.ajax({
+                type: 'POST',
+                url: '/Organization/AddNode?relation=' + $("#relation").val() + '&chooseId=' + $("#chooseNodeId").val(),
+                dataType: 'json',
+                data: {
+                    'Name': $("#newNodeId").val()
+                },
+                success: function (data) {
+                    if (data.isSuccess) {
+                        layer.msg(data.message, { icon: 1, time: 1000 });
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        $("#sp_result_error").html(data.message);
+                    }
+                    lock = false;
+                },
+                error: function (data) {
+                    $("#sp_result_error").html(data.message);
+                    lock = false;
+                },
+            });
+        } else {
+            layer.msg('您的点击太频繁了！', { icon: 2, time: 1000 });
+        }
+    }
+
+    /* 编辑 */
+    function updateCondition(obj) {
+        cleanSpan();
+        //check parameters
+        if ($('#chooseNodeId').val() == '' || $('#chooseNodeId').val() == null) {
+            $("#sp_result_error").html("请点击选择组织图谱中的组织！"); return;
+        }
+        if ($('#newNodeName').val() == '' || $('#newNodeName').val() == null) {
+            $("#sp_result_error").html("请输入新组织名称！"); return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/Organization/UpdateNode?chooseId=' + $("#chooseNodeId").val(),
+            dataType: 'json',
+            data: {
+                'Name': $("#newNodeName").val()
+            },
+            success: function (data) {
+                if (data.isSuccess) {
+                    //!!!这里这个弹层为啥不行
+                    //layer.msg(data.message, { icon: 1, time: 1000 });
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    $("#sp_result_error").html(data.message);
+                }
+            },
+            error: function (data) {
+                $("#sp_result_error").html(data.message);
+            },
+        });
+    }
+
+    /**禁用节点 */
+    function disableNode() {
+        cleanSpan();
+        //check parameters
+        if ($('#chooseNodeId').val() == '' || $('#chooseNodeId').val() == null) {
+            $("#sp_result_error").html("请点击选择组织图谱中的组织！"); return;
+        }
+
+        layer.confirm('禁用组织将同时禁用组织下所有子组织！', function (index) {
+            $.ajax({
+                type: 'POST',
+                url: '/Organization/DisableNode?nodeId=' + $('#chooseNodeId').val(),
+                dataType: 'json',
+                success: function (data) {
+                    layer.msg(data.message, { icon: 1, time: 1000 });
+                    if (data.isSuccess) {
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    }
+                },
+                error: function (data) {
+                    console.log(data.message);
+                }
+            });
+        });
+    }
+
+    //调整组织
+    function ajustCondition(obj) {
+        cleanSpan();
+        //check parameters
+        if ($('#chooseNodeId').val() == '' || $('#chooseNodeId').val() == null) {
+            $("#sp_result_error").html("请点击选择组织图谱中的组织！"); return;
+        }
+
+        if (!lock) {
+            lock = true;
+            //add
+            $.ajax({
+                type: 'POST',
+                url: '/Organization/AjustRelation?relation=' + $("#ajustRelation").val() + '&chooseId=' + $("#chooseNodeId").val() + '&ajustId=' + $("#ajustId").val(),
+                dataType: 'json',
+                success: function (data) {
+                    if (data.isSuccess) {
+                        layer.msg(data.message, { icon: 1, time: 1000 });
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        $("#sp_result_error").html(data.message);
+                    }
+                    lock = false;
+                },
+                error: function (data) {
+                    $("#sp_result_error").html(data.message);
+                    lock = false;
+                },
+            });
+        } else {
+            layer.msg('您的点击太频繁了！', { icon: 2, time: 1000 });
+        }
+    }
+
+</script>
+

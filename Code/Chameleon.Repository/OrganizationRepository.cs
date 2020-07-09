@@ -8,7 +8,12 @@ namespace Chameleon.Repository
 {
     public interface IOrganizationRepository : ICommonRepositoryBase<Organization>
     {
-       
+        /// <summary>
+        /// 获取启用的组织列表
+        /// </summary>
+        /// <returns></returns>
+        List<Organization> GetEnableList();
+        List<Organization> GetDisableList();
     }
 
     public class OrganizationRepository : CommonRepositoryBase<Organization>, IOrganizationRepository
@@ -17,6 +22,14 @@ namespace Chameleon.Repository
         {
         }
 
-       
+        public List<Organization> GetDisableList()
+        {
+            return _dbContext.Queryable<Organization>().Where(t => t.Disable == 1).ToList();
+        }
+
+        public List<Organization> GetEnableList()
+        {
+            return _dbContext.Queryable<Organization>().Where(t => t.Disable != 1).ToList();
+        }
     }
 }

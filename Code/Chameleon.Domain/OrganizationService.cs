@@ -18,7 +18,26 @@ namespace Chameleon.Domain
     {
         List<Organization> GetTree();
         Result AddNode(RelationEnum relation, Guid chooseNodeId, Organization entity);
-        Result DeleteNode(Guid nodeId);
+        /// <summary>
+        /// 调整位置
+        /// </summary>
+        /// <param name="relation"></param>
+        /// <param name="chooseNodeId"></param>
+        /// <param name="ajustNodeId"></param>
+        /// <returns></returns>
+        Result AjustRelation(RelationEnum relation, Guid chooseNodeId, Guid ajustNodeId);
+        /// <summary>
+        /// 启用节点
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        Result EnableNode(Guid nodeId);
+        /// <summary>
+        /// 禁用节点
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        Result DisableNode(Guid nodeId);
         /// <summary>
         /// 获取有权限的所有组织id
         /// </summary>
@@ -38,7 +57,7 @@ namespace Chameleon.Domain
         public List<Organization> GetTree()
         {
             //获取所有子节点
-            var nodes = _organizationRepository.GetListUnDeleted();
+            var nodes = _organizationRepository.GetEnableList();
 
             //获取顶级节点
             Organization condition = nodes?.FirstOrDefault(t => t.ParentId == Guid.Empty);
@@ -84,7 +103,7 @@ namespace Chameleon.Domain
                 if (chooseNodeId != Guid.Empty)
                 {
                     //判断是否有树存在
-                    List<Organization> conditionListExist = _organizationRepository.GetListUnDeleted();
+                    List<Organization> conditionListExist = _organizationRepository.GetEnableList();
 
                     //获取选择的节点
                     Organization chooseNode = conditionListExist.FirstOrDefault(t => t.Id == chooseNodeId);
@@ -113,35 +132,13 @@ namespace Chameleon.Domain
             });
         }
 
-        public Result DeleteNode(Guid nodeId)
-        {
-            if (nodeId == Guid.Empty)
-                return Result.Success();
-
-            List<Organization> conditionListExist = _organizationRepository.GetListUnDeleted();
-
-            if (conditionListExist != null)
-            {
-                var needToDelete = conditionListExist.Where(t => t.ParentId == nodeId).ToList();
-
-                foreach (var item in needToDelete)
-                {
-                    _organizationRepository.LogicDelete(item.Id);
-                }
-
-                _organizationRepository.LogicDelete(nodeId);
-            }
-
-            return Result.Success();
-        }
-
         public List<string> GetPermissionOrganizations(Guid userOrganization)
         {
             //结果
             var result = new List<string> { userOrganization.ToString() };
 
             //获取所有子节点
-            var nodes = _organizationRepository.GetListUnDeleted();
+            var nodes = _organizationRepository.GetEnableList();
 
             if (nodes == null || !nodes.Any())
                 return result;
@@ -161,6 +158,70 @@ namespace Chameleon.Domain
 
                 return childs.Select(t => t.Id.ToString()).ToList();
             }
+        }
+
+        public Result EnableNode(Guid nodeId)
+        {
+            if (nodeId == Guid.Empty)
+                return Result.Success();
+
+            return base.UpdateWithId(nodeId, t =>
+            {
+                t.Disable = 0;
+            });
+        }
+
+        public Result DisableNode(Guid nodeId)
+        {
+            if (nodeId == Guid.Empty)
+                return Result.Success();
+
+            return base.UpdateWithId(nodeId, t =>
+            {
+                t.Disable = 1;
+            });
+        }
+
+        public Result AjustRelation(RelationEnum relation, Guid chooseNodeId, Guid ajustNodeId)
+        {
+            if (chooseNodeId == Guid.Empty || ajustNodeId == Guid.Empty)
+                return Result.Success();
+
+            //判断是否有树存在
+            List<Organization> conditionListExist = _organizationRepository.GetEnableList();
+
+            if (conditionListExist == null || !conditionListExist.Any())
+                return Result.Success();
+
+            if (!conditionListExist.Any(t => t.Id == chooseNodeId) || !conditionListExist.Any(t => t.Id == ajustNodeId))
+                return Result.Success("待调整节点未找到，无法继续");
+
+            return TransactionHelper.Transaction(() =>
+            {
+                //获取选择的节点
+                Organization chooseNode = conditionListExist.Find(t => t.Id == chooseNodeId);
+                //待调整节点
+                Organization ajustNode = conditionListExist.Find(t => t.Id == ajustNodeId);
+
+                //根据选择的方式处理新节点
+                switch (relation)
+                {
+                    case RelationEnum.Parent:
+                        ajustNode.ParentId = chooseNode.ParentId;
+                        chooseNode.ParentId = ajustNode.Id;
+                        _organizationRepository.Update(chooseNode);
+                        break;
+                    case RelationEnum.Child:
+                        ajustNode.ParentId = chooseNode.Id;
+                        break;
+                    default:
+                        return Result.Error("关系错误，无法调整组织");
+                }
+
+                _organizationRepository.Update(ajustNode);
+
+                return Result.Success("保存成功！");
+            });
         }
     }
 }
