@@ -24,7 +24,7 @@ namespace Chameleon.Development.Controllers
         public IActionResult Index()
         {
             //未删除的应用
-            ViewData["CloudApplicationList"] = _cloudApplicationService.GetListUnDeleted();
+            ViewData["CloudApplicationList"] = _cloudApplicationService.GetListUnDeleted()?.OrderBy(t => t.SortNumber).ToList();
             return View();
         }
 

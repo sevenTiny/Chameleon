@@ -32,7 +32,7 @@ namespace Chameleon.Development.Controllers
 
         public IActionResult List()
         {
-            var list = _applicationService.GetListUnDeleted();
+            var list = _applicationService.GetListUnDeleted()?.OrderBy(t=>t.SortNumber).ToList();
             return View(list);
         }
 
