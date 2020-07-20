@@ -101,7 +101,7 @@ namespace Chameleon.Development.Controllers
             SetUserInfoToViewData();
 
             if (string.IsNullOrEmpty(applicationCode))
-                return Redirect("/CloudApplication/Select");
+                return Redirect("/Home/Index");
 
             //设置cookie
             SetCookiesApplictionInfo(applicationId, applicationCode);

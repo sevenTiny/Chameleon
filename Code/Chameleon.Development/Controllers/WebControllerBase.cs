@@ -31,7 +31,7 @@ namespace Chameleon.Development.Controllers
                 var applicationId = HttpContext.Request.Cookies["ApplicationId"];
 
                 if (string.IsNullOrEmpty(applicationId))
-                    Response.Redirect("/CloudApplication/Select");
+                    Response.Redirect("/Home/Index");
 
                 return Guid.Parse(applicationId);
             }
