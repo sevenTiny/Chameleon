@@ -24,7 +24,7 @@ namespace Chameleon.Account.Controllers
 
         public IActionResult Setting()
         {
-            ViewData["EnableList"] = _organizationRepository.GetEnableList();
+            ViewData["EnableList"] = _organizationService.GetTreeNameList();
             return View();
         }
 

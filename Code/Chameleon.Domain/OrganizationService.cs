@@ -44,6 +44,11 @@ namespace Chameleon.Domain
         /// <param name="userOrganization"></param>
         /// <returns></returns>
         List<string> GetPermissionOrganizations(Guid userOrganization);
+        /// <summary>
+        /// 获取名称展示类似树状层级的列表（用于下拉列表）
+        /// </summary>
+        /// <returns></returns>
+        List<Organization> GetTreeNameList();
     }
 
     public class OrganizationService : CommonServiceBase<Organization>, IOrganizationService
@@ -52,6 +57,55 @@ namespace Chameleon.Domain
         public OrganizationService(IOrganizationRepository organizationRepository) : base(organizationRepository)
         {
             _organizationRepository = organizationRepository;
+        }
+
+        public List<Organization> GetTreeNameList()
+        {
+            // 获取所有子节点
+            var nodes = _organizationRepository.GetEnableList();
+
+            //获取顶级节点
+            Organization condition = nodes?.FirstOrDefault(t => t.ParentId == Guid.Empty);
+
+            if (condition == null)
+                return new List<Organization>(0);
+
+            //返回值
+            var result = new List<Organization>() { condition };
+
+            //深度
+            int dep = 0;
+
+            //递归构造子节点
+            GetTree(nodes, condition.Id, condition.Name);
+
+            return result;
+
+            //Tree Search
+            void GetTree(List<Organization> source, Guid parentId, string parentName)
+            {
+                dep++;
+
+                var childs = source.Where(t => t.ParentId == parentId).ToList();
+
+                if (childs == null)
+                    return;
+
+                foreach (var item in childs)
+                {
+                    //StringBuilder builder = new StringBuilder();
+
+                    //for (int i = 0; i < dep; i++)
+                    //    builder.Append("   ");
+
+                    item.Name = string.Concat(parentName, " - ", item.Name);
+                    result.Add(item);
+
+                    GetTree(source, item.Id, item.Name);
+                }
+
+                return;
+            }
         }
 
         public List<Organization> GetTree()
