@@ -76,7 +76,7 @@ namespace Chameleon.Development.Controllers
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
                     entity.PageSize = entity.PageSize;//暂时写死每页数目
 
-                    return _InterfaceSettingService.Add(entity);
+                    return _InterfaceSettingService.AddCheckCode(entity);
                 });
 
             if (!result.IsSuccess)

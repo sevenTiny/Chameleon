@@ -1,4 +1,5 @@
-﻿using Chameleon.Domain;
+﻿using Chameleon.Application;
+using Chameleon.Domain;
 using Chameleon.Entity;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,10 @@ namespace Chameleon.Development.Controllers
         ICloudApplicationService _applicationService;
         IMetaObjectService _metaObjectService;
         IMetaObjectRepository _metaObjectRepository;
-
-        public CloudApplicationController(IMetaObjectRepository metaObjectRepository, ICloudApplicationService applicationService, IMetaObjectService metaObjectService)
+        ICloudApplicationApp _cloudApplicationApp;
+        public CloudApplicationController(ICloudApplicationApp cloudApplicationApp, IMetaObjectRepository metaObjectRepository, ICloudApplicationService applicationService, IMetaObjectService metaObjectService)
         {
+            _cloudApplicationApp = cloudApplicationApp;
             _metaObjectRepository = metaObjectRepository;
             _applicationService = applicationService;
             _metaObjectService = metaObjectService;
@@ -26,13 +28,13 @@ namespace Chameleon.Development.Controllers
 
         public IActionResult Select()
         {
-            var list = _applicationService.GetListUnDeleted();
+            var list = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId);
             return View(list);
         }
 
         public IActionResult List()
         {
-            var list = _applicationService.GetListUnDeleted()?.OrderBy(t=>t.SortNumber).ToList();
+            var list = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId)?.OrderBy(t => t.SortNumber).ToList();
             return View(list);
         }
 
@@ -56,7 +58,7 @@ namespace Chameleon.Development.Controllers
                 .Continue(_ =>
                 {
                     entity.CreateBy = CurrentUserId;
-                    return _applicationService.Add(entity);
+                    return _cloudApplicationApp.AddCloudApplication(entity);
                 });
 
             if (!result.IsSuccess)

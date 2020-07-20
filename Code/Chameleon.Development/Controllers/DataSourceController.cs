@@ -64,12 +64,12 @@ namespace Chameleon.Development.Controllers
                     entity.CloudApplicationId = CurrentApplicationId;
                     entity.Code = string.Concat(CurrentApplicationCode, ".", entity.Code);
                     entity.ScriptType = (int)ScriptTypeEnum.DynamicScriptDataSourceTrigger;
-                    return _triggerScriptService.Add(entity);
+                    return _triggerScriptService.AddCheckCode(entity);
                 })
                 //同步添加接口
                 .Continue(_ =>
                 {
-                    _interfaceSettingService.Add(new InterfaceSetting
+                    _interfaceSettingService.AddCheckCode(new InterfaceSetting
                     {
                         DataSousrceId = entity.Id,
                         InterfaceType = (int)InterfaceTypeEnum.DynamicScriptDataSource,
@@ -166,12 +166,12 @@ namespace Chameleon.Development.Controllers
                     entity.ScriptType = (int)ScriptTypeEnum.JsonDataSource;
                     entity.ClassFullName = "-";
                     entity.FunctionName = "-";
-                    return _triggerScriptService.Add(entity);
+                    return _triggerScriptService.AddCheckCode(entity);
                 })
                 //同步添加接口
                 .Continue(_ =>
                 {
-                    _interfaceSettingService.Add(new InterfaceSetting
+                    _interfaceSettingService.AddCheckCode(new InterfaceSetting
                     {
                         DataSousrceId = entity.Id,
                         InterfaceType = (int)InterfaceTypeEnum.JsonDataSource,

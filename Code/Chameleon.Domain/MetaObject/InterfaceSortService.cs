@@ -48,7 +48,7 @@ namespace Chameleon.Domain
             if (_repository.CheckMetaFieldShortCodeHasExistInCurrentSort(entity.ParentId, entity.MetaFieldShortCode))
                 return Result.Error("已经存在一个该字段的规则了");
 
-            return base.Add(entity);
+            return base.AddNoCareCode(entity);
         }
 
         public Result UpdateSortItem(InterfaceSort entity)

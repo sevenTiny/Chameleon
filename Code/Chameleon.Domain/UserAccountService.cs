@@ -109,7 +109,7 @@ namespace Chameleon.Domain
 
             userAccount.UserId = TimeHelper.GetTimeStamp();
 
-            return base.Add(userAccount);
+            return base.AddNoCareCode(userAccount);
         }
 
         public Result SetNextTimeResetPassword(Guid id)

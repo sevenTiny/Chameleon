@@ -63,7 +63,7 @@ namespace Chameleon.Domain
             if (_triggerScriptRepository.CheckMetaObjectInterfaceServiceTypeExistIfMetaObjectTrigger(entity.MetaObjectId, entity.GetMetaObjectInterfaceServiceType()))
                 return Result.Error($"该对象下已经存在一个[{entity.GetMetaObjectInterfaceServiceType().GetDescription()}]类型的脚本");
 
-            return base.Add(entity);
+            return base.AddNoCareCode(entity);
         }
 
         public DefaultScriptBase GetDefaultMetaObjectTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)

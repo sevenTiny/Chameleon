@@ -46,7 +46,7 @@ namespace Chameleon.Development.Controllers
                     entity.ShortCode = entity.Code;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.ShortCode);
 
-                    return _metaFieldService.Add(entity);
+                    return _metaFieldService.AddCheckCode(entity);
                 });
 
             if (!result.IsSuccess)

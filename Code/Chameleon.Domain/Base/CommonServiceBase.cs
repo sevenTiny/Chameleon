@@ -10,7 +10,13 @@ namespace Chameleon.Domain
 {
     public interface ICommonServiceBase<TEntity> where TEntity : CommonBase
     {
-        Result Add(TEntity entity);
+        /// <summary>
+        /// 新增并校验编码
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Result AddCheckCode(TEntity entity);
+        Result AddNoCareCode(TEntity entity);
         Result<IEnumerable<TEntity>> BatchAdd(IEnumerable<TEntity> entities);
         Result Update(TEntity entity);
         Result Delete(TEntity entity);
@@ -90,7 +96,7 @@ namespace Chameleon.Domain
                 .ContinueAssert(_ => !_commonRepositoryBase.CheckCodeExistWithoutSameId(id, code), $"编码[{code}]已存在");
         }
 
-        public Result Add(TEntity entity)
+        public Result AddCheckCode(TEntity entity)
         {
             return Result.Success()
                 .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
@@ -102,6 +108,24 @@ namespace Chameleon.Domain
                 {
                     if (entity.Id == Guid.Empty)
                         entity.Id = Guid.NewGuid();
+
+                    return _;
+                })
+                .Continue(_ => _commonRepositoryBase.Add(entity));
+        }
+
+        public Result AddNoCareCode(TEntity entity)
+        {
+            return Result.Success()
+                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
+                //校验Id并赋值
+                .Continue(_ =>
+                {
+                    if (entity.Id == Guid.Empty)
+                        entity.Id = Guid.NewGuid();
+
+                    entity.Code = "-";
+
                     return _;
                 })
                 .Continue(_ => _commonRepositoryBase.Add(entity));
@@ -115,7 +139,12 @@ namespace Chameleon.Domain
                 return Result.Error($"没有查到Id[{id}]对应的数据.");
 
             //个性化字段赋值
-            updateFieldAction?.Invoke(target);
+            if (updateFieldAction == null)
+                return Result.Success("操作成功");
+
+            updateFieldAction.Invoke(target);
+
+            target.ModifyTime = DateTime.Now;
 
             _commonRepositoryBase.Update(target);
 

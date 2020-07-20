@@ -50,7 +50,7 @@ namespace Chameleon.Development.Controllers
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
                     entity.MetaFieldShortCode = Guid.NewGuid().ToString().Replace("-", string.Empty);
 
-                    return _interfaceSortService.Add(entity);
+                    return _interfaceSortService.AddCheckCode(entity);
                 });
 
             if (!result.IsSuccess)

@@ -69,7 +69,7 @@ namespace Chameleon.Domain
             entity.ParentId = Guid.Empty;
             entity.MetaFieldId = Guid.Empty;
 
-            return base.Add(entity);
+            return base.AddNoCareCode(entity);
         }
 
         public Result AddNode(Guid brotherNodeId, InterfaceCondition entity)
