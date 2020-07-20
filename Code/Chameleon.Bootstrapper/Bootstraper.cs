@@ -101,6 +101,13 @@ namespace Chameleon.Bootstrapper
                     },
                     OnTokenValidated = context =>
                     {
+                        //为了防止跳转链接中带token会影响切换账号，如果链接中有url，则重定向一次不带token的链接
+                        if (!string.IsNullOrEmpty(context.Request.Query[AccountConst.KEY_AccessToken]))
+                        {
+                            context.Response.Redirect(UrlHelper.RemoveUrlParam(string.Concat(context.Request.Host, context.Request.Path, context.Request.QueryString), AccountConst.KEY_AccessToken));
+                            return Task.CompletedTask;
+                        }
+
                         if (chameleonSystemEnum == ChameleonSystemEnum.Account && context.HttpContext.Request.Path.HasValue)
                         {
                             //这里默认放行路径，不走角色过滤
