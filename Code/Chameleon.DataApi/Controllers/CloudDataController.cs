@@ -84,7 +84,7 @@ namespace Chameleon.DataApi.Controllers
                         //before
                         filter = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryList_Before, new object[] { _queryContext.TriggerContext, _queryContext.ConditionArgumentsUpperKeyDic, filter }, filter);
                         //execute
-                        var listResult = _dataAccessApp.GetList(_queryContext.InterfaceSetting, filter, queryArgs._pageIndex);
+                        var listResult = _dataAccessApp.GetList(_queryContext.InterfaceSetting, filter, queryArgs._pageIndex, queryArgs._pageSize);
                         //after
                         listResult.Data = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.QueryList_After, new object[] { _queryContext.TriggerContext, listResult.Data }, listResult.Data);
                         return listResult.ToJsonResult();

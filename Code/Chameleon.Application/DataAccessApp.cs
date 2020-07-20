@@ -68,7 +68,7 @@ namespace Chameleon.Application
         /// <param name="sortSetting"></param>
         /// <param name="columns"></param>
         /// <returns></returns>
-        Result<List<Dictionary<string, CloudData>>> GetList(InterfaceSetting interfaceSetting, FilterDefinition<BsonDocument> filter, int pageIndex = 0);
+        Result<List<Dictionary<string, CloudData>>> GetList(InterfaceSetting interfaceSetting, FilterDefinition<BsonDocument> filter, int pageIndex, int pageSize = 0);
         /// <summary>
         /// 查询数量
         /// </summary>
@@ -369,7 +369,7 @@ namespace Chameleon.Application
             return Result<Dictionary<string, CloudData>>.Error(listResult.Message);
         }
 
-        public Result<List<Dictionary<string, CloudData>>> GetList(InterfaceSetting interfaceSetting, FilterDefinition<BsonDocument> filter, int pageIndex = 0)
+        public Result<List<Dictionary<string, CloudData>>> GetList(InterfaceSetting interfaceSetting, FilterDefinition<BsonDocument> filter, int pageIndex, int pageSize = 0)
         {
             //自定义查询列表
             var interfaceFields = _interfaceFieldsRepository.GetInterfaceFieldMetaFieldUpperKeyDicByInterfaceFieldsId(interfaceSetting.InterfaceFieldsId);
@@ -380,9 +380,12 @@ namespace Chameleon.Application
             foreach (var item in interfaceFields.Values)
                 projection = projection.Include(item.MetaFieldShortCode);
 
-            int skipSize = (pageIndex - 1) > 0 ? ((pageIndex - 1) * interfaceSetting.PageSize) : 0;
+            if (pageSize == 0)
+                pageSize = interfaceSetting.PageSize;
 
-            var datas = TranslatorBsonToCloudData(_chameleonDataDbContext.GetCollectionBson(interfaceSetting.MetaObjectCode).Find(filter).Skip(skipSize).Limit(interfaceSetting.PageSize).Sort(StructureSortDefinition(interfaceSetting.InterfaceSortId)).Project(projection).ToList() ?? new List<BsonDocument>(0), interfaceFields);
+            int skipSize = (pageIndex - 1) > 0 ? ((pageIndex - 1) * pageSize) : 0;
+
+            var datas = TranslatorBsonToCloudData(_chameleonDataDbContext.GetCollectionBson(interfaceSetting.MetaObjectCode).Find(filter).Skip(skipSize).Limit(pageSize).Sort(StructureSortDefinition(interfaceSetting.InterfaceSortId)).Project(projection).ToList() ?? new List<BsonDocument>(0), interfaceFields);
 
             var result = Result<List<Dictionary<string, CloudData>>>.Success($"查询成功，共{datas.Count}条记录", datas);
 

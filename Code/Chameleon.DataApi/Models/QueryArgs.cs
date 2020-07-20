@@ -12,5 +12,6 @@ namespace Chameleon.DataApi.Models
     {
         public string _interface { get; set; }
         public int _pageIndex { get; set; }
+        public int _pageSize { get; set; }
     }
 }
