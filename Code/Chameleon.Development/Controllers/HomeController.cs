@@ -14,18 +14,14 @@ namespace Chameleon.Development.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        ICloudApplicationService _cloudApplicationService;
-        public HomeController(ICloudApplicationService cloudApplicationService, ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger)
         {
-            _cloudApplicationService = cloudApplicationService;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            //未删除的应用
-            ViewData["CloudApplicationList"] = _cloudApplicationService.GetListUnDeleted()?.OrderBy(t => t.SortNumber).ToList();
-            return View();
+            return Redirect("/CloudApplication/Select");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

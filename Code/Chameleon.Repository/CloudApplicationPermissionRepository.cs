@@ -11,6 +11,7 @@ namespace Chameleon.Repository
         List<Guid> GetUserPermissionCloudApplicationIds(long userId);
         List<CloudApplicationPermission> GetCloudApplicationPermissionsByUserId(long userId);
         void DeleteByUserIdAndApplicationId(Guid applicationId, long userId);
+        List<CloudApplicationPermission> GetCloudApplicationPermissionsByCloudApplicationId(Guid cloudApplicationId);
     }
 
     public class CloudApplicationPermissionRepository : CommonRepositoryBase<CloudApplicationPermission>, ICloudApplicationPermissionRepository
@@ -35,6 +36,11 @@ namespace Chameleon.Repository
         public void DeleteByUserIdAndApplicationId(Guid applicationId, long userId)
         {
             _dbContext.Delete<CloudApplicationPermission>(t => t.CloudApplicationId == applicationId && t.UserId == userId);
+        }
+
+        public List<CloudApplicationPermission> GetCloudApplicationPermissionsByCloudApplicationId(Guid cloudApplicationId)
+        {
+            return _dbContext.Queryable<CloudApplicationPermission>().Where(t => t.IsDeleted == 0 && t.CloudApplicationId == cloudApplicationId).ToList();
         }
     }
 }

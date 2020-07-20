@@ -28,7 +28,7 @@ namespace Chameleon.Development.Controllers
 
         public IActionResult Select()
         {
-            var list = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId);
+            var list = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId)?.OrderBy(t => t.SortNumber).ToList();
             return View(list);
         }
 

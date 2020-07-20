@@ -28,6 +28,11 @@ namespace Chameleon.Repository
         /// <param name="phone"></param>
         /// <returns></returns>
         bool CheckEmailOrPhoneExist(string email, string phone);
+        /// <summary>
+        /// 全部开发者
+        /// </summary>
+        /// <returns></returns>
+        List<UserAccount> GetDeveloperUserAccount();
     }
 
     public class UserAccountRepository : CommonRepositoryBase<UserAccount>, IUserAccountRepository
@@ -67,6 +72,12 @@ namespace Chameleon.Repository
                 return _dbContext.Queryable<UserAccount>().Where(t => t.IsDeleted == 0 && t.Phone.Equals(phone)).Any();
 
             return result;
+        }
+
+        public List<UserAccount> GetDeveloperUserAccount()
+        {
+            var deveolperRole = (int)RoleEnum.Developer;
+            return _dbContext.Queryable<UserAccount>().Where(t => t.IsDeleted == 0 && t.Role == deveolperRole).ToList();
         }
     }
 }

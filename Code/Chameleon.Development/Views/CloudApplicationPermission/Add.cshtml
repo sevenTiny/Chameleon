@@ -1,0 +1,75 @@
+﻿@using Chameleon.Entity;
+@using SevenTiny.Bantina.Extensions.AspNetCore;
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
+
+    var result = Model as ResponseModel ?? new ResponseModel() { IsSuccess = true };
+    var entity = result?.Data as CloudApplicationPermission ?? new CloudApplicationPermission();
+
+    var developers = (ViewData["UserAccounts"] as List<UserAccount>) ?? new List<UserAccount>(0);
+}
+
+@{
+    ViewData["Level_1"] = "应用权限管理";
+    ViewData["Level_2"] = "新增授权";
+}
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
+
+<article class="page-container">
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/CloudApplicationPermission/AddLogic">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select name="userId" class="input select" id="userId" required>
+                        <option value="">--请选择--</option>
+                        @foreach (var item in developers)
+                        {
+                            <option value="@item.UserId">@item.Email</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">分组：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="@entity.Group" name="group">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">排序值：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="@entity.SortNumber" name="sortNumber">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">描述：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea name="description" class="textarea ignore" placeholder="说点什么...最多输入1000个字符">@entity.Description</textarea>
+                <p class="textarea-numberbar"><em class="textarea-length">0</em>/1000</p>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                <button onClick="javascript:window.location='/CloudApplicationPermission/List';" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+                @if (!result.IsSuccess)
+                {
+                    <br /><br /><pre><span class="c-red">@result.Message</span></pre>
+                }
+            </div>
+        </div>
+    </form>
+</article>
+
+@await Html.PartialAsync("~/Views/Shared/_FooterScripts.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_CommonScript.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_FormValidate.cshtml")
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+    $("#userId").val('@entity.UserId')
+
+</script>
+<!--/请在上方写此页面业务相关的脚本-->

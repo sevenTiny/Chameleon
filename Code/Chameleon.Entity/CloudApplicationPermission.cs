@@ -19,5 +19,10 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public long UserId { get; set; }
+
+        /// <summary>
+        /// 只显示用，不做持久化
+        /// </summary>
+        public string UserEmail { get; set; }
     }
 }
