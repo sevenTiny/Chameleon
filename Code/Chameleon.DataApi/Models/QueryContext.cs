@@ -21,6 +21,6 @@ namespace Chameleon.DataApi.Models
         /// </summary>
         public List<TriggerScript> TriggerScripts { get; set; }
         //贯穿触发器执行方法的上下文，常用于从before往after传递参数
-        public Dictionary<string, object> TriggerContext { get; set; } = new Dictionary<string, object>();
+        public Dictionary<string, string> TriggerContext { get; set; } = new Dictionary<string, string>();
     }
 }

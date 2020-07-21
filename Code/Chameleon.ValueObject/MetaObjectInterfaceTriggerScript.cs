@@ -58,9 +58,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public BsonDocument Add_Before(Dictionary<string, object> triggerContext, BsonDocument bsonDocument)
+    public BsonDocument Add_Before(Dictionary<string, string> triggerContext, BsonDocument bsonDocument)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -81,9 +81,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public void Add_After(Dictionary<string, object> triggerContext)
+    public void Add_After(Dictionary<string, string> triggerContext)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -103,9 +103,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public BsonDocument[] BatchAdd_Before(Dictionary<string, object> triggerContext, BsonDocument[] bsonDocuments)
+    public BsonDocument[] BatchAdd_Before(Dictionary<string, string> triggerContext, BsonDocument[] bsonDocuments)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -126,9 +126,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public void BatchAdd_After(Dictionary<string, object> triggerContext)
+    public void BatchAdd_After(Dictionary<string, string> triggerContext)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -148,9 +148,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public FilterDefinition<BsonDocument> Update_Before(Dictionary<string, object> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter, BsonDocument bsonDocument)
+    public FilterDefinition<BsonDocument> Update_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter, BsonDocument bsonDocument)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -171,9 +171,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public Result Update_After(Dictionary<string, object> triggerContext)
+    public Result Update_After(Dictionary<string, string> triggerContext)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -193,9 +193,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public FilterDefinition<BsonDocument> Delete_Before(Dictionary<string, object> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
+    public FilterDefinition<BsonDocument> Delete_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -216,9 +216,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public Result Delete_After(Dictionary<string, object> triggerContext)
+    public Result Delete_After(Dictionary<string, string> triggerContext)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -238,9 +238,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public FilterDefinition<BsonDocument> QueryCount_Before(Dictionary<string, object> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
+    public FilterDefinition<BsonDocument> QueryCount_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -261,9 +261,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public int QueryCount_After(Dictionary<string, object> triggerContext, int result)
+    public int QueryCount_After(Dictionary<string, string> triggerContext, int result)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -284,9 +284,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public FilterDefinition<BsonDocument> QuerySingle_Before(Dictionary<string, object> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
+    public FilterDefinition<BsonDocument> QuerySingle_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -307,9 +307,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public Dictionary<string, CloudData> QuerySingle_After(Dictionary<string, object> triggerContext, Dictionary<string, CloudData> result)
+    public Dictionary<string, CloudData> QuerySingle_After(Dictionary<string, string> triggerContext, Dictionary<string, CloudData> result)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -331,9 +331,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public FilterDefinition<BsonDocument> QueryList_Before(Dictionary<string, object> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
+    public FilterDefinition<BsonDocument> QueryList_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}
@@ -354,9 +354,9 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public List<Dictionary<string, CloudData>> QueryList_After(Dictionary<string, object> triggerContext, List<Dictionary<string, CloudData>> result)
+    public List<Dictionary<string, CloudData>> QueryList_After(Dictionary<string, string> triggerContext, List<Dictionary<string, CloudData>> result)
     {{
-        if(triggerContext[""Interface""].ToString() == ""xxx"")
+        if(triggerContext[""Interface""] == ""xxx"")
         {{
 
         }}

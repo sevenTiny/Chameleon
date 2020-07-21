@@ -84,13 +84,13 @@ namespace Chameleon.DataApi.Controllers
 
             //上下文赋值一些查询可能用到的参数
             _queryContext.TriggerContext.Add("Interface", queryArgs._interface);
-            _queryContext.TriggerContext.Add("PageIndex", queryArgs._pageIndex);
-            _queryContext.TriggerContext.Add("PageSize", _queryContext.InterfaceSetting.PageSize);
+            _queryContext.TriggerContext.Add("PageIndex", queryArgs._pageIndex.ToString());
+            _queryContext.TriggerContext.Add("PageSize", _queryContext.InterfaceSetting.PageSize.ToString());
             _queryContext.TriggerContext.Add("MetaObjectCode", _queryContext.InterfaceSetting.MetaObjectCode);
-            _queryContext.TriggerContext.Add("MetaObjectId", _queryContext.InterfaceSetting.MetaObjectId);
+            _queryContext.TriggerContext.Add("MetaObjectId", _queryContext.InterfaceSetting.MetaObjectId.ToString());
             _queryContext.TriggerContext.Add("CloudApplicationCode", _queryContext.InterfaceSetting.CloudApplicationCode);
-            _queryContext.TriggerContext.Add("CloudApplicationtId", _queryContext.InterfaceSetting.CloudApplicationtId);
-            _queryContext.TriggerContext.Add("Organization", CurrentOrganization);
+            _queryContext.TriggerContext.Add("CloudApplicationtId", _queryContext.InterfaceSetting.CloudApplicationtId.ToString());
+            _queryContext.TriggerContext.Add("Organization", CurrentOrganization.ToString());
         }
 
         /// <summary>
