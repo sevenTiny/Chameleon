@@ -5,6 +5,7 @@
 
 appsettings.json
 appsettings.Development.json
+SevenTinyLogs/
 
 # User-specific files
 *.rsuser
