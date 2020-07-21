@@ -15,6 +15,31 @@ namespace Chameleon.Bootstrapper
     [EnableCors]
     public class ApiControllerCommonBase : ControllerBase
     {
+        /// <summary>
+        /// 返回安全执行结果
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        protected IActionResult SafeExecute(Func<IActionResult> func)
+        {
+            try
+            {
+                return func();
+            }
+            catch (ArgumentNullException argNullEx)
+            {
+                return Result.Error(argNullEx.Message).ToJsonResult();
+            }
+            catch (ArgumentException argEx)
+            {
+                return Result.Error(argEx.Message).ToJsonResult();
+            }
+            catch (Exception ex)
+            {
+                return Result.Error(ex.Message).ToJsonResult();
+            }
+        }
+
         protected JsonResult JsonResultSuccess(string msg = "操作成功")
         {
             return Result.Success(msg).ToJsonResult();

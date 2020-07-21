@@ -17,7 +17,7 @@ namespace Chameleon.DataApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CloudDataController : ApiControllerBase
+    public class CloudDataController : CloudDataApiControllerBase
     {
         public CloudDataController(
             IOrganizationService organizationService,

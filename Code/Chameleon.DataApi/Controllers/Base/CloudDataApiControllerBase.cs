@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace Chameleon.DataApi.Controllers
 {
     [Authorize]
-    public class ApiControllerBase : ApiControllerCommonBase
+    public class CloudDataApiControllerBase : ApiControllerCommonBase
     {
         protected IDataAccessApp _dataAccessApp;
         protected IInterfaceSettingRepository _interfaceSettingRepository;
@@ -31,7 +31,7 @@ namespace Chameleon.DataApi.Controllers
         protected ITriggerScriptRepository _triggerScriptRepository;
         protected ITriggerScriptService _triggerScriptService;
         protected IOrganizationService _organizationService;
-        public ApiControllerBase(IOrganizationService organizationService, ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository)
+        public CloudDataApiControllerBase(IOrganizationService organizationService, ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceConditionService interfaceConditionService, IInterfaceSettingRepository interfaceSettingRepository, IDataAccessApp dataAccessApp, IInterfaceVerificationService interfaceVerificationService, IInterfaceVerificationRepository interfaceVerificationRepository)
         {
             _organizationService = organizationService;
             _triggerScriptService = triggerScriptService;
@@ -44,31 +44,6 @@ namespace Chameleon.DataApi.Controllers
         }
 
         protected QueryContext _queryContext;
-
-        /// <summary>
-        /// 返回安全执行结果
-        /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        protected IActionResult SafeExecute(Func<IActionResult> func)
-        {
-            try
-            {
-                return func();
-            }
-            catch (ArgumentNullException argNullEx)
-            {
-                return Result.Error(argNullEx.Message).ToJsonResult();
-            }
-            catch (ArgumentException argEx)
-            {
-                return Result.Error(argEx.Message).ToJsonResult();
-            }
-            catch (Exception ex)
-            {
-                return Result.Error(ex.Message).ToJsonResult();
-            }
-        }
 
         /// <summary>
         /// 初始化查询上下文

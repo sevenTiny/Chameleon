@@ -21,7 +21,7 @@ namespace Chameleon.DataApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class BatchCloudDataController : ApiControllerBase
+    public class BatchCloudDataController : CloudDataApiControllerBase
     {
         public BatchCloudDataController(
             IOrganizationService organizationService,
