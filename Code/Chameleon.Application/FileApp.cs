@@ -50,12 +50,12 @@ namespace Chameleon.Application
             if (!_fileService.ExistsById(fileId))
                 throw new FileNotFoundException($"File not found by fileId:[{fileId}]");
 
-            var orgnization = _fileService.GetFileOrgnization(fileId).ToString();
+            var meta = _fileService.GetFileMetaDataByFileId(fileId);
 
             //获取员工有权限的所有组织
             var permissionOrgs = _organizationService.GetPermissionOrganizations(organization);
 
-            if (!permissionOrgs.Contains(orgnization))
+            if (!permissionOrgs.Contains(meta.Organization.ToString()))
                 throw new InvalidOperationException("No Permission");
 
             _fileService.Delete(fileId);

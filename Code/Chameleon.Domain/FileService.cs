@@ -60,7 +60,7 @@ namespace Chameleon.Domain
         private MongoGridFS GetMongoFs()
         {
             MongoGridFSSettings fsSetting = new MongoGridFSSettings() { Root = "Chameleon.FileSystem" };
-            MongoGridFS fs = new MongoGridFS("", fsSetting);
+            MongoGridFS fs = new MongoGridFS(_chameleonDataDbContext.GetMongoServer(), "Chameleon", fsSetting);
             return fs;
         }
 

@@ -5,9 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="mongocsharpdriver" Version="2.10.4" />
     <PackageReference Include="SevenTiny.Bantina" Version="1.0.62" />
     <PackageReference Include="SevenTiny.Bantina.Bankinate.Core" Version="1.0.26" />
-    <PackageReference Include="SevenTiny.Bantina.Bankinate.MongoDb" Version="1.0.11" />
+    <PackageReference Include="SevenTiny.Bantina.Bankinate.MongoDb" Version="1.0.12" />
     <PackageReference Include="SevenTiny.Bantina.Bankinate.MySql" Version="1.0.21" />
     <PackageReference Include="SevenTiny.Bantina.Configuration.Core" Version="1.0.31" />
     <PackageReference Include="SevenTiny.Bantina.Configuration.MySql" Version="1.0.24" />
