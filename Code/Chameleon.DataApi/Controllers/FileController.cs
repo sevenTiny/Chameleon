@@ -40,12 +40,13 @@ namespace Chameleon.DataApi.Controllers
                     var fileUploadPayload = new FileUploadPayload
                     {
                         FileName = item.FileName,
+                        ContentType = item.ContentType,
                         UserId = CurrentUserId,
                         Organization = CurrentOrganization,
                         UploadTime = DateTime.Now
                     };
 
-                    fileUploadPayload.UploadFileStream = null;
+                    fileUploadPayload.UploadFileStream = item.OpenReadStream();
 
                     successList.Add(_fileApp.Upload(fileUploadPayload));
                 }
