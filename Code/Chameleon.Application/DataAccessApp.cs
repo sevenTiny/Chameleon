@@ -1,4 +1,5 @@
-﻿using Chameleon.Domain;
+﻿using Chameleon.Common;
+using Chameleon.Domain;
 using Chameleon.Entity;
 using Chameleon.Repository;
 using Chameleon.ValueObject;
@@ -97,7 +98,7 @@ namespace Chameleon.Application
         IInterfaceFieldsService _interfaceFieldsService;
         IMetaFieldService _metaFieldService;
         IInterfaceSettingService _interfaceSettingService;
-        ChameleonDataDbContext _chameleonDataDbContext;
+        Chameleon.Repository.ChameleonDataDbContext _chameleonDataDbContext;
         IMetaFieldRepository _metaFieldRepository;
         IInterfaceVerificationRepository _interfaceVerificationRepository;
         IInterfaceVerificationService _interfaceVerificationService;
@@ -105,7 +106,7 @@ namespace Chameleon.Application
         IInterfaceSortRepository _interfaceSortRepository;
         ITriggerScriptRepository _triggerScriptRepository;
         ITriggerScriptService _triggerScriptService;
-        public DataAccessApp(ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceSortRepository interfaceSortRepository, IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceVerificationRepository interfaceVerificationRepository, IInterfaceVerificationService interfaceVerificationService, IMetaFieldRepository metaFieldRepository, ChameleonDataDbContext chameleonDataDbContext, IInterfaceSettingService interfaceSettingService, IInterfaceConditionService interfaceConditionService, IInterfaceFieldsService interfaceFieldsService, IMetaFieldService metaFieldService)
+        public DataAccessApp(ITriggerScriptService triggerScriptService, ITriggerScriptRepository triggerScriptRepository, IInterfaceSortRepository interfaceSortRepository, IInterfaceFieldsRepository interfaceFieldsRepository, IInterfaceVerificationRepository interfaceVerificationRepository, IInterfaceVerificationService interfaceVerificationService, IMetaFieldRepository metaFieldRepository, Chameleon.Repository.ChameleonDataDbContext chameleonDataDbContext, IInterfaceSettingService interfaceSettingService, IInterfaceConditionService interfaceConditionService, IInterfaceFieldsService interfaceFieldsService, IMetaFieldService metaFieldService)
         {
             _triggerScriptService = triggerScriptService;
             _triggerScriptRepository = triggerScriptRepository;

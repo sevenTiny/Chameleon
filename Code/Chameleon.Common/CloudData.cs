@@ -1,4 +1,4 @@
-﻿namespace Chameleon.ValueObject
+﻿namespace Chameleon.Common
 {
     /// <summary>
     /// 通用数据交换对象
