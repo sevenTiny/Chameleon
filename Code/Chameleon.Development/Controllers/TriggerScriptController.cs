@@ -52,6 +52,7 @@ namespace Chameleon.Development.Controllers
                     entity.Name = entity.GetMetaObjectInterfaceServiceType().GetDescription();
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.GetMetaObjectInterfaceServiceType().ToString());
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.CloudApplicationId = CurrentApplicationId;
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.ScriptType = (int)ScriptTypeEnum.MetaObjectInterfaceTrigger;

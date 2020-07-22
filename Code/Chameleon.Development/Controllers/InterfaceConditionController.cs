@@ -52,6 +52,7 @@ namespace Chameleon.Development.Controllers
                     entity.CloudApplicationtId = CurrentApplicationId;
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
 
                     return _InterfaceConditionService.AddTopInterfaceCondition(entity);
@@ -118,6 +119,8 @@ namespace Chameleon.Development.Controllers
                 .ContinueEnsureArgumentNotNullOrEmpty(conditionValueTypeId, nameof(conditionValueTypeId))
                 .Continue(_ => _interfaceSettingApp.InterfaceConditionAddNode(brotherNodeId, new InterfaceCondition
                 {
+                    CreateBy = CurrentUserId,
+                    ModifyBy = CurrentUserId,
                     Id = Guid.NewGuid(),
                     BelongToCondition = id,
                     ConditionJointType = conditionJointTypeId,

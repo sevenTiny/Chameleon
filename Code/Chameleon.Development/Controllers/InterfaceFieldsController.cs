@@ -49,6 +49,7 @@ namespace Chameleon.Development.Controllers
                     entity.CloudApplicationtId = CurrentApplicationId;
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
 
                     return _interfaceFieldsService.AddTopInterfaceFields(entity);

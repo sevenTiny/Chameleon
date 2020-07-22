@@ -73,6 +73,7 @@ namespace Chameleon.Development.Controllers
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.MetaObjectCode = CurrentMetaObjectCode;
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
                     entity.PageSize = entity.PageSize;//暂时写死每页数目
 

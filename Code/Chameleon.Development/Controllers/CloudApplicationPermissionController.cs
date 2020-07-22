@@ -44,6 +44,7 @@ namespace Chameleon.Development.Controllers
                 {
                     entity.Name = "-";
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.CloudApplicationId = CurrentApplicationId;
                     return _cloudApplicationPermissionService.AddIfNotExist(entity);
                 });

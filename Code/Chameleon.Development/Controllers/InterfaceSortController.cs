@@ -47,6 +47,7 @@ namespace Chameleon.Development.Controllers
                     entity.CloudApplicationtId = CurrentApplicationId;
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
                     entity.MetaFieldShortCode = Guid.NewGuid().ToString().Replace("-", string.Empty);
 
@@ -110,6 +111,7 @@ namespace Chameleon.Development.Controllers
                     entity.CloudApplicationtId = CurrentApplicationId;
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.Name = "-";
                     entity.Code = Guid.NewGuid().ToString().Replace("-", string.Empty);
 

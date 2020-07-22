@@ -58,6 +58,7 @@ namespace Chameleon.Development.Controllers
                 .Continue(_ =>
                 {
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     return _cloudApplicationApp.AddCloudApplication(entity);
                 });
 

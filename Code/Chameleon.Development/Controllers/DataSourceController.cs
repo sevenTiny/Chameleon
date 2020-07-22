@@ -61,6 +61,7 @@ namespace Chameleon.Development.Controllers
                 {
                     entity.Id = Guid.NewGuid();
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.CloudApplicationId = CurrentApplicationId;
                     entity.Code = string.Concat(CurrentApplicationCode, ".", entity.Code);
                     entity.ScriptType = (int)ScriptTypeEnum.DynamicScriptDataSourceTrigger;
@@ -71,6 +72,8 @@ namespace Chameleon.Development.Controllers
                 {
                     _interfaceSettingService.AddCheckCode(new InterfaceSetting
                     {
+                        CreateBy = CurrentUserId,
+                        ModifyBy = CurrentUserId,
                         DataSousrceId = entity.Id,
                         InterfaceType = (int)InterfaceTypeEnum.DynamicScriptDataSource,
                         Code = entity.Code,
@@ -161,6 +164,7 @@ namespace Chameleon.Development.Controllers
                 {
                     entity.Id = Guid.NewGuid();
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.CloudApplicationId = CurrentApplicationId;
                     entity.Code = string.Concat(CurrentApplicationCode, ".", entity.Code);
                     entity.ScriptType = (int)ScriptTypeEnum.JsonDataSource;
@@ -173,6 +177,8 @@ namespace Chameleon.Development.Controllers
                 {
                     _interfaceSettingService.AddCheckCode(new InterfaceSetting
                     {
+                        CreateBy = CurrentUserId,
+                        ModifyBy = CurrentUserId,
                         DataSousrceId = entity.Id,
                         InterfaceType = (int)InterfaceTypeEnum.JsonDataSource,
                         Code = entity.Code,

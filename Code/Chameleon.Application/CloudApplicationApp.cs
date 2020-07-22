@@ -57,6 +57,9 @@ namespace Chameleon.Application
                 .Continue(_ => _cloudApplicationService.AddCheckCode(cloudApplication))
                 .Continue(_ => _cloudApplicationPermissionService.AddNoCareCode(new CloudApplicationPermission
                 {
+                    Name = "-",
+                    CreateBy = cloudApplication.CreateBy,
+                    ModifyBy = cloudApplication.CreateBy,
                     CloudApplicationId = cloudApplication.Id,
                     UserId = cloudApplication.CreateBy
                 }));

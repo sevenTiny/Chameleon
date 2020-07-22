@@ -43,6 +43,7 @@ namespace Chameleon.Development.Controllers
                     entity.CloudApplicationtId = CurrentApplicationId;
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.ShortCode = entity.Code;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.ShortCode);
 

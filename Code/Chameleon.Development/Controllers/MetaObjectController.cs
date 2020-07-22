@@ -45,6 +45,7 @@ namespace Chameleon.Development.Controllers
                 {
                     entity.Id = Guid.NewGuid();
                     entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
                     entity.CloudApplicationId = CurrentApplicationId;
                     entity.Code = string.Concat(CurrentApplicationCode, ".", entity.Code);
                     return _metaObjectApp.AddMetaObject(entity.Id, entity.Code, CurrentApplicationId, entity);
