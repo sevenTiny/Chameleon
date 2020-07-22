@@ -23,35 +23,42 @@ namespace Chameleon.Development.Controllers
         ICloudApplicationDeployService _cloudApplicationDeployService;
         ICloudApplicationRepository _cloudApplicationRepository;
         ICloudApplicationApp _cloudApplicationApp;
-        public CloudApplicationDeployController(ICloudApplicationApp cloudApplicationApp, ICloudApplicationRepository cloudApplicationRepository, ICloudApplicationDeployService cloudApplicationDeployService)
+        IMetaObjectRepository _metaObjectRepository;
+        public CloudApplicationDeployController(IMetaObjectRepository metaObjectRepository, ICloudApplicationApp cloudApplicationApp, ICloudApplicationRepository cloudApplicationRepository, ICloudApplicationDeployService cloudApplicationDeployService)
         {
+            _metaObjectRepository = metaObjectRepository;
             _cloudApplicationApp = cloudApplicationApp;
             _cloudApplicationRepository = cloudApplicationRepository;
             _cloudApplicationDeployService = cloudApplicationDeployService;
         }
 
+        private void QuerySelectDatas()
+        {
+            //应用下对象
+            ViewData["MetaObjects"] = _metaObjectRepository.GetMetaObjectListUnDeletedByApplicationId(CurrentApplicationId);
+        }
+
         public IActionResult Export()
         {
-            ViewData["CloudApplications"] = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId);
+            QuerySelectDatas();
             return View(ResponseModel.Success());
         }
 
         /// <summary>
         /// 整个应用导出
         /// </summary>
-        /// <param name="cloudApplicationId"></param>
         /// <returns></returns>
-        public IActionResult AllCloudApplicationExport(Guid cloudApplicationId)
+        public IActionResult AllCloudApplicationExport()
         {
-            var application = _cloudApplicationRepository.GetById(cloudApplicationId);
+            var application = _cloudApplicationRepository.GetById(CurrentApplicationId);
 
             if (application == null)
             {
-                ViewData["CloudApplications"] = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId);
+                QuerySelectDatas();
                 return View("Export", ResponseModel.Error("应用不存在"));
             }
 
-            var deployDto = _cloudApplicationDeployService.AllCloudApplicationExport(cloudApplicationId);
+            var deployDto = _cloudApplicationDeployService.AllCloudApplicationExport(CurrentApplicationId);
 
             var json = JsonConvert.SerializeObject(deployDto);
 
