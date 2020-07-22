@@ -136,7 +136,7 @@ var filter = bf.And(bf.Eq("Name","张三"),bf.Eq("IsDeleted",false));
 
 //查询结果
 var result = dbContext.GetCollectionBson("ChameleonDemo.UserInformation").Find(filter).ToList();
-</pre>
+    </pre>
 </article>
 
 @await Html.PartialAsync($"~/Views/Shared/_FooterScripts.cshtml")
