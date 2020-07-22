@@ -18,7 +18,14 @@ public class DynamicScriptDataSource
 
     public object Get(Dictionary<string, string> argumentsUpperKeyDic)
     {
-        //ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
+        ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
+
+        var bf = Builders<BsonDocument>.Filter;
+
+        var filter = bf.Eq("IsDeleted", false);
+
+        var re = dbContext.GetCollectionBson("ChameleonDemo.UserInformation").Find(filter).ToList() ;
+
         return new { Name = "蒋鹏", Age = 200 };
     }
 }

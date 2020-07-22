@@ -135,7 +135,7 @@ var bf = Builders&lt;BsonDocument&gt;.Filter;
 var filter = bf.And(bf.Eq("Name","张三"),bf.Eq("IsDeleted",false));
 
 //查询结果
-var result = dbContext.GetCollectionBson("ChameleonDemo.UserInformation").Find(filter);
+var result = dbContext.GetCollectionBson("ChameleonDemo.UserInformation").Find(filter).ToList();
 </pre>
 </article>
 

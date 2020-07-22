@@ -14,6 +14,8 @@ namespace Chameleon.Development.Template
     {
         static void Main(string[] args)
         {
+            var re = new DynamicScriptDataSource().Get(null);
+
             var triggerContext = new Dictionary<string, string>();
             var result = new List<Dictionary<string, CloudData>>();
 
