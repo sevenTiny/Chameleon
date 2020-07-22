@@ -1,7 +1,7 @@
 ﻿using Chameleon.Common.Configs;
 using SevenTiny.Bantina.Bankinate;
 
-namespace Chameleon.ValueObject
+namespace Chameleon.Common
 {
     public class ChameleonDataDbContext : MongoDbContext<ChameleonDataDbContext>
     {

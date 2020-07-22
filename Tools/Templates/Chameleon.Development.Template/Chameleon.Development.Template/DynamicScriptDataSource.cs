@@ -16,11 +16,9 @@ public class DynamicScriptDataSource
     ILogger logger = new SevenTiny.Bantina.Logging.LogManager();
     //logger.LogError(string message, params object[] args);
 
-    //2. 查询数据
-    //ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
-
     public object Get(Dictionary<string, string> argumentsUpperKeyDic)
     {
+        //ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
         return new { Name = "蒋鹏", Age = 200 };
     }
 }
