@@ -119,7 +119,9 @@ namespace Chameleon.Domain
                 FunctionName = triggerScript.FunctionName,
                 Script = triggerScript.Script,
                 Language = (DynamicScriptLanguage)triggerScript.Language,
-                Parameters = parameters
+                Parameters = parameters,
+                IsTrustedScript = false,
+                MillisecondsTimeout = 5000//脚本最多允许执行5s，超过将会终止执行，避免影响其他服务
             };
 
             var result = _dynamicScriptEngine.Execute<TResult>(dynamicScript);
