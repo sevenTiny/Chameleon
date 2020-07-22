@@ -1,6 +1,7 @@
 ﻿using Chameleon.Application;
 using Chameleon.Domain;
 using Chameleon.Entity;
+using Chameleon.Infrastructure;
 using Chameleon.Repository;
 using Chameleon.ValueObject;
 using Microsoft.AspNetCore.Http;
@@ -79,7 +80,7 @@ namespace Chameleon.Development.Controllers
             if (files == null || !files.Any())
                 return View("Import", ResponseModel.Error("未找到文件"));
 
-            var successList = new List<List<string>>(files.Count);
+            var successList = new List<Tuple<string, List<string>>>(files.Count);
 
             foreach (var item in files)
             {
@@ -92,11 +93,11 @@ namespace Chameleon.Development.Controllers
                     var result = _cloudApplicationDeployService.AllCloudApplicationImport(dto);
 
                     if (result.IsSuccess)
-                        successList.Add(result.MoreMessage);
+                        successList.Add(Tuple.Create($"导入元数据文件文件：{item.FileName}", result.MoreMessage));
                 }
             }
 
-            return Content(JsonConvert.SerializeObject(successList));
+            return Content(JsonHelper.FormatJsonString(JsonConvert.SerializeObject(successList)));
         }
     }
 }
