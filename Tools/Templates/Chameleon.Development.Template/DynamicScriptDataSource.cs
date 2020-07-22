@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 
 
-public class MetaObjectInterfaceTrigger
+public class DynamicScriptDataSource
 {
     //1. 记录日志
     ILogger logger = new SevenTiny.Bantina.Logging.LogManager();
@@ -19,12 +19,8 @@ public class MetaObjectInterfaceTrigger
     //2. 查询数据
     //ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
 
-    public List<Dictionary<string, CloudData>> QueryList_After(Dictionary<string, string> triggerContext, List<Dictionary<string, CloudData>> result)
+    public object Get(Dictionary<string, string> argumentsUpperKeyDic)
     {
-        if (triggerContext["Interface"] == "xxx")
-        {
-
-        }
-        return result;
+        return new { Name = "蒋鹏", Age = 200 };
     }
 }
