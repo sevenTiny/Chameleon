@@ -113,7 +113,6 @@ namespace Chameleon.Development.Controllers
                     entity.CreateBy = CurrentUserId;
                     entity.ModifyBy = CurrentUserId;
                     entity.Name = "-";
-                    entity.Code = Guid.NewGuid().ToString().Replace("-", string.Empty);
 
                     return _interfaceSortService.AddSortItem(entity);
                 });

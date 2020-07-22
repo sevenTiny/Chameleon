@@ -50,7 +50,7 @@ namespace Chameleon.Domain
             entity.MetaFieldShortCode = "-";
             entity.MetaFieldId = Guid.Empty;
 
-            return base.AddNoCareCode(entity);
+            return base.AddCheckCode(entity);
         }
 
         public Result UpdateSeletedMetaField(InterfaceFields entity)

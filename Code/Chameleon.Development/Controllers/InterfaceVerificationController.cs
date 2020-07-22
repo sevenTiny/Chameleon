@@ -118,7 +118,6 @@ namespace Chameleon.Development.Controllers
                     entity.CreateBy = CurrentUserId;
                     entity.ModifyBy = CurrentUserId;
                     entity.Name = "-";
-                    entity.Code = Guid.NewGuid().ToString();
 
                     return _InterfaceVerificationService.AddVerificationItem(entity);
                 });

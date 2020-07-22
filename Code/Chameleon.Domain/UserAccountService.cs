@@ -102,7 +102,6 @@ namespace Chameleon.Domain
                 return Result.Error("该联系方式已经被注册");
 
             userAccount.Id = Guid.NewGuid();
-            userAccount.Code = userAccount.Id.ToString();
             //密码加盐
             userAccount.Password = GetSaltPassword(userAccount.Password);
             userAccount.Role = (int)RoleEnum.User;
