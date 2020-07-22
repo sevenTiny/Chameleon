@@ -11,6 +11,12 @@ namespace Chameleon.Repository
     public interface IInterfaceVerificationRepository : IMetaObjectRepositoryBase<InterfaceVerification>
     {
         /// <summary>
+        /// 通过应用id查未删除数据
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        List<InterfaceVerification> GetListByCloudApplicationId(Guid cloudApplicationId);
+        /// <summary>
         /// 获取顶级接口校验
         /// </summary>
         /// <param name="metaObjectId"></param>
@@ -72,5 +78,9 @@ namespace Chameleon.Repository
             return list.SafeToDictionary(k => k.MetaFieldShortCode.ToUpperInvariant(), v => v);
         }
 
+        public List<InterfaceVerification> GetListByCloudApplicationId(Guid cloudApplicationId)
+        {
+            return _dbContext.Queryable<InterfaceVerification>().Where(t => t.CloudApplicationtId == cloudApplicationId && t.IsDeleted == 0).ToList();
+        }
     }
 }

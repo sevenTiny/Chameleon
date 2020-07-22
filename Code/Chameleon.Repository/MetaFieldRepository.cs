@@ -9,6 +9,12 @@ namespace Chameleon.Repository
     public interface IMetaFieldRepository : IMetaObjectRepositoryBase<MetaField>
     {
         /// <summary>
+        /// 通过应用id查未删除数据
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        List<MetaField> GetListByCloudApplicationId(Guid cloudApplicationId);
+        /// <summary>
         /// 获取当前对象下的所有字段的字典形式 key=字段id
         /// </summary>
         /// <param name="metaObjectId"></param>
@@ -49,6 +55,11 @@ namespace Chameleon.Repository
         {
             var list = _dbContext.Queryable<MetaField>().Where(t => t.IsDeleted == 0 && t.MetaObjectId == metaObjectId).ToList();
             return list.SafeToDictionary(k => k.ShortCode.ToUpperInvariant(), v => v);
+        }
+
+        public List<MetaField> GetListByCloudApplicationId(Guid cloudApplicationId)
+        {
+            return _dbContext.Queryable<MetaField>().Where(t => t.CloudApplicationtId == cloudApplicationId && t.IsDeleted == 0).ToList();
         }
     }
 }

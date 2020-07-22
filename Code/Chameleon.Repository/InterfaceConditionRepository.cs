@@ -9,6 +9,12 @@ namespace Chameleon.Repository
     public interface IInterfaceConditionRepository : IMetaObjectRepositoryBase<InterfaceCondition>
     {
         /// <summary>
+        /// 通过应用id查未删除数据
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        List<InterfaceCondition> GetListByCloudApplicationId(Guid cloudApplicationId);
+        /// <summary>
         /// 获取顶级接口条件
         /// </summary>
         /// <param name="metaObjectId"></param>
@@ -49,6 +55,11 @@ namespace Chameleon.Repository
             var conditionNodeType = (int)NodeTypeEnum.Condition;
             var conditionValueType = (int)ConditionValueTypeEnum.Parameter;
             return _dbContext.Queryable<InterfaceCondition>().Where(t => t.BelongToCondition == parentId && t.IsDeleted == 0 && t.ConditionNodeType == conditionNodeType && t.ConditionValueType == conditionValueType).ToList();
+        }
+
+        public List<InterfaceCondition> GetListByCloudApplicationId(Guid cloudApplicationId)
+        {
+            return _dbContext.Queryable<InterfaceCondition>().Where(t => t.CloudApplicationtId == cloudApplicationId && t.IsDeleted == 0).ToList();
         }
     }
 }

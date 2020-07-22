@@ -1,0 +1,70 @@
+﻿using Chameleon.Application;
+using Chameleon.Domain;
+using Chameleon.Entity;
+using Chameleon.Repository;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using SevenTiny.Bantina;
+using SevenTiny.Bantina.Extensions.AspNetCore;
+using SevenTiny.Bantina.Validation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Unicode;
+
+namespace Chameleon.Development.Controllers
+{
+    public class CloudApplicationDeployController : WebControllerBase
+    {
+        ICloudApplicationDeployService _cloudApplicationDeployService;
+        ICloudApplicationRepository _cloudApplicationRepository;
+        ICloudApplicationApp _cloudApplicationApp;
+        public CloudApplicationDeployController(ICloudApplicationApp cloudApplicationApp, ICloudApplicationRepository cloudApplicationRepository, ICloudApplicationDeployService cloudApplicationDeployService)
+        {
+            _cloudApplicationApp = cloudApplicationApp;
+            _cloudApplicationRepository = cloudApplicationRepository;
+            _cloudApplicationDeployService = cloudApplicationDeployService;
+        }
+
+        public IActionResult Export()
+        {
+            ViewData["CloudApplications"] = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId);
+            return View(ResponseModel.Success());
+        }
+
+        /// <summary>
+        /// 整个应用导出
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        public IActionResult AllCloudApplicationExport(Guid cloudApplicationId)
+        {
+            var application = _cloudApplicationRepository.GetById(cloudApplicationId);
+
+            if (application == null)
+            {
+                ViewData["CloudApplications"] = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId);
+                return View("Export", ResponseModel.Error("应用不存在"));
+            }
+
+            var deployDto = _cloudApplicationDeployService.AllCloudApplicationExport(cloudApplicationId);
+
+            var json = JsonConvert.SerializeObject(deployDto);
+
+            var bytes = Encoding.UTF8.GetBytes(json);
+
+            return File(bytes, "application/json", $"{application.Name}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.json");
+        }
+
+        public IActionResult Import()
+        {
+            return View(ResponseModel.Success());
+        }
+
+        public IActionResult AllCloudApplicationImport()
+        {
+            return Ok();
+        }
+    }
+}

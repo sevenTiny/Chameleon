@@ -8,6 +8,12 @@ namespace Chameleon.Repository
     public interface ITriggerScriptRepository : ICommonRepositoryBase<TriggerScript>
     {
         /// <summary>
+        /// 通过应用id查未删除数据
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        List<TriggerScript> GetListByCloudApplicationId(Guid cloudApplicationId);
+        /// <summary>
         /// 获取对象下的对象接口列表
         /// </summary>
         /// <param name="metaObjectId"></param>
@@ -50,6 +56,11 @@ namespace Chameleon.Repository
             var scriptType = (int)ScriptTypeEnum.MetaObjectInterfaceTrigger;
             var metaObjectTriggerType = (int)metaObjectInterfaceServiceTypeEnum;
             return _dbContext.Queryable<TriggerScript>().Where(t => t.MetaObjectId.Equals(metaObjectId) && t.ScriptType.Equals(scriptType) && t.IsDeleted == 0 && t.MetaObjectInterfaceServiceType == metaObjectTriggerType).Any();
+        }
+
+        public List<TriggerScript> GetListByCloudApplicationId(Guid cloudApplicationId)
+        {
+            return _dbContext.Queryable<TriggerScript>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == 0).ToList();
         }
     }
 }

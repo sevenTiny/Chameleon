@@ -1,6 +1,7 @@
 ﻿using SevenTiny.Bantina;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Chameleon.Repository
@@ -34,7 +35,11 @@ namespace Chameleon.Repository
 
         public Result<IEnumerable<TEntity>> BatchAdd(IEnumerable<TEntity> entities)
         {
+            if (entities == null || !entities.Any())
+                return Result<IEnumerable<TEntity>>.Success(data: entities);
+
             _dbContext.Add<TEntity>(entities);
+
             return Result<IEnumerable<TEntity>>.Success(data: entities);
         }
 

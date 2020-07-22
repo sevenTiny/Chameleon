@@ -11,6 +11,12 @@ namespace Chameleon.Repository
     public interface IInterfaceFieldsRepository : IMetaObjectRepositoryBase<InterfaceFields>
     {
         /// <summary>
+        /// 通过应用id查未删除数据
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        List<InterfaceFields> GetListByCloudApplicationId(Guid cloudApplicationId);
+        /// <summary>
         /// 获取顶级接口字段
         /// </summary>
         /// <param name="metaObjectId"></param>
@@ -57,6 +63,11 @@ namespace Chameleon.Repository
                 return new Dictionary<string, InterfaceFields>(0);
 
             return list.SafeToDictionary(k => k.MetaFieldShortCode.ToUpperInvariant(), v => v);
+        }
+
+        public List<InterfaceFields> GetListByCloudApplicationId(Guid cloudApplicationId)
+        {
+            return _dbContext.Queryable<InterfaceFields>().Where(t => t.CloudApplicationtId == cloudApplicationId && t.IsDeleted == 0).ToList();
         }
     }
 }

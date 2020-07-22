@@ -7,6 +7,12 @@ namespace Chameleon.Repository
 {
     public interface IMetaObjectRepository : ICommonRepositoryBase<MetaObject>
     {
+        /// <summary>
+        /// 通过应用id查未删除数据
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        List<MetaObject> GetListByCloudApplicationId(Guid cloudApplicationId);
         List<MetaObject> GetMetaObjectListUnDeletedByApplicationId(Guid applicationId);
         List<MetaObject> GetMetaObjectListDeletedByApplicationId(Guid applicationId);
         MetaObject GetMetaObjectByCodeOrNameWithApplicationId(Guid applicationId, string code, string name);
@@ -28,5 +34,10 @@ namespace Chameleon.Repository
 
         public MetaObject GetMetaObjectByCodeAndApplicationId(Guid applicationId, string code)
             => _dbContext.Queryable<MetaObject>().Where(t => t.CloudApplicationId == applicationId && t.Code.Equals(code)).FirstOrDefault();
+
+        public List<MetaObject> GetListByCloudApplicationId(Guid cloudApplicationId)
+        {
+            return _dbContext.Queryable<MetaObject>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == 0).ToList();
+        }
     }
 }

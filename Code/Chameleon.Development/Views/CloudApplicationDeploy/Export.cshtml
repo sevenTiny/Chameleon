@@ -1,0 +1,48 @@
+﻿@using Chameleon.Entity;
+@using SevenTiny.Bantina.Extensions.AspNetCore;
+@{
+    ViewData["Title"] = "Export";
+    Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
+
+    var result = Model as ResponseModel ?? new ResponseModel();
+
+    var applications = (ViewData["CloudApplications"] as List<CloudApplication>) ?? new List<CloudApplication>(0);
+}
+
+@{
+    ViewData["Level_1"] = "应用发布";
+    ViewData["Level_2"] = "数据导出";
+}
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
+
+<article class="page-container">
+    <div class="row cl">
+        <form class="form form-horizontal validate" id="form-article-add" method="post" action="/CloudApplicationDeploy/AllCloudApplicationExport">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>整个应用导出：</label>
+            <div class="formControls col-xs-4 col-sm-5">
+                <span class="select-box">
+                    <select name="cloudApplicationId" class="input select" required>
+                        <option value="">--请选择--</option>
+                        @foreach (var item in applications)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </span>
+            </div>
+            <div class="formControls col-xs-4 col-sm-2">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;导出&nbsp;&nbsp;">
+            </div>
+        </form>
+    </div>
+    <div class="row cl">
+        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+            @if (!result.IsSuccess)
+            {
+                <br /><br /><pre><span class="c-red">@result.Message</span></pre>
+            }
+        </div>
+    </div>
+</article>
+@await Html.PartialAsync("~/Views/Shared/_FooterScripts.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_FormValidate.cshtml")

@@ -11,4 +11,8 @@
     <PackageReference Include="SevenTiny.Bantina.Logging" Version="1.0.30" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Chameleon.Entity\Chameleon.Entity.csproj" />
+  </ItemGroup>
+
 </Project>

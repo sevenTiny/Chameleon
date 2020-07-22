@@ -11,6 +11,12 @@ namespace Chameleon.Repository
     public interface IInterfaceSettingRepository : IMetaObjectRepositoryBase<InterfaceSetting>
     {
         /// <summary>
+        /// 通过应用id查未删除数据
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        List<InterfaceSetting> GetListByCloudApplicationId(Guid cloudApplicationId);
+        /// <summary>
         /// 根据id获取接口设置，并且校验了是否查到
         /// </summary>
         /// <param name="interfaceId"></param>
@@ -75,6 +81,11 @@ namespace Chameleon.Repository
             });
 
             return Result.Success();
+        }
+
+        public List<InterfaceSetting> GetListByCloudApplicationId(Guid cloudApplicationId)
+        {
+            return _dbContext.Queryable<InterfaceSetting>().Where(t => t.CloudApplicationtId == cloudApplicationId && t.IsDeleted == 0).ToList();
         }
     }
 }

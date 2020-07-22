@@ -11,6 +11,12 @@ namespace Chameleon.Repository
     public interface IInterfaceSortRepository : IMetaObjectRepositoryBase<InterfaceSort>
     {
         /// <summary>
+        /// 通过应用id查未删除数据
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        List<InterfaceSort> GetListByCloudApplicationId(Guid cloudApplicationId);
+        /// <summary>
         /// 获取顶级接口排序
         /// </summary>
         /// <param name="metaObjectId"></param>
@@ -55,6 +61,11 @@ namespace Chameleon.Repository
         {
             var guidEmpty = Guid.Empty;
             return _dbContext.Queryable<InterfaceSort>().Where(t => t.ParentId == interfaceSortId && t.IsDeleted == 0 && t.ParentId != guidEmpty && t.MetaFieldShortCode.Equals(metaFieldShortCode)).Any();
+        }
+
+        public List<InterfaceSort> GetListByCloudApplicationId(Guid cloudApplicationId)
+        {
+            return _dbContext.Queryable<InterfaceSort>().Where(t => t.CloudApplicationtId == cloudApplicationId && t.IsDeleted == 0).ToList();
         }
     }
 }
