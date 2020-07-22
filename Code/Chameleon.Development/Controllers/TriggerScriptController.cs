@@ -104,5 +104,10 @@ namespace Chameleon.Development.Controllers
 
             return JsonResultSuccess("删除成功");
         }
+
+        public IActionResult ScriptTemplate()
+        {
+            return View();
+        }
     }
 }
