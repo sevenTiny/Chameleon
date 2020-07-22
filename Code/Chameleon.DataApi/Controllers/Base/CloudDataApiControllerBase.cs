@@ -90,7 +90,11 @@ namespace Chameleon.DataApi.Controllers
             _queryContext.TriggerContext.Add("MetaObjectId", _queryContext.InterfaceSetting.MetaObjectId.ToString());
             _queryContext.TriggerContext.Add("CloudApplicationCode", _queryContext.InterfaceSetting.CloudApplicationCode);
             _queryContext.TriggerContext.Add("CloudApplicationtId", _queryContext.InterfaceSetting.CloudApplicationtId.ToString());
-            _queryContext.TriggerContext.Add("Organization", CurrentOrganization.ToString());
+            _queryContext.TriggerContext.Add("CurrentOrganization", CurrentOrganization.ToString());
+            _queryContext.TriggerContext.Add("CurrentUserId", CurrentUserId.ToString());
+            _queryContext.TriggerContext.Add("CurrentUserEmail", CurrentUserEmail);
+            _queryContext.TriggerContext.Add("CurrentUserName", CurrentUserName);
+            _queryContext.TriggerContext.Add("CurrentUserRole", CurrentUserRole.ToString());
         }
 
         /// <summary>
