@@ -60,10 +60,12 @@ namespace Chameleon.Entity
         /// <summary>
         /// 文件支持的扩展名（带.且英文逗号分隔，例如 .gif,.jpg）
         /// </summary>
-        public int FileExtensionLimit { get; set; }
+        [Column]
+        public string FileExtensionLimit { get; set; }
         /// <summary>
         /// 上传文件大小限制
         /// </summary>
+        [Column]
         public long FileSizeLimit { get; set; }
 
         #region 不参与数据存储的字段
