@@ -9,6 +9,7 @@ using Chameleon.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -190,6 +191,18 @@ namespace Chameleon.Bootstrapper
             //防止中文乱码
             services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.All));
             services.AddHttpContextAccessor();
+
+            //解除文件上传大小限制，iis部署模式下要删除
+            //此处会导致IIS模式下api.Request.Form获取失败
+            services.Configure<FormOptions>(options =>
+            {
+                options.BufferBodyLengthLimit = long.MaxValue;
+                options.KeyLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = long.MaxValue;
+                options.MultipartBoundaryLengthLimit = int.MaxValue;
+                options.ValueCountLimit = int.MaxValue;
+                options.ValueLengthLimit = int.MaxValue;
+            });
         }
 
         /// <summary>

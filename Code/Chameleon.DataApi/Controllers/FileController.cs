@@ -25,6 +25,7 @@ namespace Chameleon.DataApi.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(52428800)]//限制上传文件大小不得超过50M=50*1024*1024(B)
         public IActionResult Post([FromForm]IFormCollection formData)
         {
             return SafeExecute(() =>
@@ -38,6 +39,9 @@ namespace Chameleon.DataApi.Controllers
 
                 foreach (var item in files)
                 {
+                    if (item.Length > 52428800)
+                        return Result.Error("file can not large than 50MB.").ToJsonResult();
+
                     var fileUploadPayload = new FileUploadPayload
                     {
                         FileName = item.FileName,
