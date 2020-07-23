@@ -85,7 +85,7 @@ namespace Chameleon.Repository
 
         public List<InterfaceSetting> GetListByCloudApplicationId(Guid cloudApplicationId)
         {
-            return _dbContext.Queryable<InterfaceSetting>().Where(t => t.CloudApplicationtId == cloudApplicationId && t.IsDeleted == 0).ToList();
+            return _dbContext.Queryable<InterfaceSetting>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == 0).ToList();
         }
     }
 }

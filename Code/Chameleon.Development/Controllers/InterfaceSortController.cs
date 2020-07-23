@@ -44,7 +44,7 @@ namespace Chameleon.Development.Controllers
                 .ContinueAssert(_ => entity.Code.IsAlnum(2, 50), "编码不合法，2-50位且只能包含字母和数字（字母开头）")
                 .Continue(_ =>
                 {
-                    entity.CloudApplicationtId = CurrentApplicationId;
+                    entity.CloudApplicationId = CurrentApplicationId;
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.CreateBy = CurrentUserId;
                     entity.ModifyBy = CurrentUserId;
@@ -108,7 +108,7 @@ namespace Chameleon.Development.Controllers
                 .Continue(_ =>
                 {
                     entity.ParentId = parentId;
-                    entity.CloudApplicationtId = CurrentApplicationId;
+                    entity.CloudApplicationId = CurrentApplicationId;
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.CreateBy = CurrentUserId;
                     entity.ModifyBy = CurrentUserId;

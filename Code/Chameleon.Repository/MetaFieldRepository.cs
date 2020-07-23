@@ -59,7 +59,7 @@ namespace Chameleon.Repository
 
         public List<MetaField> GetListByCloudApplicationId(Guid cloudApplicationId)
         {
-            return _dbContext.Queryable<MetaField>().Where(t => t.CloudApplicationtId == cloudApplicationId && t.IsDeleted == 0).ToList();
+            return _dbContext.Queryable<MetaField>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == 0).ToList();
         }
     }
 }

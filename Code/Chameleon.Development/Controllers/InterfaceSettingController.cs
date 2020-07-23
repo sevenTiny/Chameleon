@@ -68,7 +68,7 @@ namespace Chameleon.Development.Controllers
                 .ContinueAssert(_ => entity.PageSize > 0, "分页页大小不能<=0")
                 .Continue(_ =>
                 {
-                    entity.CloudApplicationtId = CurrentApplicationId;
+                    entity.CloudApplicationId = CurrentApplicationId;
                     entity.CloudApplicationCode = CurrentApplicationCode;
                     entity.MetaObjectId = CurrentMetaObjectId;
                     entity.MetaObjectCode = CurrentMetaObjectCode;

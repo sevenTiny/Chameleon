@@ -78,7 +78,7 @@ namespace Chameleon.Development.Controllers
                         InterfaceType = (int)InterfaceTypeEnum.DynamicScriptDataSource,
                         Code = entity.Code,
                         Name = entity.Name,
-                        CloudApplicationtId = entity.CloudApplicationId,
+                        CloudApplicationId = entity.CloudApplicationId,
                         CloudApplicationCode = CurrentApplicationCode,
                         MetaObjectId = Guid.Empty,
                         MetaObjectCode = "-"
@@ -183,7 +183,7 @@ namespace Chameleon.Development.Controllers
                         InterfaceType = (int)InterfaceTypeEnum.JsonDataSource,
                         Code = entity.Code,
                         Name = entity.Name,
-                        CloudApplicationtId = entity.CloudApplicationId,
+                        CloudApplicationId = entity.CloudApplicationId,
                         CloudApplicationCode = CurrentApplicationCode,
                         MetaObjectId = Guid.Empty,
                         MetaObjectCode = "-"

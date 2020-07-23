@@ -98,7 +98,7 @@ namespace Chameleon.Domain
             systemFields.ForEach(item =>
             {
                 item.Id = Guid.NewGuid();
-                item.CloudApplicationtId = applicationId;
+                item.CloudApplicationId = applicationId;
                 item.MetaObjectId = metaObjectId;
                 item.Code = string.Concat(metaObjectCode, ".", item.ShortCode);
                 item.IsSystem = 1;

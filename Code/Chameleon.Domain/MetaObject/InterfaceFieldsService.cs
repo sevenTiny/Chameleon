@@ -91,7 +91,7 @@ namespace Chameleon.Domain
                 MetaFieldShortCode = fieldDic.SafeGet(t)?.ShortCode,
                 MetaFieldCustomViewName = fieldDic.SafeGet(t)?.Name,
                 MetaObjectId = metaObjectId,
-                CloudApplicationtId = fieldDic.SafeGet(t)?.CloudApplicationtId ?? Guid.Empty
+                CloudApplicationId = fieldDic.SafeGet(t)?.CloudApplicationId ?? Guid.Empty
             });
 
             base.BatchAdd(toAdds);

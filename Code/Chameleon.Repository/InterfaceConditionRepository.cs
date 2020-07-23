@@ -59,7 +59,7 @@ namespace Chameleon.Repository
 
         public List<InterfaceCondition> GetListByCloudApplicationId(Guid cloudApplicationId)
         {
-            return _dbContext.Queryable<InterfaceCondition>().Where(t => t.CloudApplicationtId == cloudApplicationId && t.IsDeleted == 0).ToList();
+            return _dbContext.Queryable<InterfaceCondition>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == 0).ToList();
         }
     }
 }

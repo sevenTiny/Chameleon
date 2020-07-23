@@ -75,7 +75,7 @@ namespace Chameleon.DataApi.Controllers
                     break;
                 //查询动态脚本接口
                 case InterfaceTypeEnum.DynamicScriptDataSource:
-                    _queryContext.TriggerScripts = new List<TriggerScript> { _triggerScriptRepository.GetById(_queryContext.InterfaceSetting.CloudApplicationtId) };
+                    _queryContext.TriggerScripts = new List<TriggerScript> { _triggerScriptRepository.GetById(_queryContext.InterfaceSetting.CloudApplicationId) };
                     break;
                 case InterfaceTypeEnum.UnKnown:
                 default:
@@ -89,7 +89,7 @@ namespace Chameleon.DataApi.Controllers
             _queryContext.TriggerContext.Add("MetaObjectCode", _queryContext.InterfaceSetting.MetaObjectCode);
             _queryContext.TriggerContext.Add("MetaObjectId", _queryContext.InterfaceSetting.MetaObjectId.ToString());
             _queryContext.TriggerContext.Add("CloudApplicationCode", _queryContext.InterfaceSetting.CloudApplicationCode);
-            _queryContext.TriggerContext.Add("CloudApplicationtId", _queryContext.InterfaceSetting.CloudApplicationtId.ToString());
+            _queryContext.TriggerContext.Add("CloudApplicationtId", _queryContext.InterfaceSetting.CloudApplicationId.ToString());
             _queryContext.TriggerContext.Add("CurrentOrganization", CurrentOrganization.ToString());
             _queryContext.TriggerContext.Add("CurrentUserId", CurrentUserId.ToString());
             _queryContext.TriggerContext.Add("CurrentUserEmail", CurrentUserEmail);

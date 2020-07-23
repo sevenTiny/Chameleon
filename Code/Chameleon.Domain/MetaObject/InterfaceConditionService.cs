@@ -110,7 +110,7 @@ namespace Chameleon.Domain
                             ConditionValue = "-1",
                             ConditionValueType = -1,
                             ConditionNodeType = (int)NodeTypeEnum.Joint,
-                            CloudApplicationtId = entity.CloudApplicationtId,
+                            CloudApplicationId = entity.CloudApplicationId,
                             MetaObjectId = entity.MetaObjectId,
                             CreateBy = entity.CreateBy,
                             ModifyBy = entity.ModifyBy
@@ -153,7 +153,7 @@ namespace Chameleon.Domain
                     ConditionValue = entity.ConditionValue,
                     ConditionValueType = entity.ConditionValueType,
                     ConditionNodeType = (int)NodeTypeEnum.Condition,
-                    CloudApplicationtId = entity.CloudApplicationtId,
+                    CloudApplicationId = entity.CloudApplicationId,
                     MetaObjectId = entity.MetaObjectId,
                     CreateBy = entity.CreateBy,
                     ModifyBy = entity.ModifyBy
