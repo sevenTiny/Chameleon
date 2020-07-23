@@ -123,7 +123,7 @@ namespace Chameleon.Development.Controllers
             {
                 if (!".chameleonmeta".Equals(Path.GetExtension(item.FileName)))
                 {
-                    successList.Add(Tuple.Create($"导入元数据文件文件：{item.FileName} 失败，元数据文件类型不匹配", new List<string>(0)));
+                    successList.Add(Tuple.Create($"导入元数据文件：{item.FileName} 失败，元数据文件类型不匹配", new List<string>(0)));
                     continue;
                 }
 
