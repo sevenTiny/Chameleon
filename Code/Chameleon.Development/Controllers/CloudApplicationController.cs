@@ -28,13 +28,13 @@ namespace Chameleon.Development.Controllers
 
         public IActionResult Select()
         {
-            var list = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId)?.OrderBy(t => t.SortNumber).ToList();
+            var list = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId)?.OrderBy(t => t.SortNumber).ThenByDescending(t => t.CreateTime).ToList();
             return View(list);
         }
 
         public IActionResult List()
         {
-            var list = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId)?.OrderBy(t => t.SortNumber).ToList();
+            var list = _cloudApplicationApp.GetUserPermissionApplications(CurrentUserId)?.OrderBy(t => t.SortNumber).ThenByDescending(t => t.CreateTime).ToList();
             return View(list);
         }
 
@@ -98,20 +98,25 @@ namespace Chameleon.Development.Controllers
             return JsonResultSuccess("删除成功");
         }
 
-        public IActionResult Detail(Guid applicationId, string applicationCode)
+        public IActionResult Detail(Guid applicationId)
         {
             //获取用户信息到页面
             SetUserInfoToViewData();
 
-            if (string.IsNullOrEmpty(applicationCode))
+            if (applicationId == Guid.Empty)
                 return Redirect("/Home/Index");
 
-            //设置cookie
-            SetCookiesApplictionInfo(applicationId, applicationCode);
+            var application = _applicationService.GetById(applicationId);
 
-            ViewData["ApplicationCode"] = applicationCode;
+            if (application == null)
+                return Content("应用不存在！");
+
+            //设置cookie
+            SetCookiesApplictionInfo(applicationId, application.Code);
+
+            ViewData["ApplicationCode"] = application.Code;
             ViewData["ApplicationId"] = applicationId;
-            ViewData["MetaObjects"] = (_metaObjectRepository.GetMetaObjectListUnDeletedByApplicationId(applicationId) ?? new List<MetaObject>(0)).OrderBy(t => t.SortNumber).ToList();
+            ViewData["MetaObjects"] = (_metaObjectRepository.GetMetaObjectListUnDeletedByApplicationId(applicationId) ?? new List<MetaObject>(0)).OrderBy(t => t.SortNumber).ThenByDescending(t => t.CreateTime).ToList();
 
             return View();
         }
