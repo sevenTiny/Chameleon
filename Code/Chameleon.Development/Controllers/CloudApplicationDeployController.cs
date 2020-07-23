@@ -65,7 +65,7 @@ namespace Chameleon.Development.Controllers
 
             var bytes = Encoding.UTF8.GetBytes(json);
 
-            return File(bytes, "application/json", $"{application.Name}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.json");
+            return File(bytes, "application/json", $"{application.Name}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.chameleonmeta");
         }
 
         public IActionResult Import()
