@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using Chameleon.Application;
 using Chameleon.Bootstrapper;
 using Chameleon.Domain;
@@ -31,7 +32,7 @@ namespace Chameleon.DataApi.Controllers
                 IFormFileCollection files = formData.Files;
 
                 if (files == null || !files.Any())
-                    return Result.Info("未找到文件").ToJsonResult();
+                    return Result.Info("file not found").ToJsonResult();
 
                 var successList = new List<string>(files.Count);
 
@@ -56,45 +57,34 @@ namespace Chameleon.DataApi.Controllers
             });
         }
 
-        [HttpPost]
+        [HttpDelete]
         public IActionResult Delete(string fileId)
         {
             return SafeExecute(() =>
             {
+                if (string.IsNullOrEmpty(fileId))
+                    return Result.Error("Parameter invalid: fileId is null").ToJsonResult();
+
                 _fileApp.Delete(CurrentUserId, CurrentUserRole, CurrentOrganization, fileId);
 
                 return JsonResultSuccess();
             });
         }
 
-        [Route("api/file/view")]
-        public IActionResult GetFileView(string fileId)
-        {
-            return SafeExecute(() =>
-            {
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    var downloadPayload = _fileApp.Download(CurrentUserId, CurrentUserRole, CurrentOrganization, fileId, stream);
-
-                    var bytes = new byte[stream.Length];
-
-                    stream.Read(bytes, 0, bytes.Length);
-
-                    return File(bytes, downloadPayload.ContentType);
-                }
-            });
-        }
-
-        [Route("api/file/download")]
+        [Route("Download")]
+        [HttpGet]
         public IActionResult Download(string fileId)
         {
             return SafeExecute(() =>
             {
-                var stream = Response.Body;
+                if (string.IsNullOrEmpty(fileId))
+                    return Result.Error("Parameter invalid: fileId is null").ToJsonResult();
 
-                var downloadPayload = _fileApp.Download(CurrentUserId, CurrentUserRole, CurrentOrganization, fileId, stream);
+                var downloadPayload = _fileApp.Download(CurrentUserId, CurrentUserRole, CurrentOrganization, fileId);
 
-                return new FileStreamResult(stream, downloadPayload.ContentType);
+                Response.ContentType = downloadPayload.ContentType;
+
+                return File(downloadPayload.ReadStream, downloadPayload.ContentType, downloadPayload.FileName);
             });
         }
     }

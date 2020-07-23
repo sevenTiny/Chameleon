@@ -30,12 +30,6 @@ namespace Chameleon.Domain
         /// <param name="fileId"></param>
         void Delete(string fileId);
         /// <summary>
-        /// 下载文件
-        /// </summary>
-        /// <param name="fileId"></param>
-        /// <param name="downloadStream"></param>
-        void Download(string fileId, Stream downloadStream);
-        /// <summary>
         /// 判断文件是否存在
         /// </summary>
         /// <param name="fileId"></param>
@@ -47,6 +41,11 @@ namespace Chameleon.Domain
         /// <param name="fileId"></param>
         /// <returns></returns>
         FileMetaData GetFileMetaDataByFileId(string fileId);
+        /// <summary>
+        /// 获得读文件流
+        /// </summary>
+        /// <param name="fileOperationPayload"></param>
+        Stream OpenRead(FileOperationPayload fileOperationPayload);
     }
 
     public class FileService : IFileService
@@ -60,7 +59,7 @@ namespace Chameleon.Domain
         private MongoGridFS GetMongoFs()
         {
             MongoGridFSSettings fsSetting = new MongoGridFSSettings() { Root = "Chameleon.FileSystem" };
-            MongoGridFS fs = new MongoGridFS(_chameleonDataDbContext.GetMongoServer(), "Chameleon", fsSetting);
+            MongoGridFS fs = new MongoGridFS(_chameleonDataDbContext.GetMongoServer(), "ChameleonDataDbContext", fsSetting);
             return fs;
         }
 
@@ -76,6 +75,9 @@ namespace Chameleon.Domain
 
             BsonDocument doc = new BsonDocument();
 
+            var innerFileName = Guid.NewGuid().ToString();
+
+            doc.Add("InnerFileName", innerFileName);//对内使用的文件名，用于文件下载等场景
             doc.Add("FileName", fileUploadPayload.FileName);
             doc.Add("ContentType", fileUploadPayload.ContentType);
             doc.Add("UploadTime", fileUploadPayload.UploadTime);
@@ -85,7 +87,7 @@ namespace Chameleon.Domain
 
             option.Metadata = doc; // 添加metadata数据
 
-            var result = fs.Upload(fileUploadPayload.UploadFileStream, fileUploadPayload.FileName, option);
+            var result = fs.Upload(fileUploadPayload.UploadFileStream, innerFileName, option);
 
             return result.Id.ToString();
         }
@@ -101,7 +103,7 @@ namespace Chameleon.Domain
 
             MongoGridFS fs = GetMongoFs();
 
-            return fs.ExistsById(fileId);
+            return fs.ExistsById(ObjectId.Parse(fileId));
         }
 
         /// <summary>
@@ -115,16 +117,20 @@ namespace Chameleon.Domain
 
             MongoGridFS fs = GetMongoFs();
 
-            var meta = fs.FindOneById(fileId).Metadata;
+            var fileMeta = fs.FindOneById(ObjectId.Parse(fileId));
+
+            var meta = fileMeta.Metadata;
 
             return new FileMetaData
             {
                 FileName = meta["FileName"].AsString,
+                InnerFileName = meta["InnerFileName"].AsString,
                 ContentType = meta["ContentType"].AsString,
                 UploadTime = meta["UploadTime"].ToUniversalTime(),
                 UserId = meta["UserId"].AsInt64,
                 Organization = meta["Organization"].AsGuid,
-                IsSystemFile = meta["IsSystemFile"].AsInt32
+                IsSystemFile = meta["IsSystemFile"].AsInt32,
+                MongoGridFSFileInfo = fileMeta
             };
         }
 
@@ -137,18 +143,14 @@ namespace Chameleon.Domain
             fs.DeleteById(fileId);
         }
 
-        public void Download(string fileId, Stream downloadStream)
+        public Stream OpenRead(FileOperationPayload fileOperationPayload)
         {
-            Ensure.ArgumentNotNullOrEmpty(fileId, nameof(fileId));
+            Ensure.ArgumentNotNullOrEmpty(fileOperationPayload, nameof(fileOperationPayload));
+            Ensure.ArgumentNotNullOrEmpty(fileOperationPayload.InnerFileName, nameof(fileOperationPayload.InnerFileName));
 
             MongoGridFS fs = GetMongoFs();
 
-            if (!fs.ExistsById(fileId))
-                return;
-
-            var meta = fs.FindOneById(fileId);
-
-            fs.Download(downloadStream, meta);
+            return fs.OpenRead(fileOperationPayload.InnerFileName);
         }
     }
 
@@ -177,6 +179,7 @@ namespace Chameleon.Domain
             this.Organization = fileMetaData.Organization;
             this.UploadTime = fileMetaData.UploadTime;
         }
+        public Stream ReadStream { get; set; }
     }
 
     /// <summary>
@@ -184,11 +187,19 @@ namespace Chameleon.Domain
     /// </summary>
     public class FileMetaData : FileOperationPayload
     {
-
+        //文件元数据
+        public MongoGridFSFileInfo MongoGridFSFileInfo { get; set; }
     }
 
+    /// <summary>
+    /// 文件操作载荷
+    /// </summary>
     public abstract class FileOperationPayload
     {
+        /// <summary>
+        /// 对内使用的文件名，上传时使用Guid生成，用于下载等场景确定唯一文件
+        /// </summary>
+        public string InnerFileName { get; set; }
         /// <summary>
         /// 文件名
         /// </summary>

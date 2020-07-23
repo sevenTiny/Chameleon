@@ -32,7 +32,7 @@ namespace Chameleon.Application
         /// <param name="organization">所属组织</param>
         /// <param name="fileId">文件id</param>
         /// <param name="downloadStream">下载流</param>
-        FileDownloadPayload Download(long userId, int userRole, Guid organization, string fileId, Stream downloadStream);
+        FileDownloadPayload Download(long userId, int userRole, Guid organization, string fileId);
     }
 
     public class FileApp : IFileApp
@@ -70,7 +70,7 @@ namespace Chameleon.Application
             _fileService.Delete(fileId);
         }
 
-        public FileDownloadPayload Download(long userId, int userRole, Guid organization, string fileId, Stream downloadStream)
+        public FileDownloadPayload Download(long userId, int userRole, Guid organization, string fileId)
         {
             if (!_fileService.ExistsById(fileId))
                 throw new FileNotFoundException($"File not found by fileId:[{fileId}]");
@@ -87,9 +87,12 @@ namespace Chameleon.Application
                     throw new InvalidOperationException("No Permission");
             }
 
-            _fileService.Download(fileId, downloadStream);
+            var downloadPayload = new FileDownloadPayload(meta);
 
-            return new FileDownloadPayload(meta);
+            //获取读取流
+            downloadPayload.ReadStream = _fileService.OpenRead(meta);
+
+            return downloadPayload;
         }
 
         public string Upload(FileUploadPayload fileUploadPayload)
