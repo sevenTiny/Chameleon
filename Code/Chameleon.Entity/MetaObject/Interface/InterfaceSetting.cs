@@ -57,6 +57,14 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public int PageSize { get; set; }
+        /// <summary>
+        /// 文件支持的扩展名（带.且英文逗号分隔，例如 .gif,.jpg）
+        /// </summary>
+        public int FileExtensionLimit { get; set; }
+        /// <summary>
+        /// 上传文件大小限制
+        /// </summary>
+        public long FileSizeLimit { get; set; }
 
         #region 不参与数据存储的字段
         public string InterfaceConditionName { get; set; }
@@ -100,13 +108,17 @@ namespace Chameleon.Entity
         [Description("动态脚本接口")]
         DynamicScriptDataSource = 8,
         [Description("JSON 数据源")]
-        JsonDataSource = 9
+        JsonDataSource = 9,
+        [Description("文件上传")]
+        FileUpload = 10,
+        [Description("文件下载")]
+        FileDownload = 11,
     }
 
     public static class InterfaceTypeEnumHelper
     {
         /// <summary>
-        /// 获取对象触发器类型
+        /// 获取对象接口类型
         /// </summary>
         /// <returns></returns>
         public static InterfaceTypeEnum[] GetMetaObjectInterfaceServiceTypes()
@@ -123,14 +135,16 @@ namespace Chameleon.Entity
         }
 
         /// <summary>
-        /// 获取数据源类型
+        /// 获取应用接口类型
         /// </summary>
         /// <returns></returns>
-        public static InterfaceTypeEnum[] GetDataSourceServiceTypes()
+        public static InterfaceTypeEnum[] GetApplicationInterfaceServiceTypes()
         {
             return new[] {
                 InterfaceTypeEnum.DynamicScriptDataSource,
-                InterfaceTypeEnum.JsonDataSource
+                InterfaceTypeEnum.JsonDataSource,
+                InterfaceTypeEnum.FileUpload,
+                InterfaceTypeEnum.FileDownload,
             };
         }
     }

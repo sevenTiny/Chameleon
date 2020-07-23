@@ -1,8 +1,7 @@
 ﻿@using Chameleon.Entity;
-@using SevenTiny.Bantina.Extensions.AspNetCore;
-@using Chameleon.Infrastructure;
+@using SevenTiny.Bantina.Extensions.AspNetCore
 @{
-    ViewData["Title"] = "DynamicScriptTriggerAdd";
+    ViewData["Title"] = "JsonDataSourceAdd";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
     var result = Model as ResponseModel ?? new ResponseModel();
@@ -10,12 +9,12 @@
 }
 @{
     ViewData["Level_1"] = "数据源";
-    ViewData["Level_2"] = "新增脚本数据源";
+    ViewData["Level_2"] = "新增JSON";
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="page-container">
-    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/DataSource/DynamicScriptTriggerAddLogic">
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/DataSource/JsonDataSourceAddLogic">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -29,36 +28,7 @@
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>脚本语言：</label>
-            <div class="formControls col-xs-8 col-sm-3  ">
-                <span class="select-box">
-                    <select name="Language" class="input select" id="Language" required>
-                        @*<option value="">--请选择--</option>*@
-                        @foreach (var item in Enum.GetValues(typeof(LanguageEnum)))
-                        {
-                            if ((LanguageEnum)item == LanguageEnum.UnKnown)
-                                continue;
-
-                            var label = ((LanguageEnum)item).GetDescription();
-
-                            <option value="@Convert.ToInt32(item)">@label</option>
-                        }
-                    </select>
-                </span>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>类全名：</label>
-            <div class="formControls col-xs-3 col-sm-3  ">
-                <input type="text" class="input-text" value="@entity.ClassFullName" placeholder="" name="ClassFullName" id="ClassFullName" style="background-color:#e8e8e8;" readonly="readonly" required>
-            </div>
-            <label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>方法名：</label>
-            <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" class="input-text" value="@entity.FunctionName" placeholder="" name="FunctionName" id="FunctionName" style="background-color:#e8e8e8;" readonly="readonly" required>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>触发器脚本：</label>
+            <label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>JSON脚本：</label>
             <div class="formControls col-xs-9 col-sm-9">
                 <textarea id="codeTextArea" name="script" class="ignore">@entity.Script</textarea>
                 <span class="c-red">*提示：F11 全屏模式</span>
@@ -106,7 +76,7 @@
 <script src="~/lib/codemirror-5.43.0/addon/display/fullscreen.js"></script>
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
-        var editor = CodeMirror.fromTextArea($("#codeTextArea")[0], {
+    var editor = CodeMirror.fromTextArea($("#codeTextArea")[0], {
         mode: 'text/x-csharp',//编辑器语言
         theme: 'cobalt', //编辑器主题
         extraKeys: {
