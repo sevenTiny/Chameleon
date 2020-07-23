@@ -61,7 +61,7 @@ namespace Chameleon.DataApi.Controllers
         {
             return SafeExecute(() =>
             {
-                _fileApp.Delete(CurrentUserId, CurrentOrganization, fileId);
+                _fileApp.Delete(CurrentUserId, CurrentUserRole, CurrentOrganization, fileId);
 
                 return JsonResultSuccess();
             });
@@ -74,7 +74,7 @@ namespace Chameleon.DataApi.Controllers
             {
                 using (MemoryStream stream = new MemoryStream())
                 {
-                    var downloadPayload = _fileApp.Download(CurrentUserId, CurrentOrganization, fileId, stream);
+                    var downloadPayload = _fileApp.Download(CurrentUserId, CurrentUserRole, CurrentOrganization, fileId, stream);
 
                     var bytes = new byte[stream.Length];
 
@@ -92,7 +92,7 @@ namespace Chameleon.DataApi.Controllers
             {
                 var stream = Response.Body;
 
-                var downloadPayload = _fileApp.Download(CurrentUserId, CurrentOrganization, fileId, stream);
+                var downloadPayload = _fileApp.Download(CurrentUserId, CurrentUserRole, CurrentOrganization, fileId, stream);
 
                 return new FileStreamResult(stream, downloadPayload.ContentType);
             });
