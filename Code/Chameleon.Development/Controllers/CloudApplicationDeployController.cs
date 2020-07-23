@@ -1,21 +1,16 @@
-﻿using Chameleon.Application;
-using Chameleon.Domain;
-using Chameleon.Entity;
+﻿using Chameleon.Domain;
 using Chameleon.Infrastructure;
 using Chameleon.Repository;
 using Chameleon.ValueObject;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
-using SevenTiny.Bantina.Validation;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Unicode;
 
 namespace Chameleon.Development.Controllers
 {
@@ -23,15 +18,16 @@ namespace Chameleon.Development.Controllers
     {
         ICloudApplicationDeployService _cloudApplicationDeployService;
         ICloudApplicationRepository _cloudApplicationRepository;
-        ICloudApplicationApp _cloudApplicationApp;
         IMetaObjectRepository _metaObjectRepository;
-        public CloudApplicationDeployController(IMetaObjectRepository metaObjectRepository, ICloudApplicationApp cloudApplicationApp, ICloudApplicationRepository cloudApplicationRepository, ICloudApplicationDeployService cloudApplicationDeployService)
+        public CloudApplicationDeployController(IMetaObjectRepository metaObjectRepository, ICloudApplicationRepository cloudApplicationRepository, ICloudApplicationDeployService cloudApplicationDeployService)
         {
             _metaObjectRepository = metaObjectRepository;
-            _cloudApplicationApp = cloudApplicationApp;
             _cloudApplicationRepository = cloudApplicationRepository;
             _cloudApplicationDeployService = cloudApplicationDeployService;
         }
+
+        //元数据文件后缀（更改时记得把前端导入accept也一起调整）
+        const string MetaDataFileExtension = ".chameleonmeta";
 
         private void QuerySelectDatas()
         {
@@ -59,13 +55,54 @@ namespace Chameleon.Development.Controllers
                 return View("Export", ResponseModel.Error("应用不存在"));
             }
 
-            var deployDto = _cloudApplicationDeployService.AllCloudApplicationExport(CurrentApplicationId);
+            var deployDto = _cloudApplicationDeployService.CloudApplicationExport(CurrentApplicationId);
 
-            var json = JsonConvert.SerializeObject(deployDto);
+            var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(deployDto));
 
-            var bytes = Encoding.UTF8.GetBytes(json);
+            return File(bytes, "application/json", $"{application.Name}_{DateTime.Now.ToString("yyyyMMddHHmmss")}{MetaDataFileExtension}");
+        }
 
-            return File(bytes, "application/json", $"{application.Name}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.chameleonmeta");
+        /// <summary>
+        /// 单个对象导出
+        /// </summary>
+        /// <param name="metaObjectId"></param>
+        /// <returns></returns>
+        public IActionResult MetaObjectDataExport(Guid metaObjectId)
+        {
+            var metaObject = _metaObjectRepository.GetById(metaObjectId);
+
+            if (metaObject == null)
+            {
+                QuerySelectDatas();
+                return View("Export", ResponseModel.Error("对象不存在"));
+            }
+
+            var deployDto = _cloudApplicationDeployService.MetaObjectExport(metaObjectId);
+
+            var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(deployDto));
+
+            return File(bytes, "application/json", $"{metaObject.Name}_{DateTime.Now.ToString("yyyyMMddHHmmss")}{MetaDataFileExtension}");
+        }
+
+        /// <summary>
+        /// 数据源导出
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult DataSourceExport()
+        {
+            var application = _cloudApplicationRepository.GetById(CurrentApplicationId);
+
+            if (application == null)
+            {
+                QuerySelectDatas();
+                return View("Export", ResponseModel.Error("应用不存在"));
+            }
+
+            var deployDto = _cloudApplicationDeployService.DataSourceTriggerScriptExport(CurrentApplicationId);
+
+            var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(deployDto));
+
+            return File(bytes, "application/json", $"{application.Name}_DataSource_{DateTime.Now.ToString("yyyyMMddHHmmss")}{MetaDataFileExtension}");
         }
 
         public IActionResult Import()
@@ -98,7 +135,7 @@ namespace Chameleon.Development.Controllers
                         var bytes = stream.ToArray();
                         var content = Encoding.UTF8.GetString(bytes);
                         var dto = JsonConvert.DeserializeObject<CloudApplicationDeployDto>(content);
-                        var result = _cloudApplicationDeployService.AllCloudApplicationImport(dto);
+                        var result = _cloudApplicationDeployService.CloudApplicationImport(dto);
 
                         if (result.IsSuccess)
                             successList.Add(Tuple.Create($"导入元数据文件文件：{item.FileName}", result.MoreMessage));

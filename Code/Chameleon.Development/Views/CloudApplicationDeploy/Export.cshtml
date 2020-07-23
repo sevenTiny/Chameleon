@@ -24,12 +24,12 @@
             </div>
         </div>
     </form>
-    <form class="form form-horizontal validate" id="form-article-add" method="post" action="#">
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/CloudApplicationDeploy/AllCloudApplicationExport">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>单对象导出：</label>
             <div class="formControls col-xs-4 col-sm-5">
                 <span class="select-box">
-                    <select name="cloudApplicationId" class="input select" required>
+                    <select name="metaObjectId" class="input select" required>
                         <option value="">--请选择--</option>
                         @foreach (var item in metaObjects)
                         {
@@ -38,6 +38,14 @@
                     </select>
                 </span>
             </div>
+            <div class="formControls col-xs-4 col-sm-2">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;导出&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/CloudApplicationDeploy/DataSourceExport">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>数据源导出：</label>
             <div class="formControls col-xs-4 col-sm-2">
                 <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;导出&nbsp;&nbsp;">
             </div>

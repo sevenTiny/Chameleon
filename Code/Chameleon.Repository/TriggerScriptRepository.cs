@@ -48,7 +48,7 @@ namespace Chameleon.Repository
         public List<TriggerScript> GetDataSourceListByApplicationId(Guid applicationId, ScriptTypeEnum scriptTypeEnum)
         {
             var scriptType = (int)scriptTypeEnum;
-            return _dbContext.Queryable<TriggerScript>().Where(t => t.CloudApplicationId.Equals(applicationId) && t.ScriptType.Equals(scriptType) && t.IsDeleted == 0).ToList();
+            return _dbContext.Queryable<TriggerScript>().Where(t => t.CloudApplicationId.Equals(applicationId) && t.ScriptType.Equals(scriptType) && t.IsDeleted == 0).ToList() ?? new List<TriggerScript>(0);
         }
 
         public bool CheckMetaObjectInterfaceServiceTypeExistIfMetaObjectTrigger(Guid metaObjectId, MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)

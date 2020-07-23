@@ -14,13 +14,25 @@ namespace Chameleon.Domain
         /// 全应用导出
         /// </summary>
         /// <returns></returns>
-        CloudApplicationDeployDto AllCloudApplicationExport(Guid cloudApplicationId);
+        CloudApplicationDeployDto CloudApplicationExport(Guid cloudApplicationId);
         /// <summary>
         /// 全应用导入
         /// </summary>
         /// <param name="cloudApplicationDeployDto"></param>
         /// <returns></returns>
-        Result AllCloudApplicationImport(CloudApplicationDeployDto cloudApplicationDeployDto);
+        Result CloudApplicationImport(CloudApplicationDeployDto cloudApplicationDeployDto);
+        /// <summary>
+        /// 对象导出
+        /// </summary>
+        /// <param name="metaObjectId"></param>
+        /// <returns></returns>
+        CloudApplicationDeployDto MetaObjectExport(Guid metaObjectId);
+        /// <summary>
+        /// 应用下数据源导出
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        CloudApplicationDeployDto DataSourceTriggerScriptExport(Guid cloudApplicationId);
     }
 
     public class CloudApplicationDeployService : ICloudApplicationDeployService
@@ -57,7 +69,7 @@ namespace Chameleon.Domain
             _interfaceVerificationRepository = interfaceVerificationRepository;
         }
 
-        public CloudApplicationDeployDto AllCloudApplicationExport(Guid cloudApplicationId)
+        public CloudApplicationDeployDto CloudApplicationExport(Guid cloudApplicationId)
         {
             var deployDto = new CloudApplicationDeployDto();
             deployDto.CloudApplication = _cloudApplicationRepository.GetListByCloudApplicationId(cloudApplicationId);
@@ -73,7 +85,30 @@ namespace Chameleon.Domain
             return deployDto;
         }
 
-        public Result AllCloudApplicationImport(CloudApplicationDeployDto deployDto)
+        public CloudApplicationDeployDto MetaObjectExport(Guid metaObjectId)
+        {
+            var deployDto = new CloudApplicationDeployDto();
+            deployDto.MetaObject = new List<Entity.MetaObject> { _metaObjectRepository.GetById(metaObjectId) };
+            deployDto.MetaField = _metaFieldRepository.GetListByMetaObjectId(metaObjectId);
+            deployDto.InterfaceSetting = _interfaceSettingRepository.GetListByMetaObjectId(metaObjectId);
+            deployDto.InterfaceFields = _interfaceFieldsRepository.GetListByMetaObjectId(metaObjectId);
+            deployDto.InterfaceCondition = _interfaceConditionRepository.GetListByMetaObjectId(metaObjectId);
+            deployDto.InterfaceSort = _interfaceSortRepository.GetListByMetaObjectId(metaObjectId);
+            deployDto.InterfaceVerification = _interfaceVerificationRepository.GetListByMetaObjectId(metaObjectId);
+            deployDto.TriggerScript = _triggerScriptRepository.GetMetaObjectTriggerListByMetaObjectId(metaObjectId);
+
+            return deployDto;
+        }
+
+        public CloudApplicationDeployDto DataSourceTriggerScriptExport(Guid cloudApplicationId)
+        {
+            var deployDto = new CloudApplicationDeployDto();
+            deployDto.TriggerScript = _triggerScriptRepository.GetDataSourceListByApplicationId(cloudApplicationId, Entity.ScriptTypeEnum.DynamicScriptDataSourceTrigger);
+            deployDto.TriggerScript.AddRange(_triggerScriptRepository.GetDataSourceListByApplicationId(cloudApplicationId, Entity.ScriptTypeEnum.JsonDataSource));
+            return deployDto;
+        }
+
+        public Result CloudApplicationImport(CloudApplicationDeployDto deployDto)
         {
             if (deployDto == null)
                 return Result.Success("Success，未找到需要导入的元数据");
