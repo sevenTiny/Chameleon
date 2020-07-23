@@ -81,6 +81,7 @@ namespace Chameleon.Domain
             doc.Add("UploadTime", fileUploadPayload.UploadTime);
             doc.Add("UserId", fileUploadPayload.UserId);
             doc.Add("Organization", fileUploadPayload.Organization);
+            doc.Add("IsSystemFile", fileUploadPayload.IsSystemFile);
 
             option.Metadata = doc; // 添加metadata数据
 
@@ -123,6 +124,7 @@ namespace Chameleon.Domain
                 UploadTime = meta["UploadTime"].ToUniversalTime(),
                 UserId = meta["UserId"].AsInt64,
                 Organization = meta["Organization"].AsGuid,
+                IsSystemFile = meta["IsSystemFile"].AsInt32
             };
         }
 
@@ -207,5 +209,9 @@ namespace Chameleon.Domain
         /// 上传时间
         /// </summary>
         public DateTime UploadTime { get; set; }
+        /// <summary>
+        /// 是否系统文件（系统文件全局可以访问，但是只有开发人员可以删除）
+        /// </summary>
+        public int IsSystemFile { get; set; }
     }
 }

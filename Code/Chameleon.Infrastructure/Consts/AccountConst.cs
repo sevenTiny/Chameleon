@@ -1,4 +1,5 @@
 ﻿using Chameleon.Infrastructure.Configs;
+using System;
 
 namespace Chameleon.Infrastructure.Consts
 {
@@ -19,6 +20,9 @@ namespace Chameleon.Infrastructure.Consts
         public const string KEY_AccessToken = "_AccessToken";
         public const string KEY_ChameleonRole = "ChameleonRole";
         public const string KEY_Organization = "Organization";
+
+        //默认的组织id，所有人权限列表里都有这个权限的组织id
+        public static Guid DefaultOrganization => Guid.Parse("aaaa1111-2222-3333-4444-abcdefghijkl");
 
         /// <summary>
         /// 登陆Url

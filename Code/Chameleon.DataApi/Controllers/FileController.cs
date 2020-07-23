@@ -43,7 +43,8 @@ namespace Chameleon.DataApi.Controllers
                         ContentType = item.ContentType,
                         UserId = CurrentUserId,
                         Organization = CurrentOrganization,
-                        UploadTime = DateTime.Now
+                        UploadTime = DateTime.Now,
+                        IsSystemFile = 0//业务线上传的文件未非系统文件
                     };
 
                     fileUploadPayload.UploadFileStream = item.OpenReadStream();
