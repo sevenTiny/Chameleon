@@ -84,16 +84,32 @@ namespace Chameleon.Development.Controllers
 
             foreach (var item in files)
             {
-                using (MemoryStream stream = new MemoryStream())
+                if (!".chameleonmeta".Equals(Path.GetExtension(item.FileName)))
                 {
-                    item.CopyTo(stream);
-                    var bytes = stream.ToArray();
-                    var content = Encoding.UTF8.GetString(bytes);
-                    var dto = JsonConvert.DeserializeObject<CloudApplicationDeployDto>(content);
-                    var result = _cloudApplicationDeployService.AllCloudApplicationImport(dto);
+                    successList.Add(Tuple.Create($"导入元数据文件文件：{item.FileName} 失败，元数据文件类型不匹配", new List<string>(0)));
+                    continue;
+                }
 
-                    if (result.IsSuccess)
-                        successList.Add(Tuple.Create($"导入元数据文件文件：{item.FileName}", result.MoreMessage));
+                try
+                {
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        item.CopyTo(stream);
+                        var bytes = stream.ToArray();
+                        var content = Encoding.UTF8.GetString(bytes);
+                        var dto = JsonConvert.DeserializeObject<CloudApplicationDeployDto>(content);
+                        var result = _cloudApplicationDeployService.AllCloudApplicationImport(dto);
+
+                        if (result.IsSuccess)
+                            successList.Add(Tuple.Create($"导入元数据文件文件：{item.FileName}", result.MoreMessage));
+                        else
+                            successList.Add(Tuple.Create($"导入元数据文件文件：{item.FileName} 失败", result.MoreMessage));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    successList.Add(Tuple.Create($"导入元数据文件文件：{item.FileName} 失败，元数据文件内容不正确，ex:{ex.ToString()}", new List<string>(0)));
+                    continue;
                 }
             }
 
