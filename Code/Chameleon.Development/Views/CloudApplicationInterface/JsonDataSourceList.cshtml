@@ -13,7 +13,7 @@
 <article class="cl pd-20">
     <div class="cl pd-5 bg-1 bk-gray">
         <span class="l">
-            <a class="btn btn-primary radius" href="/DataSource/JsonDataSourceAdd"><i class="Hui-iconfont">&#xe600;</i> 新增JSON</a>
+            <a class="btn btn-primary radius" href="/CloudApplicationInterface/JsonDataSourceAdd"><i class="Hui-iconfont">&#xe600;</i> 新增JSON</a>
         </span>
         <span class="r">共有数据：<strong>@entities.Count</strong> 条</span>
     </div>
@@ -39,8 +39,8 @@
                         <td>@item.Description</td>
                         <td>@item.SortNumber</td>
                         <td class="f-14 td-manage">
-                            <a style="text-decoration: none" class="ml-5" href="/DataSource/JsonDataSourceUpdate/@item.Id" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
-                            <a style="text-decoration: none" class="ml-5" onClick="ajax_delete_table(this, '/DataSource/LogicDelete/@item.Id')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                            <a style="text-decoration: none" class="ml-5" href="/CloudApplicationInterface/JsonDataSourceUpdate/@item.Id" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
+                            <a style="text-decoration: none" class="ml-5" onClick="ajax_delete_table(this, '/CloudApplicationInterface/LogicDelete/@item.Id')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
                         </td>
                     </tr>
                 }

@@ -58,6 +58,6 @@ namespace Chameleon.Entity
         [Description("货币")]
         Decimal = 10,
         //[Description("数据源")]
-        //DataSource = 11,
+        //CloudApplicationInterface = 11,
     }
 }

@@ -85,10 +85,10 @@ namespace Chameleon.Development.Controllers
         }
 
         /// <summary>
-        /// 数据源导出
+        /// 应用接口导出
         /// </summary>
         /// <returns></returns>
-        public IActionResult DataSourceExport()
+        public IActionResult CloudApplicationInterfaceExport()
         {
             var application = _cloudApplicationRepository.GetById(CurrentApplicationId);
 
@@ -98,11 +98,11 @@ namespace Chameleon.Development.Controllers
                 return View("Export", ResponseModel.Error("应用不存在"));
             }
 
-            var deployDto = _cloudApplicationDeployService.DataSourceTriggerScriptExport(CurrentApplicationId);
+            var deployDto = _cloudApplicationDeployService.CloudApplicationInterfaceExport(CurrentApplicationId);
 
             var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(deployDto));
 
-            return File(bytes, "application/json", $"{application.Name}_DataSource_{DateTime.Now.ToString("yyyyMMddHHmmss")}{MetaDataFileExtension}");
+            return File(bytes, "application/json", $"{application.Name}_ApplicationInterface_{DateTime.Now.ToString("yyyyMMddHHmmss")}{MetaDataFileExtension}");
         }
 
         public IActionResult Import()
