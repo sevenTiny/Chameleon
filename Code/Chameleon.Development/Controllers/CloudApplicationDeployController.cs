@@ -88,7 +88,7 @@ namespace Chameleon.Development.Controllers
         /// 应用接口导出
         /// </summary>
         /// <returns></returns>
-        public IActionResult CloudApplicationInterfaceExport()
+        public IActionResult DataSourceExport()
         {
             var application = _cloudApplicationRepository.GetById(CurrentApplicationId);
 
@@ -98,7 +98,7 @@ namespace Chameleon.Development.Controllers
                 return View("Export", ResponseModel.Error("应用不存在"));
             }
 
-            var deployDto = _cloudApplicationDeployService.CloudApplicationInterfaceExport(CurrentApplicationId);
+            var deployDto = _cloudApplicationDeployService.DataSourceExport(CurrentApplicationId);
 
             var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(deployDto));
 

@@ -32,7 +32,7 @@ namespace Chameleon.Domain
         /// </summary>
         /// <param name="cloudApplicationId"></param>
         /// <returns></returns>
-        CloudApplicationDeployDto CloudApplicationInterfaceExport(Guid cloudApplicationId);
+        CloudApplicationDeployDto DataSourceExport(Guid cloudApplicationId);
     }
 
     public class CloudApplicationDeployService : ICloudApplicationDeployService
@@ -100,7 +100,7 @@ namespace Chameleon.Domain
             return deployDto;
         }
 
-        public CloudApplicationDeployDto CloudApplicationInterfaceExport(Guid cloudApplicationId)
+        public CloudApplicationDeployDto DataSourceExport(Guid cloudApplicationId)
         {
             var deployDto = new CloudApplicationDeployDto();
             deployDto.TriggerScript = _triggerScriptRepository.GetDataSourceListByApplicationId(cloudApplicationId, Entity.ScriptTypeEnum.DynamicScriptDataSourceTrigger);

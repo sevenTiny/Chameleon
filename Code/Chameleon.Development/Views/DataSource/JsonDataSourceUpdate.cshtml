@@ -2,20 +2,20 @@
 @using SevenTiny.Bantina.Extensions.AspNetCore;
 @using Chameleon.Infrastructure;
 @{
-    ViewData["Title"] = "DynamicScriptTriggerUpdate";
+    ViewData["Title"] = "JsonDataSourceUpdate";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
     var result = Model as ResponseModel ?? new ResponseModel();
     var entity = result?.Data as TriggerScript ?? new TriggerScript();
 }
 @{
-    ViewData["Level_1"] = "数据源";
-    ViewData["Level_2"] = "编辑动态脚本";
+    ViewData["Level_1"] = "应数据源用管理";
+    ViewData["Level_2"] = "编辑JSON";
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="page-container">
-    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/CloudApplicationInterface/DynamicScriptTriggerUpdateLogic">
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/DataSource/JsonDataSourceUpdateLogic">
         <input type="text" class="input-text" value="@entity.Id" name="id" hidden>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
@@ -30,27 +30,7 @@
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>脚本语言：</label>
-            <div class="formControls col-xs-8 col-sm-3  ">
-                @{
-                    var language = ((LanguageEnum)entity.Language).GetDescription();
-                    <input type="text" class="input-text" style="background-color:#e8e8e8;" value="@language" readonly="readonly">
-                    <input type="text" class="input-text" name="Language" value="@entity.Language" hidden>
-                }
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>类全名：</label>
-            <div class="formControls col-xs-3 col-sm-3  ">
-                <input type="text" class="input-text" value="@entity.ClassFullName" name="ClassFullName" style="background-color:#e8e8e8;" readonly="readonly">
-            </div>
-            <label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>方法名：</label>
-            <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" class="input-text" value="@entity.FunctionName" name="FunctionName" style="background-color:#e8e8e8;" readonly="readonly">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>触发器脚本：</label>
+            <label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>JSON脚本：</label>
             <div class="formControls col-xs-9 col-sm-9">
                 <textarea id="codeTextArea" name="script" class="ignore">@entity.Script</textarea>
                 <span class="c-red">*提示：F11 全屏模式</span>

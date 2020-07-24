@@ -12,13 +12,13 @@ using System;
 
 namespace Chameleon.Development.Controllers
 {
-    public class CloudApplicationInterfaceController : WebControllerBase
+    public class DataSourceController : WebControllerBase
     {
         ITriggerScriptService _triggerScriptService;
         ITriggerScriptRepository _triggerScriptRepository;
         IInterfaceSettingService _interfaceSettingService;
         IInterfaceSettingRepository _interfaceSettingRepository;
-        public CloudApplicationInterfaceController(IInterfaceSettingRepository interfaceSettingRepository, IInterfaceSettingService interfaceSettingService, ITriggerScriptService metaObjectService, ITriggerScriptRepository metaObjectRepository)
+        public DataSourceController(IInterfaceSettingRepository interfaceSettingRepository, IInterfaceSettingService interfaceSettingService, ITriggerScriptService metaObjectService, ITriggerScriptRepository metaObjectRepository)
         {
             _interfaceSettingRepository = interfaceSettingRepository;
             _interfaceSettingService = interfaceSettingService;
