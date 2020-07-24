@@ -26,11 +26,11 @@ namespace Chameleon.Development.Controllers
             _triggerScriptRepository = metaObjectRepository;
         }
 
+        #region DynamicScript
         public IActionResult DynamicScriptTriggerList()
         {
             return View(_triggerScriptRepository.GetDataSourceListByApplicationId(CurrentApplicationId, ScriptTypeEnum.DynamicScriptDataSourceTrigger));
         }
-
         public IActionResult DynamicScriptTriggerAdd()
         {
             //获取默认脚本
@@ -43,7 +43,6 @@ namespace Chameleon.Development.Controllers
             };
             return View(ResponseModel.Success(data: metaObject));
         }
-
         public IActionResult DynamicScriptTriggerAddLogic(TriggerScript entity)
         {
             var result = Result.Success()
@@ -63,7 +62,7 @@ namespace Chameleon.Development.Controllers
                     entity.CreateBy = CurrentUserId;
                     entity.ModifyBy = CurrentUserId;
                     entity.CloudApplicationId = CurrentApplicationId;
-                    entity.Code = string.Concat(CurrentApplicationCode, ".", entity.Code);
+                    entity.Code = string.Concat(CurrentApplicationCode, ".TDS.", entity.Code);
                     entity.ScriptType = (int)ScriptTypeEnum.DynamicScriptDataSourceTrigger;
                     return _triggerScriptService.AddCheckCode(entity);
                 })
@@ -76,7 +75,7 @@ namespace Chameleon.Development.Controllers
                         ModifyBy = CurrentUserId,
                         DataSousrceId = entity.Id,
                         InterfaceType = (int)InterfaceTypeEnum.DynamicScriptDataSource,
-                        Code = entity.Code,
+                        Code = entity.Code,//这里【应用名.编码】的形式一定要保证应用下的接口编码唯一，因为这里添加脚本没法校验接口是否重复
                         Name = entity.Name,
                         CloudApplicationId = entity.CloudApplicationId,
                         CloudApplicationCode = CurrentApplicationCode,
@@ -91,13 +90,11 @@ namespace Chameleon.Development.Controllers
 
             return RedirectToAction("DynamicScriptTriggerList");
         }
-
         public IActionResult DynamicScriptTriggerUpdate(Guid id)
         {
             var metaObject = _triggerScriptService.GetById(id);
             return View(ResponseModel.Success(data: metaObject));
         }
-
         public IActionResult DynamicScriptTriggerUpdateLogic(TriggerScript entity)
         {
             var result = Result.Success()
@@ -120,12 +117,13 @@ namespace Chameleon.Development.Controllers
 
             return RedirectToAction("DynamicScriptTriggerList");
         }
+        #endregion
 
+        #region Json
         public IActionResult JsonDataSourceList()
         {
             return View(_triggerScriptRepository.GetDataSourceListByApplicationId(CurrentApplicationId, ScriptTypeEnum.JsonDataSource));
         }
-
         public IActionResult JsonDataSourceAdd()
         {
             //获取默认脚本
@@ -138,7 +136,6 @@ namespace Chameleon.Development.Controllers
             };
             return View(ResponseModel.Success(data: metaObject));
         }
-
         public IActionResult JsonDataSourceAddLogic(TriggerScript entity)
         {
             var result = Result.Success()
@@ -166,7 +163,7 @@ namespace Chameleon.Development.Controllers
                     entity.CreateBy = CurrentUserId;
                     entity.ModifyBy = CurrentUserId;
                     entity.CloudApplicationId = CurrentApplicationId;
-                    entity.Code = string.Concat(CurrentApplicationCode, ".", entity.Code);
+                    entity.Code = string.Concat(CurrentApplicationCode, ".JDS.", entity.Code);
                     entity.ScriptType = (int)ScriptTypeEnum.JsonDataSource;
                     entity.ClassFullName = "-";
                     entity.FunctionName = "-";
@@ -196,13 +193,11 @@ namespace Chameleon.Development.Controllers
 
             return RedirectToAction("JsonDataSourceList");
         }
-
         public IActionResult JsonDataSourceUpdate(Guid id)
         {
             var metaObject = _triggerScriptService.GetById(id);
             return View(ResponseModel.Success(data: metaObject));
         }
-
         public IActionResult JsonDataSourceUpdateLogic(TriggerScript entity)
         {
             var result = Result.Success()
@@ -243,6 +238,7 @@ namespace Chameleon.Development.Controllers
 
             return RedirectToAction("JsonDataSourceList");
         }
+        #endregion
 
         public IActionResult LogicDelete(Guid id)
         {

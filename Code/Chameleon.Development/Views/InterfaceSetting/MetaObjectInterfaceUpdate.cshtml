@@ -2,7 +2,7 @@
 @using SevenTiny.Bantina.Extensions.AspNetCore;
 @using Chameleon.Infrastructure;
 @{
-    ViewData["Title"] = "Add";
+    ViewData["Title"] = "Update";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
     var result = Model as ResponseModel ?? new ResponseModel() { IsSuccess = true };
@@ -15,22 +15,23 @@
 }
 @{
     ViewData["Level_1"] = "对象设置";
-    ViewData["Level_2"] = "新增接口";
+    ViewData["Level_2"] = "修改接口";
 }
-@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml");
 
 <article class="page-container">
-    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/InterfaceSetting/AddLogic">
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/InterfaceSetting/MetaObjectInterfaceUpdateLogic">
+        <input type="text" class="input-text" value="@entity.Id" name="id" hidden>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@entity.Name" placeholder="" name="name" required minLength="2" maxlength="50">
+                <input type="text" class="input-text" value="@entity.Name" name="name" required minLength="2" maxlength="50">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编码：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@entity.Code" placeholder="" name="code" required minLength="2" maxlength="50">
+                <input type="text" class="input-text" style="background-color:#e8e8e8;" value="@entity.Code" name="code" readonly="readonly" required>
             </div>
         </div>
         <div class="row cl">

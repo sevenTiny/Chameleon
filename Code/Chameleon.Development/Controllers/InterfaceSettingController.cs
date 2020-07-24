@@ -41,14 +41,14 @@ namespace Chameleon.Development.Controllers
             _InterfaceSettingService = InterfaceSettingService;
         }
 
-        public IActionResult List(Guid metaObjectId, string metaObjectCode)
+        public IActionResult MetaObjectInterfaceList(Guid metaObjectId, string metaObjectCode)
         {
             SetCookiesMetaObjectInfo(metaObjectId, metaObjectCode);
 
             return View(_InterfaceSettingService.GetInterfaceSettingsTranslated(metaObjectId));
         }
 
-        public IActionResult Add()
+        public IActionResult MetaObjectInterfaceAdd()
         {
             ViewData["InterfaceCondition"] = _interfaceConditionRepository.GetTopInterfaceCondition(CurrentMetaObjectId);
             ViewData["InterfaceVerification"] = _interfaceVerificationRepository.GetTopInterfaceVerification(CurrentMetaObjectId);
@@ -58,14 +58,19 @@ namespace Chameleon.Development.Controllers
             return View(ResponseModel.Success(data: new InterfaceSetting { PageSize = ChameleonSettingConfig.Instance.DefaultInterfacePageSize }));
         }
 
-        public IActionResult AddLogic(InterfaceSetting entity)
+        public IActionResult MetaObjectInterfaceAddLogic(InterfaceSetting entity)
         {
             var result = Result.Success()
                 .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Name, nameof(entity.Name))
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Code, nameof(entity.Code))
                 .ContinueAssert(_ => entity.Code.IsAlnum(2, 50), "编码不合法，2-50位且只能包含字母和数字（字母开头）")
-                .ContinueAssert(_ => entity.PageSize > 0, "分页页大小不能<=0")
+                .Continue(_ =>
+                {
+                    if (entity.GetInterfaceType() == InterfaceTypeEnum.QueryList)
+                        return _.ContinueAssert(_t => entity.PageSize > 0, "分页页大小不能<=0");
+                    return _;
+                })
                 .Continue(_ =>
                 {
                     entity.CloudApplicationId = CurrentApplicationId;
@@ -75,18 +80,17 @@ namespace Chameleon.Development.Controllers
                     entity.CreateBy = CurrentUserId;
                     entity.ModifyBy = CurrentUserId;
                     entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.Code);
-                    entity.PageSize = entity.PageSize;//暂时写死每页数目
 
                     return _InterfaceSettingService.AddCheckCode(entity);
                 });
 
             if (!result.IsSuccess)
-                return View("Add", result.ToResponseModel(data: entity));
+                return View("MetaObjectInterfaceAdd", result.ToResponseModel(data: entity));
 
-            return Redirect($"/InterfaceSetting/List?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
+            return Redirect($"/InterfaceSetting/MetaObjectInterfaceList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
 
-        public IActionResult Update(Guid id)
+        public IActionResult MetaObjectInterfaceUpdate(Guid id)
         {
             ViewData["InterfaceCondition"] = _interfaceConditionRepository.GetTopInterfaceCondition(CurrentMetaObjectId);
             ViewData["InterfaceVerification"] = _interfaceVerificationRepository.GetTopInterfaceVerification(CurrentMetaObjectId);
@@ -96,7 +100,7 @@ namespace Chameleon.Development.Controllers
             return View(ResponseModel.Success(data: _InterfaceSettingService.GetById(id)));
         }
 
-        public IActionResult UpdateLogic(InterfaceSetting entity)
+        public IActionResult MetaObjectInterfaceUpdateLogic(InterfaceSetting entity)
         {
             var result = Result.Success()
                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
@@ -117,9 +121,9 @@ namespace Chameleon.Development.Controllers
                });
 
             if (!result.IsSuccess)
-                return View("Update", result.ToResponseModel(entity));
+                return View("MetaObjectInterfaceUpdate", result.ToResponseModel(entity));
 
-            return Redirect($"/InterfaceSetting/List?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
+            return Redirect($"/InterfaceSetting/MetaObjectInterfaceList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
 
         /// <summary>
