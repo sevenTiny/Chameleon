@@ -81,14 +81,14 @@ namespace Chameleon.DataApi.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(string fileId)
+        public IActionResult Delete(string _fileId)
         {
             return SafeExecute(() =>
             {
-                if (string.IsNullOrEmpty(fileId))
+                if (string.IsNullOrEmpty(_fileId))
                     return Result.Error("Parameter invalid: fileId is null").ToJsonResult();
 
-                _fileApp.Delete(CurrentUserId, CurrentUserRole, CurrentOrganization, fileId);
+                _fileApp.Delete(CurrentUserId, CurrentUserRole, CurrentOrganization, _fileId);
 
                 return JsonResultSuccess();
             });
