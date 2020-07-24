@@ -2,56 +2,60 @@
 @using SevenTiny.Bantina.Extensions.AspNetCore;
 @using Chameleon.Infrastructure;
 @{
-    ViewData["Title"] = "MetaObjectTriggerAdd";
+    ViewData["Title"] = "DynamicScriptTriggerUpdate";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
     var result = Model as ResponseModel ?? new ResponseModel();
     var entity = result?.Data as TriggerScript ?? new TriggerScript();
 }
 @{
-    ViewData["Level_1"] = "对象设置";
-    ViewData["Level_2"] = "新增对象触发器";
+    ViewData["Level_1"] = "应用接口";
+    ViewData["Level_2"] = "编辑应用接口触发器";
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="page-container">
-    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/TriggerScript/MetaObjectTriggerAddLogic">
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/TriggerScript/CloudApplicationTriggerUpdateLogic">
+        <input type="text" class="input-text" value="@entity.Id" name="id" hidden>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="@entity.Name" placeholder="" name="name" required minLength="2" maxlength="50">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编码：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" style="background-color:#e8e8e8;" value="@entity.Code" name="code" readonly="readonly" required>
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>服务方法：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <span class="select-box">
-                    <select name="InterfaceServiceType" class="input select" onchange="MetaObjectInterfaceServiceTypeSwitch(this)" id="InterfaceServiceType" required>
-                        <option value="">--请选择--</option>
-                        @foreach (var item in InterfaceServiceTypeEnumHelper.GetMetaObjectInterfaceServiceTypeEnums())
-                        {
-                            <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
-                        }
-                    </select>
-                </span>
+                @{
+                    var serviceType = ((InterfaceServiceTypeEnum)entity.InterfaceServiceType).GetDescription();
+                    <input type="text" class="input-text" style="background-color:#e8e8e8;" value="@serviceType" readonly="readonly">
+                }
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>脚本语言：</label>
             <div class="formControls col-xs-8 col-sm-3  ">
-                <span class="select-box">
-                    <select name="Language" class="input select" id="Language" required>
-                        @*<option value="">--请选择--</option>*@
-                        @foreach (var item in LanguageEnumHelper.GetLanguageEnums())
-                        {
-                            <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
-                        }
-                    </select>
-                </span>
+                @{
+                    var language = ((LanguageEnum)entity.Language).GetDescription();
+                    <input type="text" class="input-text" style="background-color:#e8e8e8;" value="@language" readonly="readonly">
+                    <input type="text" class="input-text" name="Language" value="@entity.Language" hidden>
+                }
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>类全名：</label>
             <div class="formControls col-xs-3 col-sm-3  ">
-                <input type="text" class="input-text" value="@entity.ClassFullName" placeholder="" name="ClassFullName" id="ClassFullName" style="background-color:#e8e8e8;" readonly="readonly" required>
+                <input type="text" class="input-text" value="@entity.ClassFullName" name="ClassFullName" style="background-color:#e8e8e8;" readonly="readonly">
             </div>
             <label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>方法名：</label>
             <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" class="input-text" value="@entity.FunctionName" placeholder="" name="FunctionName" id="FunctionName" style="background-color:#e8e8e8;" readonly="readonly" required>
+                <input type="text" class="input-text" value="@entity.FunctionName" name="FunctionName" style="background-color:#e8e8e8;" readonly="readonly">
             </div>
         </div>
         <div class="row cl">
@@ -103,7 +107,7 @@
 <script src="~/lib/codemirror-5.43.0/addon/display/fullscreen.js"></script>
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
-        var editor = CodeMirror.fromTextArea($("#codeTextArea")[0], {
+    var editor = CodeMirror.fromTextArea($("#codeTextArea")[0], {
         mode: 'text/x-csharp',//编辑器语言
         theme: 'cobalt', //编辑器主题
         extraKeys: {
@@ -118,35 +122,5 @@
         lineNumbers: true,//显示行号
         spellcheck: true,//拼写检查
     });
-
-    $("#InterfaceServiceType").val(@entity.InterfaceServiceType);
-    $("#Language").val(@entity.Language);
-
-    //切换服务类型
-    function MetaObjectInterfaceServiceTypeSwitch() {
-        var serviceType = $("#InterfaceServiceType").val()
-
-        if (serviceType != null && serviceType != '') {
-            $.ajax({
-                type: 'GET',
-                url: '/TriggerScript/GetDefaultTriggerScriptTemplate?interfaceServiceType=' + serviceType,
-                dataType: 'json',
-                success: function (data) {
-                    if (data.isSuccess) {
-                        if (data.data != null) {
-                            editor.setValue(data.data.script)
-                            $("#ClassFullName").val(data.data.classFullName)
-                            $("#FunctionName").val(data.data.functionName)
-                        } else {
-                            editor.setValue('')
-                        }
-                    }
-                },
-                error: function (data) {
-                    console.log(data.msg);
-                }
-            });
-        }
-    }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

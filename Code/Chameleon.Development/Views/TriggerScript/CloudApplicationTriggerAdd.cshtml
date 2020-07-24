@@ -9,20 +9,20 @@
     var entity = result?.Data as TriggerScript ?? new TriggerScript();
 }
 @{
-    ViewData["Level_1"] = "对象设置";
-    ViewData["Level_2"] = "新增对象触发器";
+    ViewData["Level_1"] = "应用接口";
+    ViewData["Level_2"] = "新增应用接口触发器";
 }
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="page-container">
-    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/TriggerScript/MetaObjectTriggerAddLogic">
+    <form class="form form-horizontal validate" id="form-article-add" method="post" action="/TriggerScript/CloudApplicationTriggerAddLogic">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>服务方法：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
                     <select name="InterfaceServiceType" class="input select" onchange="MetaObjectInterfaceServiceTypeSwitch(this)" id="InterfaceServiceType" required>
                         <option value="">--请选择--</option>
-                        @foreach (var item in InterfaceServiceTypeEnumHelper.GetMetaObjectInterfaceServiceTypeEnums())
+                        @foreach (var item in InterfaceServiceTypeEnumHelper.GetCloudApplicationInterfaceServiceTypeEnums())
                         {
                             <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
                         }

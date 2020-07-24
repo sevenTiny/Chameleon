@@ -84,6 +84,41 @@ namespace Chameleon.Entity
         FileManagement = 4,
     }
 
+    public static class ScriptTypeEnumHelper
+    {
+        public static ScriptTypeEnum GetScriptTypeByInterfaceServiceTypeMapping(InterfaceServiceTypeEnum interfaceServiceTypeEnum)
+        {
+            switch (interfaceServiceTypeEnum)
+            {
+                case InterfaceServiceTypeEnum.MetaObject_Add_Before:
+                case InterfaceServiceTypeEnum.MetaObject_Add_After:
+                case InterfaceServiceTypeEnum.MetaObject_BatchAdd_Before:
+                case InterfaceServiceTypeEnum.MetaObject_BatchAdd_After:
+                case InterfaceServiceTypeEnum.MetaObject_Update_Before:
+                case InterfaceServiceTypeEnum.MetaObject_Update_After:
+                case InterfaceServiceTypeEnum.MetaObject_Delete_Before:
+                case InterfaceServiceTypeEnum.MetaObject_Delete_After:
+                case InterfaceServiceTypeEnum.MetaObject_QueryCount_Before:
+                case InterfaceServiceTypeEnum.MetaObject_QueryCount_After:
+                case InterfaceServiceTypeEnum.MetaObject_QuerySingle_Before:
+                case InterfaceServiceTypeEnum.MetaObject_QuerySingle_After:
+                case InterfaceServiceTypeEnum.MetaObject_QueryList_Before:
+                case InterfaceServiceTypeEnum.MetaObject_QueryList_After:
+                    return ScriptTypeEnum.MetaObjectInterfaceTrigger;
+                case InterfaceServiceTypeEnum.Application_UploadFile_Before:
+                case InterfaceServiceTypeEnum.Application_UploadFile_After:
+                case InterfaceServiceTypeEnum.Application_DownloadFile_Before:
+                case InterfaceServiceTypeEnum.Application_DownloadFile_After:
+                    return ScriptTypeEnum.FileManagement;
+                case InterfaceServiceTypeEnum.Application_DataSource:
+                    return ScriptTypeEnum.DynamicScriptDataSourceTrigger;
+                case InterfaceServiceTypeEnum.UnKnown:
+                default:
+                    return ScriptTypeEnum.UnKnown;
+            }
+        }
+    }
+
     /// <summary>
     /// 服务类型
     /// </summary>

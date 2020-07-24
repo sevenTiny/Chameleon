@@ -14,11 +14,17 @@ namespace Chameleon.Repository
         /// <returns></returns>
         List<TriggerScript> GetListByCloudApplicationId(Guid cloudApplicationId);
         /// <summary>
-        /// 获取对象下的对象接口列表
+        /// 获取对象下的对象触发器列表
         /// </summary>
         /// <param name="metaObjectId"></param>
         /// <returns></returns>
         List<TriggerScript> GetMetaObjectTriggerListByMetaObjectId(Guid metaObjectId);
+        /// <summary>
+        /// 获取应用触发器列表
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        List<TriggerScript> GetCloudApplicationTriggerListByCloudApplicationId(Guid cloudApplicationId);
         /// <summary>
         /// 获取动态脚本数据源列表
         /// </summary>
@@ -76,6 +82,13 @@ namespace Chameleon.Repository
         public List<TriggerScript> GetListByCloudApplicationId(Guid cloudApplicationId)
         {
             return _dbContext.Queryable<TriggerScript>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == 0).ToList();
+        }
+
+        public List<TriggerScript> GetCloudApplicationTriggerListByCloudApplicationId(Guid cloudApplicationId)
+        {
+            //以后扩展其他类型应用触发器在这里添加条件
+            int scriptType = (int)ScriptTypeEnum.FileManagement;
+            return _dbContext.Queryable<TriggerScript>().Where(t => t.CloudApplicationId.Equals(cloudApplicationId) && t.ScriptType == scriptType && t.IsDeleted == 0).ToList();
         }
     }
 }
