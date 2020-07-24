@@ -6,6 +6,7 @@ using Chameleon.Entity;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Authorization;
 using SevenTiny.Bantina.Extensions;
+using System;
 using System.Collections.Generic;
 
 namespace Chameleon.DataApi.Controllers
@@ -29,6 +30,9 @@ namespace Chameleon.DataApi.Controllers
         /// <param name="queryArgs"></param>
         protected void InitQueryContext(QueryArgs queryArgs)
         {
+            if (queryArgs == null)
+                throw new ArgumentNullException(nameof(queryArgs), "query args cannot be null");
+
             _queryContext = new QueryContext();
 
             //查询接口

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Chameleon.Application;
 using Chameleon.Bootstrapper;
+using Chameleon.DataApi.Models;
 using Chameleon.Domain;
 using Chameleon.Infrastructure.Consts;
 using Chameleon.Repository;
@@ -32,10 +33,12 @@ namespace Chameleon.DataApi.Controllers
 
         [HttpPost]
         [RequestSizeLimit(CommonConst.MaxFileUploadSizeLimit)]//限制上传文件大小不得超过100M=100*1024*1024(B)
-        public IActionResult Post([FromForm]IFormCollection formData)
+        public IActionResult Post([FromQuery]QueryArgs queryArgs, [FromForm]IFormCollection formData)
         {
             return SafeExecute(() =>
             {
+                InitQueryContext(queryArgs);
+
                 IFormFileCollection files = formData.Files;
 
                 if (files == null || !files.Any())
@@ -45,9 +48,19 @@ namespace Chameleon.DataApi.Controllers
 
                 foreach (var item in files)
                 {
-                    if (item.Length > CommonConst.MaxFileUploadSizeLimit)
-                        return Result.Error("file can not large than 100MB.").ToJsonResult();
+                    //校验文件大小
+                    if (item.Length > _queryContext.InterfaceSetting.FileSizeLimit)
+                        return Result.Error($"file [{item.FileName}] cannot large than {_queryContext.InterfaceSetting.FileSizeLimit} byte").ToJsonResult();
 
+                    //校验文件后缀
+                    var extensionsLimit = _queryContext.InterfaceSetting.FileExtensionLimit?.Split('|') ?? new string[0];
+
+                    if (extensionsLimit.Any() && !extensionsLimit.Contains(Path.GetExtension(item.FileName)))
+                        return Result.Error($"The [{item.FileName}] file type does not conform to the interface definition").ToJsonResult();
+                }
+
+                foreach (var item in files)
+                {
                     var fileUploadPayload = new FileUploadPayload
                     {
                         FileName = item.FileName,
@@ -83,14 +96,16 @@ namespace Chameleon.DataApi.Controllers
 
         [Route("Download")]
         [HttpGet]
-        public IActionResult Download(string fileId)
+        public IActionResult Download([FromQuery]QueryArgs queryArgs)
         {
             return SafeExecute(() =>
             {
-                if (string.IsNullOrEmpty(fileId))
+                InitQueryContext(queryArgs);
+
+                if (string.IsNullOrEmpty(queryArgs._fileId))
                     return Result.Error("Parameter invalid: fileId is null").ToJsonResult();
 
-                var downloadPayload = _fileApp.Download(CurrentUserId, CurrentUserRole, CurrentOrganization, fileId);
+                var downloadPayload = _fileApp.Download(CurrentUserId, CurrentUserRole, CurrentOrganization, queryArgs._fileId);
 
                 Response.ContentType = downloadPayload.ContentType;
 
