@@ -56,7 +56,11 @@ namespace Chameleon.DataApi.Controllers
                     _queryContext.TriggerScripts = _triggerScriptRepository.GetMetaObjectTriggerListByMetaObjectId(_queryContext.InterfaceSetting.MetaObjectId);
                     break;
                 case InterfaceTypeEnum.FileUpload:
+                    _queryContext.TriggerScripts = _triggerScriptRepository.GetCloudApplicationTriggerListByCloudApplicationId(_queryContext.InterfaceSetting.CloudApplicationId);
+                    break;
                 case InterfaceTypeEnum.FileDownload:
+                    _queryContext.TriggerScripts = _triggerScriptRepository.GetCloudApplicationTriggerListByCloudApplicationId(_queryContext.InterfaceSetting.CloudApplicationId);
+                    break;
                 case InterfaceTypeEnum.DynamicScriptDataSource:
                 case InterfaceTypeEnum.JsonDataSource:
                 case InterfaceTypeEnum.UnKnown:

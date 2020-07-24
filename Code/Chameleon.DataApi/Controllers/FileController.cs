@@ -9,6 +9,7 @@ using Chameleon.Bootstrapper;
 using Chameleon.Common;
 using Chameleon.DataApi.Models;
 using Chameleon.Domain;
+using Chameleon.Entity;
 using Chameleon.Infrastructure.Consts;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Http;
@@ -23,13 +24,40 @@ namespace Chameleon.DataApi.Controllers
     public class FileController : InterfaceApiControllerBase
     {
         IFileApp _fileApp;
-        public FileController(IFileApp fileApp, ITriggerScriptRepository triggerScriptRepository, IInterfaceSettingRepository interfaceSettingRepository)
+        ITriggerScriptService _triggerScriptService;
+        public FileController(ITriggerScriptService triggerScriptService, IFileApp fileApp, ITriggerScriptRepository triggerScriptRepository, IInterfaceSettingRepository interfaceSettingRepository)
             : base(
                  triggerScriptRepository,
                  interfaceSettingRepository
                  )
         {
+            _triggerScriptService = triggerScriptService;
             _fileApp = fileApp;
+        }
+
+        /// <summary>
+        /// 尝试执行服务对应的动态脚本，如果没有，则采用默认值
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="interfaeServiceType"></param>
+        /// <param name="parameters"></param>
+        /// <param name="ifNoScriptReturnDefaultValue">默认值</param>
+        /// <returns></returns>
+        private TResult TryExecuteTriggerByServiceType<TResult>(InterfaceServiceTypeEnum interfaeServiceType, object[] parameters, TResult ifNoScriptReturnDefaultValue)
+        {
+            //拿到当前服务类型对应的脚本
+            var triggerScript = _queryContext.TriggerScripts?.FirstOrDefault(t => t.InterfaceServiceType == (int)interfaeServiceType);
+
+            if (triggerScript == null)
+                return ifNoScriptReturnDefaultValue;
+
+            //执行脚本
+            var executeResult = _triggerScriptService.ExecuteTriggerScript<TResult>(triggerScript, parameters);
+
+            if (!executeResult.IsSuccess)
+                throw new InvalidOperationException(executeResult.Message);
+
+            return executeResult.Data;
         }
 
         [HttpPost]
@@ -72,9 +100,15 @@ namespace Chameleon.DataApi.Controllers
                         IsSystemFile = 0//业务线上传的文件未非系统文件
                     };
 
+                    //before
+                    fileUploadPayload = TryExecuteTriggerByServiceType(InterfaceServiceTypeEnum.Application_UploadFile_Before, new object[] { _queryContext.TriggerContext, fileUploadPayload }, fileUploadPayload);
+
                     fileUploadPayload.UploadFileStream = item.OpenReadStream();
 
                     successList.Add(_fileApp.Upload(fileUploadPayload));
+
+                    //after
+                    TryExecuteTriggerByServiceType(InterfaceServiceTypeEnum.Application_UploadFile_After, new object[] { _queryContext.TriggerContext, fileUploadPayload }, fileUploadPayload);
                 }
 
                 return Result<List<string>>.Success($"Success 共成功上传[{successList.Count}]个文件", successList).ToJsonResult();
@@ -106,7 +140,13 @@ namespace Chameleon.DataApi.Controllers
                 if (string.IsNullOrEmpty(queryArgs._fileId))
                     return Result.Error("Parameter invalid: fileId is null").ToJsonResult();
 
+                //before
+                TryExecuteTriggerByServiceType<object>(InterfaceServiceTypeEnum.Application_DownloadFile_Before, new object[] { _queryContext.TriggerContext }, null);
+
                 var downloadPayload = _fileApp.Download(CurrentUserId, CurrentUserRole, CurrentOrganization, queryArgs._fileId);
+
+                //after
+                downloadPayload = TryExecuteTriggerByServiceType(InterfaceServiceTypeEnum.Application_DownloadFile_After, new object[] { _queryContext.TriggerContext, downloadPayload }, downloadPayload);
 
                 Response.ContentType = downloadPayload.ContentType;
 
