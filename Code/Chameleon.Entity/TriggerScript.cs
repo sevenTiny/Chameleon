@@ -55,10 +55,10 @@ namespace Chameleon.Entity
         public ScriptTypeEnum GetScriptType() => (ScriptTypeEnum)this.ScriptType;
 
         /// <summary>
-        /// 获取对象接口服务类型枚举
+        /// 获取接口服务类型枚举
         /// </summary>
         /// <returns></returns>
-        public InterfaceServiceTypeEnum GetMetaObjectInterfaceServiceType() => (InterfaceServiceTypeEnum)this.InterfaceServiceType;
+        public InterfaceServiceTypeEnum GetInterfaceServiceType() => (InterfaceServiceTypeEnum)this.InterfaceServiceType;
 
         /// <summary>
         /// 获取语言枚举
@@ -74,21 +74,14 @@ namespace Chameleon.Entity
     {
         [Description("UnKnown")]
         UnKnown = 0,
-        /// <summary>
-        /// 对象接口触发器
-        /// </summary>
         [Description("对象接口触发器")]
         MetaObjectInterfaceTrigger = 1,
-        /// <summary>
-        /// 动态脚本接口触发器
-        /// </summary>
         [Description("动态脚本接口触发器")]
         DynamicScriptDataSourceTrigger = 2,
-        /// <summary>
-        /// Json数据源
-        /// </summary>
         [Description("JSON 数据源")]
-        JsonDataSource = 3
+        JsonDataSource = 3,
+        [Description("文件管理")]
+        FileManagement = 4,
     }
 
     /// <summary>
@@ -138,6 +131,9 @@ namespace Chameleon.Entity
         Application_DownloadFile_Before = 17,
         [Description("下载文件-后")]
         Application_DownloadFile_After = 18,
+
+        [Description("脚本数据源")]
+        Application_DataSource = 19
     }
 
     public static class InterfaceServiceTypeEnumHelper

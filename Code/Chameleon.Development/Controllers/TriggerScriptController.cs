@@ -48,8 +48,8 @@ namespace Chameleon.Development.Controllers
                 .Continue(_ =>
                 {
                     entity.Id = Guid.NewGuid();
-                    entity.Name = entity.GetMetaObjectInterfaceServiceType().GetDescription();
-                    entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.GetMetaObjectInterfaceServiceType().ToString());
+                    entity.Name = entity.GetInterfaceServiceType().GetDescription();
+                    entity.Code = string.Concat(CurrentMetaObjectCode, ".", entity.GetInterfaceServiceType().ToString());
                     entity.CreateBy = CurrentUserId;
                     entity.ModifyBy = CurrentUserId;
                     entity.CloudApplicationId = CurrentApplicationId;

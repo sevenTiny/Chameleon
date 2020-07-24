@@ -33,6 +33,14 @@ namespace Chameleon.Repository
         /// <param name="metaObjectInterfaceServiceTypeEnum"></param>
         /// <returns></returns>
         bool CheckMetaObjectInterfaceServiceTypeExistIfMetaObjectTrigger(Guid metaObjectId, InterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum);
+        /// <summary>
+        /// 判断当前应用下是否已经有一个同类型的脚本
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <param name="scriptTypeEnum"></param>
+        /// <param name="interfaceServiceTypeEnum"></param>
+        /// <returns></returns>
+        bool CheckInterfaceServiceTypeExistInCloudApplicationTrigger(Guid cloudApplicationId, ScriptTypeEnum scriptTypeEnum, InterfaceServiceTypeEnum interfaceServiceTypeEnum);
     }
 
     public class TriggerScriptRepository : CommonRepositoryBase<TriggerScript>, ITriggerScriptRepository
@@ -56,6 +64,13 @@ namespace Chameleon.Repository
             var scriptType = (int)ScriptTypeEnum.MetaObjectInterfaceTrigger;
             var metaObjectTriggerType = (int)metaObjectInterfaceServiceTypeEnum;
             return _dbContext.Queryable<TriggerScript>().Where(t => t.MetaObjectId.Equals(metaObjectId) && t.ScriptType.Equals(scriptType) && t.IsDeleted == 0 && t.InterfaceServiceType == metaObjectTriggerType).Any();
+        }
+
+        public bool CheckInterfaceServiceTypeExistInCloudApplicationTrigger(Guid cloudApplicationId, ScriptTypeEnum scriptTypeEnum, InterfaceServiceTypeEnum interfaceServiceTypeEnum)
+        {
+            var scriptType = (int)scriptTypeEnum;
+            var interfaceServiceType = (int)interfaceServiceTypeEnum;
+            return _dbContext.Queryable<TriggerScript>().Where(t => t.CloudApplicationId.Equals(cloudApplicationId) && t.ScriptType.Equals(scriptType) && t.IsDeleted == 0 && t.InterfaceServiceType == interfaceServiceType).Any();
         }
 
         public List<TriggerScript> GetListByCloudApplicationId(Guid cloudApplicationId)

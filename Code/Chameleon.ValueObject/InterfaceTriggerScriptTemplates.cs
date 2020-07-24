@@ -374,6 +374,84 @@ public class DynamicScriptDataSource
 }}
 ";
     }
+
+    public class FileManagementScript_UploadFile_Before : DefaultScriptBase
+    {
+        public override string ClassFullName => "FileManagementScript";
+
+        public override string FunctionName => "UploadFile_Before";
+
+        public override string Script =>
+$@"{CommonUsing}
+
+public class FileManagementScript
+{{
+    {CommonClassCode}
+    public FileUploadPayload UploadFile_Before(Dictionary<string, string> triggerContext, FileUploadPayload fileUploadPayload)
+    {{
+        return fileUploadPayload;
+    }}
+}}
+";
+    }
+
+    public class FileManagementScript_UploadFile_After : DefaultScriptBase
+    {
+        public override string ClassFullName => "FileManagementScript";
+
+        public override string FunctionName => "UploadFile_After";
+
+        public override string Script =>
+$@"{CommonUsing}
+
+public class FileManagementScript
+{{
+    {CommonClassCode}
+    public void UploadFile_After(Dictionary<string, string> triggerContext, FileUploadPayload fileUploadPayload)
+    {{
+        
+    }}
+}}
+";
+    }
+    public class FileManagementScript_DownloadFile_Before : DefaultScriptBase
+    {
+        public override string ClassFullName => "FileManagementScript";
+
+        public override string FunctionName => "DownloadFile_Before";
+
+        public override string Script =>
+$@"{CommonUsing}
+
+public class FileManagementScript
+{{
+    {CommonClassCode}
+    public void DownloadFile_Before(Dictionary<string, string> triggerContext)
+    {{
+        
+    }}
+}}
+";
+    }
+    public class FileManagementScript_DownloadFile_After : DefaultScriptBase
+    {
+        public override string ClassFullName => "FileManagementScript";
+
+        public override string FunctionName => "DownloadFile_After";
+
+        public override string Script =>
+$@"{CommonUsing}
+
+public class FileManagementScript
+{{
+    {CommonClassCode}
+    public FileDownloadPayload DownloadFile_After(Dictionary<string, string> triggerContext, FileDownloadPayload fileDownloadPayload)
+    {{
+        return fileDownloadPayload;
+    }}
+}}
+";
+    }
     #endregion
 
 

@@ -21,11 +21,6 @@ namespace Chameleon.Domain
         /// <returns></returns>
         DefaultScriptBase GetDefaultMetaObjectTriggerScript(InterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum);
         /// <summary>
-        /// 获取默认动态接口触发器脚本
-        /// </summary>
-        /// <returns></returns>
-        DefaultScriptBase GetDeefaultDynamicScriptDataSourceTrigger();
-        /// <summary>
         /// 执行脚本
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
@@ -45,6 +40,12 @@ namespace Chameleon.Domain
         /// <param name="entity"></param>
         /// <returns></returns>
         Result MetaObjectTriggerAdd(TriggerScript entity);
+        /// <summary>
+        /// 添加应用触发器
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Result CloudApplicationTriggerAdd(TriggerScript entity);
     }
 
     public class TriggerScriptService : CommonServiceBase<TriggerScript>, ITriggerScriptService
@@ -60,8 +61,17 @@ namespace Chameleon.Domain
         public Result MetaObjectTriggerAdd(TriggerScript entity)
         {
             //校验是否已经存在相同服务的触发器脚本
-            if (_triggerScriptRepository.CheckMetaObjectInterfaceServiceTypeExistIfMetaObjectTrigger(entity.MetaObjectId, entity.GetMetaObjectInterfaceServiceType()))
-                return Result.Error($"该对象下已经存在一个[{entity.GetMetaObjectInterfaceServiceType().GetDescription()}]类型的脚本");
+            if (_triggerScriptRepository.CheckMetaObjectInterfaceServiceTypeExistIfMetaObjectTrigger(entity.MetaObjectId, entity.GetInterfaceServiceType()))
+                return Result.Error($"该对象下已经存在一个[{entity.GetInterfaceServiceType().GetDescription()}]类型的脚本");
+
+            return base.AddCheckCode(entity);
+        }
+
+        public Result CloudApplicationTriggerAdd(TriggerScript entity)
+        {
+            //校验是否已经存在相同服务的触发器脚本
+            if (_triggerScriptRepository.CheckInterfaceServiceTypeExistInCloudApplicationTrigger(entity.CloudApplicationId, entity.GetScriptType(), entity.GetInterfaceServiceType()))
+                return Result.Error($"当前应用下已经存在一个[{entity.GetInterfaceServiceType().GetDescription()}]类型的脚本");
 
             return base.AddCheckCode(entity);
         }
@@ -100,15 +110,20 @@ namespace Chameleon.Domain
                     return new MetaObjectInterface_QueryList_Before();
                 case InterfaceServiceTypeEnum.MetaObject_QueryList_After:
                     return new MetaObjectInterface_QueryList_After();
+                case InterfaceServiceTypeEnum.Application_UploadFile_Before:
+                    return new FileManagementScript_UploadFile_Before();
+                case InterfaceServiceTypeEnum.Application_UploadFile_After:
+                    return new FileManagementScript_UploadFile_After();
+                case InterfaceServiceTypeEnum.Application_DownloadFile_Before:
+                    return new FileManagementScript_DownloadFile_Before();
+                case InterfaceServiceTypeEnum.Application_DownloadFile_After:
+                    return new FileManagementScript_DownloadFile_After();
+                case InterfaceServiceTypeEnum.Application_DataSource:
+                    return new DynamicScriptDataSourceScript();
                 default:
                     break;
             }
             return null;
-        }
-
-        public DefaultScriptBase GetDeefaultDynamicScriptDataSourceTrigger()
-        {
-            return new DynamicScriptDataSourceScript();
         }
 
         public Result<TResult> ExecuteTriggerScript<TResult>(TriggerScript triggerScript, object[] parameters)
