@@ -56,8 +56,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\DataSource\" />
-  </ItemGroup>
-
 </Project>
