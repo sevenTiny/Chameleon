@@ -126,7 +126,7 @@ namespace Chameleon.DataApi.Controllers
                 InitQueryContext(queryArgs);
 
                 if (string.IsNullOrEmpty(queryArgs._fileId))
-                    return Result.Error("Parameter invalid: fileId is null").ToJsonResult();
+                    return Result.Error("Parameter invalid: _fileId is null").ToJsonResult();
 
                 if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.FileDownload)
                     return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
