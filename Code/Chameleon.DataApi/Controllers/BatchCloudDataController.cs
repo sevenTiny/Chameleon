@@ -64,7 +64,7 @@ namespace Chameleon.DataApi.Controllers
                 InitQueryContext(queryArgs);
 
                 //before
-                var arg = TryExecuteTriggerByServiceType(MetaObjectInterfaceServiceTypeEnum.BatchAdd_Before, new object[] { _queryContext.TriggerContext, documents }, documents);
+                var arg = TryExecuteTriggerByServiceType(InterfaceServiceTypeEnum.MetaObject_BatchAdd_Before, new object[] { _queryContext.TriggerContext, documents }, documents);
 
                 //系统字段赋值
                 if (arg != null && arg.Any())
@@ -80,7 +80,7 @@ namespace Chameleon.DataApi.Controllers
                 //execute
                 var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, arg);
                 //after
-                TryExecuteTriggerByServiceType<object>(MetaObjectInterfaceServiceTypeEnum.BatchAdd_After, new object[] { _queryContext.TriggerContext }, null);
+                TryExecuteTriggerByServiceType<object>(InterfaceServiceTypeEnum.MetaObject_BatchAdd_After, new object[] { _queryContext.TriggerContext }, null);
 
                 return result.ToJsonResult();
             });

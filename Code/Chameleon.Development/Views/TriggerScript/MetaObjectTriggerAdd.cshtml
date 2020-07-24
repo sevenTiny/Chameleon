@@ -17,31 +17,26 @@
 <article class="page-container">
     <form class="form form-horizontal validate" id="form-article-add" method="post" action="/TriggerScript/MetaObjectTriggerAddLogic">
         @*<div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@entity.Name" placeholder="" name="name" required minLength="2" maxlength="50" style="background-color:#e8e8e8;" readonly="readonly">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="@entity.Name" placeholder="" name="name" required minLength="2" maxlength="50" style="background-color:#e8e8e8;" readonly="readonly">
+                </div>
             </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编码：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="@entity.Code" placeholder="" name="code" required minLength="2" maxlength="50" style="background-color:#e8e8e8;" readonly="readonly">
-            </div>
-        </div>*@
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编码：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="@entity.Code" placeholder="" name="code" required minLength="2" maxlength="50" style="background-color:#e8e8e8;" readonly="readonly">
+                </div>
+            </div>*@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>服务方法：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
-                    <select name="MetaObjectInterfaceServiceType" class="input select" onchange="MetaObjectInterfaceServiceTypeSwitch(this)" id="MetaObjectInterfaceServiceType" required>
+                    <select name="InterfaceServiceType" class="input select" onchange="MetaObjectInterfaceServiceTypeSwitch(this)" id="InterfaceServiceType" required>
                         <option value="">--请选择--</option>
-                        @foreach (var item in Enum.GetValues(typeof(MetaObjectInterfaceServiceTypeEnum)))
+                        @foreach (var item in InterfaceServiceTypeEnumHelper.GetMetaObjectInterfaceServiceTypeEnums())
                         {
-                            if ((MetaObjectInterfaceServiceTypeEnum)item == MetaObjectInterfaceServiceTypeEnum.UnKnown)
-                                continue;
-
-                            var label = ((MetaObjectInterfaceServiceTypeEnum)item).GetDescription();
-
-                            <option value="@Convert.ToInt32(item)">@label</option>
+                            <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
                         }
                     </select>
                 </span>
@@ -53,14 +48,9 @@
                 <span class="select-box">
                     <select name="Language" class="input select" id="Language" required>
                         @*<option value="">--请选择--</option>*@
-                        @foreach (var item in Enum.GetValues(typeof(LanguageEnum)))
+                        @foreach (var item in LanguageEnumHelper.GetLanguageEnums())
                         {
-                            if ((LanguageEnum)item == LanguageEnum.UnKnown)
-                                continue;
-
-                            var label = ((LanguageEnum)item).GetDescription();
-
-                            <option value="@Convert.ToInt32(item)">@label</option>
+                            <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
                         }
                     </select>
                 </span>
@@ -141,12 +131,12 @@
         spellcheck: true,//拼写检查
     });
 
-    $("#MetaObjectInterfaceServiceType").val(@entity.MetaObjectInterfaceServiceType);
+    $("#InterfaceServiceType").val(@entity.InterfaceServiceType);
     $("#Language").val(@entity.Language);
 
     //切换服务类型
     function MetaObjectInterfaceServiceTypeSwitch() {
-        var serviceType = $("#MetaObjectInterfaceServiceType").val()
+        var serviceType = $("#InterfaceServiceType").val()
 
         if (serviceType != null && serviceType != '') {
             $.ajax({

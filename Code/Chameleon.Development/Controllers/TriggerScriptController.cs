@@ -39,7 +39,7 @@ namespace Chameleon.Development.Controllers
         {
             var result = Result.Success()
                 .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
-                .ContinueEnsureArgumentNotNullOrEmpty(entity.MetaObjectInterfaceServiceType, nameof(entity.MetaObjectInterfaceServiceType))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.InterfaceServiceType, nameof(entity.InterfaceServiceType))
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.ClassFullName, nameof(entity.ClassFullName))
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.FunctionName, nameof(entity.FunctionName))
                 .ContinueEnsureArgumentNotNullOrEmpty(entity.Language, nameof(entity.Language))
@@ -94,7 +94,7 @@ namespace Chameleon.Development.Controllers
             return Redirect($"/TriggerScript/MetaObjectTriggerList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
 
-        public IActionResult GetDefaultMetaObjectTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
+        public IActionResult GetDefaultMetaObjectTriggerScript(InterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
         {
             return Result<DefaultScriptBase>.Success(data: _triggerScriptService.GetDefaultMetaObjectTriggerScript(metaObjectInterfaceServiceTypeEnum)).ToJsonResult();
         }

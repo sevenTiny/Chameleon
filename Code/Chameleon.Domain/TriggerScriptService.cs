@@ -19,7 +19,7 @@ namespace Chameleon.Domain
         /// </summary>
         /// <param name="metaObjectInterfaceServiceTypeEnum"></param>
         /// <returns></returns>
-        DefaultScriptBase GetDefaultMetaObjectTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum);
+        DefaultScriptBase GetDefaultMetaObjectTriggerScript(InterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum);
         /// <summary>
         /// 获取默认动态接口触发器脚本
         /// </summary>
@@ -66,39 +66,39 @@ namespace Chameleon.Domain
             return base.AddCheckCode(entity);
         }
 
-        public DefaultScriptBase GetDefaultMetaObjectTriggerScript(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
+        public DefaultScriptBase GetDefaultMetaObjectTriggerScript(InterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
         {
             switch (metaObjectInterfaceServiceTypeEnum)
             {
-                case MetaObjectInterfaceServiceTypeEnum.UnKnown:
+                case InterfaceServiceTypeEnum.UnKnown:
                     return null;
-                case MetaObjectInterfaceServiceTypeEnum.Add_Before:
+                case InterfaceServiceTypeEnum.MetaObject_Add_Before:
                     return new MetaObjectInterface_Add_Before();
-                case MetaObjectInterfaceServiceTypeEnum.Add_After:
+                case InterfaceServiceTypeEnum.MetaObject_Add_After:
                     return new MetaObjectInterface_Add_After();
-                case MetaObjectInterfaceServiceTypeEnum.BatchAdd_Before:
+                case InterfaceServiceTypeEnum.MetaObject_BatchAdd_Before:
                     return new MetaObjectInterface_BatchAdd_Before();
-                case MetaObjectInterfaceServiceTypeEnum.BatchAdd_After:
+                case InterfaceServiceTypeEnum.MetaObject_BatchAdd_After:
                     return new MetaObjectInterface_BatchAdd_After();
-                case MetaObjectInterfaceServiceTypeEnum.Update_Before:
+                case InterfaceServiceTypeEnum.MetaObject_Update_Before:
                     return new MetaObjectInterface_Update_Before();
-                case MetaObjectInterfaceServiceTypeEnum.Update_After:
+                case InterfaceServiceTypeEnum.MetaObject_Update_After:
                     return new MetaObjectInterface_Update_After();
-                case MetaObjectInterfaceServiceTypeEnum.Delete_Before:
+                case InterfaceServiceTypeEnum.MetaObject_Delete_Before:
                     return new MetaObjectInterface_Delete_Before();
-                case MetaObjectInterfaceServiceTypeEnum.Delete_After:
+                case InterfaceServiceTypeEnum.MetaObject_Delete_After:
                     return new MetaObjectInterface_Delete_After();
-                case MetaObjectInterfaceServiceTypeEnum.QueryCount_Before:
+                case InterfaceServiceTypeEnum.MetaObject_QueryCount_Before:
                     return new MetaObjectInterface_QueryCount_Before();
-                case MetaObjectInterfaceServiceTypeEnum.QueryCount_After:
+                case InterfaceServiceTypeEnum.MetaObject_QueryCount_After:
                     return new MetaObjectInterface_QueryCount_After();
-                case MetaObjectInterfaceServiceTypeEnum.QuerySingle_Before:
+                case InterfaceServiceTypeEnum.MetaObject_QuerySingle_Before:
                     return new MetaObjectInterface_QuerySingle_Before();
-                case MetaObjectInterfaceServiceTypeEnum.QuerySingle_After:
+                case InterfaceServiceTypeEnum.MetaObject_QuerySingle_After:
                     return new MetaObjectInterface_QuerySingle_After();
-                case MetaObjectInterfaceServiceTypeEnum.QueryList_Before:
+                case InterfaceServiceTypeEnum.MetaObject_QueryList_Before:
                     return new MetaObjectInterface_QueryList_Before();
-                case MetaObjectInterfaceServiceTypeEnum.QueryList_After:
+                case InterfaceServiceTypeEnum.MetaObject_QueryList_After:
                     return new MetaObjectInterface_QueryList_After();
                 default:
                     break;

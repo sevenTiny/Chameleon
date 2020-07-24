@@ -32,7 +32,7 @@ namespace Chameleon.Repository
         /// <param name="metaObjectId"></param>
         /// <param name="metaObjectInterfaceServiceTypeEnum"></param>
         /// <returns></returns>
-        bool CheckMetaObjectInterfaceServiceTypeExistIfMetaObjectTrigger(Guid metaObjectId, MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum);
+        bool CheckMetaObjectInterfaceServiceTypeExistIfMetaObjectTrigger(Guid metaObjectId, InterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum);
     }
 
     public class TriggerScriptRepository : CommonRepositoryBase<TriggerScript>, ITriggerScriptRepository
@@ -51,11 +51,11 @@ namespace Chameleon.Repository
             return _dbContext.Queryable<TriggerScript>().Where(t => t.CloudApplicationId.Equals(applicationId) && t.ScriptType.Equals(scriptType) && t.IsDeleted == 0).ToList() ?? new List<TriggerScript>(0);
         }
 
-        public bool CheckMetaObjectInterfaceServiceTypeExistIfMetaObjectTrigger(Guid metaObjectId, MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
+        public bool CheckMetaObjectInterfaceServiceTypeExistIfMetaObjectTrigger(Guid metaObjectId, InterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
         {
             var scriptType = (int)ScriptTypeEnum.MetaObjectInterfaceTrigger;
             var metaObjectTriggerType = (int)metaObjectInterfaceServiceTypeEnum;
-            return _dbContext.Queryable<TriggerScript>().Where(t => t.MetaObjectId.Equals(metaObjectId) && t.ScriptType.Equals(scriptType) && t.IsDeleted == 0 && t.MetaObjectInterfaceServiceType == metaObjectTriggerType).Any();
+            return _dbContext.Queryable<TriggerScript>().Where(t => t.MetaObjectId.Equals(metaObjectId) && t.ScriptType.Equals(scriptType) && t.IsDeleted == 0 && t.InterfaceServiceType == metaObjectTriggerType).Any();
         }
 
         public List<TriggerScript> GetListByCloudApplicationId(Guid cloudApplicationId)

@@ -43,10 +43,10 @@ namespace Chameleon.DataApi.Controllers
         /// <param name="parameters"></param>
         /// <param name="ifNoScriptReturnDefaultValue">默认值</param>
         /// <returns></returns>
-        protected TResult TryExecuteTriggerByServiceType<TResult>(MetaObjectInterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum, object[] parameters, TResult ifNoScriptReturnDefaultValue)
+        protected TResult TryExecuteTriggerByServiceType<TResult>(InterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum, object[] parameters, TResult ifNoScriptReturnDefaultValue)
         {
             //拿到当前服务类型对应的脚本
-            var triggerScript = _queryContext.TriggerScripts?.FirstOrDefault(t => t.MetaObjectInterfaceServiceType == (int)metaObjectInterfaceServiceTypeEnum);
+            var triggerScript = _queryContext.TriggerScripts?.FirstOrDefault(t => t.InterfaceServiceType == (int)metaObjectInterfaceServiceTypeEnum);
 
             if (triggerScript == null)
                 return ifNoScriptReturnDefaultValue;
