@@ -22,19 +22,18 @@ namespace Chameleon.Development.Controllers
             _triggerScriptRepository = metaObjectRepository;
         }
 
+        #region MetaObjectTrigger
         public IActionResult MetaObjectTriggerList(Guid metaObjectId, string metaObjectCode)
         {
             SetCookiesMetaObjectInfo(metaObjectId, metaObjectCode);
 
             return View(_triggerScriptRepository.GetMetaObjectTriggerListByMetaObjectId(metaObjectId));
         }
-
         public IActionResult MetaObjectTriggerAdd()
         {
             TriggerScript metaObject = new TriggerScript();
             return View(ResponseModel.Success(data: metaObject));
         }
-
         public IActionResult MetaObjectTriggerAddLogic(TriggerScript entity)
         {
             var result = Result.Success()
@@ -64,13 +63,11 @@ namespace Chameleon.Development.Controllers
 
             return Redirect($"/TriggerScript/MetaObjectTriggerList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
-
         public IActionResult MetaObjectTriggerUpdate(Guid id)
         {
             var metaObject = _triggerScriptService.GetById(id);
             return View(ResponseModel.Success(data: metaObject));
         }
-
         public IActionResult MetaObjectTriggerUpdateLogic(TriggerScript entity)
         {
             var result = Result.Success()
@@ -93,11 +90,14 @@ namespace Chameleon.Development.Controllers
 
             return Redirect($"/TriggerScript/MetaObjectTriggerList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
-
         public IActionResult GetDefaultMetaObjectTriggerScript(InterfaceServiceTypeEnum metaObjectInterfaceServiceTypeEnum)
         {
             return Result<DefaultScriptBase>.Success(data: _triggerScriptService.GetDefaultMetaObjectTriggerScript(metaObjectInterfaceServiceTypeEnum)).ToJsonResult();
         }
+        #endregion
+
+        #region CloudApplicationTrigger
+        #endregion
 
         public IActionResult LogicDelete(Guid id)
         {

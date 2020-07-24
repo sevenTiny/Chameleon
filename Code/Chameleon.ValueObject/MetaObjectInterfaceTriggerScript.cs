@@ -32,6 +32,8 @@ using Microsoft.Extensions.Logging;
     ILogger logger = new SevenTiny.Bantina.Logging.LogManager();
 ";
     }
+
+    #region MetaObjectInterface
     public class MetaObjectInterface_Add_Before : DefaultScriptBase
     {
         public override string ClassFullName => "MetaObjectInterfaceTrigger";
@@ -350,6 +352,9 @@ public class MetaObjectInterfaceTrigger
 }}
 ";
     }
+    #endregion
+
+    #region CloudApplicationInterface
     public class DynamicScriptDataSourceScript : DefaultScriptBase
     {
         public override string ClassFullName => "DynamicScriptDataSource";
@@ -362,11 +367,14 @@ $@"{CommonUsing}
 public class DynamicScriptDataSource
 {{
     {CommonClassCode}
-    public object Get(Dictionary<string, string> argumentsUpperKeyDic)
+    public object Get(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic)
     {{
         return null;
     }}
 }}
 ";
     }
+    #endregion
+
+
 }

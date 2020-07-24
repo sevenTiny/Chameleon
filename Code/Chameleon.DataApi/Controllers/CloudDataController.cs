@@ -90,7 +90,7 @@ namespace Chameleon.DataApi.Controllers
                         return listResult.ToJsonResult();
                     //查询动态数据源
                     case InterfaceTypeEnum.DynamicScriptDataSource:
-                        return Result<object>.Success(data: _dataAccessApp.GetDynamicScriptDataSourceResult(_queryContext.InterfaceSetting, _queryContext.ConditionArgumentsUpperKeyDic)).ToJsonResult();
+                        return Result<object>.Success(data: _dataAccessApp.GetDynamicScriptDataSourceResult(_queryContext.InterfaceSetting, new object[] { _queryContext.TriggerContext, _queryContext.ConditionArgumentsUpperKeyDic })).ToJsonResult();
                     //查询Json数据源
                     case InterfaceTypeEnum.JsonDataSource:
                         return new JsonResult(_dataAccessApp.GetJsonDataSourceResult(_queryContext.InterfaceSetting));
