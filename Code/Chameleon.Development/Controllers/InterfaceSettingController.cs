@@ -451,5 +451,12 @@ namespace Chameleon.Development.Controllers
         {
             return _interfaceSettingService.LogicDelete(id).ToJsonResult();
         }
+
+        public IActionResult LogicDeleteDataSource(Guid id)
+        {
+            _triggerScriptRepository.LogicDelete(id);
+            _interfaceSettingService.LogicDelete(id);
+            return Result.Success("删除成功").ToJsonResult();
+        }
     }
 }

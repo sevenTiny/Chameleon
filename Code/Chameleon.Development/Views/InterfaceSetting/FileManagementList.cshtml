@@ -36,6 +36,7 @@
                 {
                     var interfaceTypeLabel = ((InterfaceTypeEnum)item.InterfaceType).GetDescription();
                     <tr class="text-c">
+                        <td title="@item.Name"><a style="color:dodgerblue" href="javascript:layer_open_define('接口详情','/InterfaceSetting/InterfaceDetail?interfaceCode=@item.Code')">@item.Name</a></td>
                         <td>@item.Name</td>
                         <td>@item.Code</td>
                         <td>@interfaceTypeLabel</td>

@@ -73,6 +73,9 @@ namespace Chameleon.DataApi.Controllers
                 if (files == null || !files.Any())
                     return Result.Info("file not found").ToJsonResult();
 
+                if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.FileUpload)
+                    return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
+
                 var successList = new List<string>(files.Count);
 
                 foreach (var item in files)
@@ -115,23 +118,8 @@ namespace Chameleon.DataApi.Controllers
             });
         }
 
-        [HttpDelete]
-        public IActionResult Delete(string _fileId)
-        {
-            return SafeExecute(() =>
-            {
-                if (string.IsNullOrEmpty(_fileId))
-                    return Result.Error("Parameter invalid: fileId is null").ToJsonResult();
-
-                _fileApp.Delete(CurrentUserId, CurrentUserRole, CurrentOrganization, _fileId);
-
-                return JsonResultSuccess();
-            });
-        }
-
-        [Route("Download")]
         [HttpGet]
-        public IActionResult Download([FromQuery]QueryArgs queryArgs)
+        public IActionResult Get([FromQuery]QueryArgs queryArgs)
         {
             return SafeExecute(() =>
             {
@@ -139,6 +127,9 @@ namespace Chameleon.DataApi.Controllers
 
                 if (string.IsNullOrEmpty(queryArgs._fileId))
                     return Result.Error("Parameter invalid: fileId is null").ToJsonResult();
+
+                if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.FileDownload)
+                    return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
 
                 //before
                 TryExecuteTriggerByServiceType<object>(InterfaceServiceTypeEnum.Application_DownloadFile_Before, new object[] { _queryContext.TriggerContext }, null);
@@ -151,6 +142,20 @@ namespace Chameleon.DataApi.Controllers
                 Response.ContentType = downloadPayload.ContentType;
 
                 return File(downloadPayload.ReadStream, downloadPayload.ContentType, downloadPayload.FileName);
+            });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(string _fileId)
+        {
+            return SafeExecute(() =>
+            {
+                if (string.IsNullOrEmpty(_fileId))
+                    return Result.Error("Parameter invalid: fileId is null").ToJsonResult();
+
+                _fileApp.Delete(CurrentUserId, CurrentUserRole, CurrentOrganization, _fileId);
+
+                return JsonResultSuccess();
             });
         }
     }

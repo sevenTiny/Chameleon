@@ -36,61 +36,73 @@
                 <hr class="mt-10 mb-10" />
                 <span>接口类型：@interfaceTypeDescription</span><br />
                 <hr class="mt-10 mb-10" />
-                @if (InterfaceTypeEnum.Add == interfaceType)
+                @switch (interfaceType)
                 {
-                    <span>请求方式：POST</span>
-                    <hr class="mt-10 mb-10" />
-                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code">@dataApiUrl/api/CloudData?_interface=@entity.Code</a></span><br />
-                    <hr class="mt-10 mb-10" />
-                    <span>字段值：request body json格式传递</span>
-                }
-                else if (InterfaceTypeEnum.BatchAdd == interfaceType)
-                {
-                    <span>请求方式：POST</span>
-                    <hr class="mt-10 mb-10" />
-                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/BatchCloudData?_interface=@entity.Code">@dataApiUrl/api/BatchCloudData?_interface=@entity.Code</a></span><br />
-                    <hr class="mt-10 mb-10" />
-                    <span>字段值：request body json格式传递</span>
-                }
-                else if (InterfaceTypeEnum.Update == interfaceType)
-                {
-                    <span>请求方式：PUT</span>
-                    <hr class="mt-10 mb-10" />
-                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
-                    <hr class="mt-10 mb-10" />
-                    <span>字段值：request body json格式传递</span>
-                }
-                else if (InterfaceTypeEnum.Delete == interfaceType)
-                {
-                    <span>请求方式：DELETE</span>
-                    <hr class="mt-10 mb-10" />
-                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
-                }
-                else if (InterfaceTypeEnum.QuerySingle == interfaceType)
-                {
-                    <span>请求方式：GET</span>
-                    <hr class="mt-10 mb-10" />
-                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
-                }
-                else if (InterfaceTypeEnum.QueryList == interfaceType)
-                {
-                    <span>请求方式：GET</span>
-                    <hr class="mt-10 mb-10" />
-                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
-                    <hr class="mt-10 mb-10" />
-                    <span>可选参数：_pageIndex（页码）, _pageSize(页大小，如不传递默认按接口配置的页大小)</span>
-                }
-                else if (InterfaceTypeEnum.QueryCount == interfaceType)
-                {
-                    <span>请求方式：GET</span>
-                    <hr class="mt-10 mb-10" />
-                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
-                }
-                else if (InterfaceTypeEnum.DynamicScriptDataSource == interfaceType || InterfaceTypeEnum.JsonDataSource == interfaceType)
-                {
-                    <span>请求方式：GET</span>
-                    <hr class="mt-10 mb-10" />
-                    <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code">@dataApiUrl/api/CloudData?_interface=@entity.Code</a></span><br />
+                    case InterfaceTypeEnum.UnKnown:
+                        break;
+                    case InterfaceTypeEnum.Add:
+                        <span>请求方式：POST</span>
+                        <hr class="mt-10 mb-10" />
+                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code">@dataApiUrl/api/CloudData?_interface=@entity.Code</a></span><br />
+                        <hr class="mt-10 mb-10" />
+                        <span>字段值：request body json格式传递</span>
+                        break;
+                    case InterfaceTypeEnum.BatchAdd:
+                        <span>请求方式：POST</span>
+                        <hr class="mt-10 mb-10" />
+                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/BatchCloudData?_interface=@entity.Code">@dataApiUrl/api/BatchCloudData?_interface=@entity.Code</a></span><br />
+                        <hr class="mt-10 mb-10" />
+                        <span>字段值：request body json格式传递</span>
+                        break;
+                    case InterfaceTypeEnum.Update:
+                        <span>请求方式：PUT</span>
+                        <hr class="mt-10 mb-10" />
+                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
+                        <hr class="mt-10 mb-10" />
+                        <span>字段值：request body json格式传递</span>
+                        break;
+                    case InterfaceTypeEnum.Delete:
+                        <span>请求方式：DELETE</span>
+                        <hr class="mt-10 mb-10" />
+                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
+                        break;
+                    case InterfaceTypeEnum.QueryCount:
+                        <span>请求方式：GET</span>
+                        <hr class="mt-10 mb-10" />
+                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
+                        break;
+                    case InterfaceTypeEnum.QuerySingle:
+                        <span>请求方式：GET</span>
+                        <hr class="mt-10 mb-10" />
+                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
+                        break;
+                    case InterfaceTypeEnum.QueryList:
+                        <span>请求方式：GET</span>
+                        <hr class="mt-10 mb-10" />
+                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends">@dataApiUrl/api/CloudData?_interface=@entity.Code@argsExtends</a></span><br />
+                        <hr class="mt-10 mb-10" />
+                        <span>可选参数：_pageIndex（页码）, _pageSize(页大小，如不传递默认按接口配置的页大小)</span>
+                        break;
+                    case InterfaceTypeEnum.DynamicScriptDataSource:
+                    case InterfaceTypeEnum.JsonDataSource:
+                        <span>请求方式：GET</span>
+                        <hr class="mt-10 mb-10" />
+                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/CloudData?_interface=@entity.Code">@dataApiUrl/api/CloudData?_interface=@entity.Code</a></span><br />
+                        break;
+                    case InterfaceTypeEnum.FileUpload:
+                        <span>请求方式：POST</span>
+                        <hr class="mt-10 mb-10" />
+                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/File?_interface=@entity.Code">@dataApiUrl/api/File?_interface=@entity.Code</a></span><br />
+                        <hr class="mt-10 mb-10" />
+                        <span>文件：request form file (enctype="multipart/form-data")</span>
+                        break;
+                    case InterfaceTypeEnum.FileDownload:
+                        <span>请求方式：GET</span>
+                        <hr class="mt-10 mb-10" />
+                        <span>接口地址：<a target="_blank" href="@dataApiUrl/api/File?_interface=@entity.Code&_fileId=xxxxid">@dataApiUrl/api/File?_interface=@entity.Code&_fileId=xxxxid</a></span><br />
+                        break;
+                    default:
+                        break;
                 }
                 <hr class="mt-10 mb-10" />
                 <span>接口描述：@entity.Description</span><br />
