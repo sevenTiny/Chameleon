@@ -105,6 +105,7 @@ namespace Chameleon.Domain
             var deployDto = new CloudApplicationDeployDto();
             deployDto.TriggerScript = _triggerScriptRepository.GetDataSourceListByApplicationId(cloudApplicationId, Entity.ScriptTypeEnum.DynamicScriptDataSourceTrigger);
             deployDto.TriggerScript.AddRange(_triggerScriptRepository.GetDataSourceListByApplicationId(cloudApplicationId, Entity.ScriptTypeEnum.JsonDataSource));
+            deployDto.TriggerScript.AddRange(_triggerScriptRepository.GetDataSourceListByApplicationId(cloudApplicationId, Entity.ScriptTypeEnum.FileManagement));
             return deployDto;
         }
 
