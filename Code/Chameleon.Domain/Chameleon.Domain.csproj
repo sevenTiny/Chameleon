@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Chameleon.Common\Chameleon.Common.csproj" />
     <ProjectReference Include="..\Chameleon.Entity\Chameleon.Entity.csproj" />
     <ProjectReference Include="..\Chameleon.Repository\Chameleon.Repository.csproj" />
     <ProjectReference Include="..\Chameleon.ValueObject\Chameleon.ValueObject.csproj" />

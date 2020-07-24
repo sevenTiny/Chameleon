@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Chameleon.Application;
 using Chameleon.Bootstrapper;
+using Chameleon.Common;
 using Chameleon.DataApi.Models;
 using Chameleon.Domain;
 using Chameleon.Infrastructure.Consts;

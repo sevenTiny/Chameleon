@@ -1,4 +1,5 @@
-﻿using Chameleon.Domain;
+﻿using Chameleon.Common;
+using Chameleon.Domain;
 using Chameleon.Entity;
 using Chameleon.Repository;
 using SevenTiny.Bantina;
@@ -87,8 +88,12 @@ namespace Chameleon.Application
                     throw new InvalidOperationException("No Permission");
             }
 
-            var downloadPayload = new FileDownloadPayload(meta);
-
+            var downloadPayload = new FileDownloadPayload();
+            downloadPayload.FileName = meta.FileName;
+            downloadPayload.ContentType = meta.ContentType;
+            downloadPayload.UserId = meta.UserId;
+            downloadPayload.Organization = meta.Organization;
+            downloadPayload.UploadTime = meta.UploadTime;
             //获取读取流
             downloadPayload.ReadStream = _fileService.OpenRead(meta);
 
