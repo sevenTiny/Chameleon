@@ -160,7 +160,7 @@ namespace Chameleon.Entity
         //应用触发器
         [Description("上传文件-前")]
         Application_UploadFile_Before = 15,
-        [Description("上传文件-前")]
+        [Description("上传文件-后")]
         Application_UploadFile_After = 16,
         [Description("下载文件-前")]
         Application_DownloadFile_Before = 17,

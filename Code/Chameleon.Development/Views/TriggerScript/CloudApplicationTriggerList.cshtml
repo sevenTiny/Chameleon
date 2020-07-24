@@ -39,7 +39,7 @@
                         <td>@item.Id</td>
                         <td>@item.Name</td>
                         @{
-                            string shortCode = item.Code.Contains(".") ? item.Code.Split('.')[2] : item.Code;
+                            string shortCode = item.Code.Contains(".") ? item.Code.Split('.')[1] : item.Code;
                             <td title="@item.Code">@shortCode</td>
                         }
                         @{
