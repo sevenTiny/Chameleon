@@ -7,6 +7,7 @@ using System.Web;
 using Chameleon.Application;
 using Chameleon.Bootstrapper;
 using Chameleon.Domain;
+using Chameleon.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
@@ -16,10 +17,14 @@ namespace Chameleon.DataApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FileController : ApiControllerCommonBase
+    public class FileController : InterfaceApiControllerBase
     {
         IFileApp _fileApp;
-        public FileController(IFileApp fileApp)
+        public FileController(IFileApp fileApp, ITriggerScriptRepository triggerScriptRepository, IInterfaceSettingRepository interfaceSettingRepository)
+            : base(
+                 triggerScriptRepository,
+                 interfaceSettingRepository
+                 )
         {
             _fileApp = fileApp;
         }
