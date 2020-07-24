@@ -7,6 +7,7 @@ using System.Web;
 using Chameleon.Application;
 using Chameleon.Bootstrapper;
 using Chameleon.Domain;
+using Chameleon.Infrastructure.Consts;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ namespace Chameleon.DataApi.Controllers
         }
 
         [HttpPost]
-        [RequestSizeLimit(52428800)]//限制上传文件大小不得超过50M=50*1024*1024(B)
+        [RequestSizeLimit(CommonConst.MaxFileUploadSizeLimit)]//限制上传文件大小不得超过100M=100*1024*1024(B)
         public IActionResult Post([FromForm]IFormCollection formData)
         {
             return SafeExecute(() =>
@@ -44,8 +45,8 @@ namespace Chameleon.DataApi.Controllers
 
                 foreach (var item in files)
                 {
-                    if (item.Length > 52428800)
-                        return Result.Error("file can not large than 50MB.").ToJsonResult();
+                    if (item.Length > CommonConst.MaxFileUploadSizeLimit)
+                        return Result.Error("file can not large than 100MB.").ToJsonResult();
 
                     var fileUploadPayload = new FileUploadPayload
                     {

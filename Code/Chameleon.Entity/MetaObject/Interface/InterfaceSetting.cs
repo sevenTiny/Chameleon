@@ -58,7 +58,7 @@ namespace Chameleon.Entity
         [Column]
         public int PageSize { get; set; }
         /// <summary>
-        /// 文件支持的扩展名（带.且英文逗号分隔，例如 .gif,.jpg）
+        /// 文件支持的扩展名（带.且竖线分隔，例如 .gif|.jpg）
         /// </summary>
         [Column]
         public string FileExtensionLimit { get; set; }
@@ -145,6 +145,18 @@ namespace Chameleon.Entity
             return new[] {
                 InterfaceTypeEnum.DynamicScriptDataSource,
                 InterfaceTypeEnum.JsonDataSource,
+                InterfaceTypeEnum.FileUpload,
+                InterfaceTypeEnum.FileDownload,
+            };
+        }
+
+        /// <summary>
+        /// 文件管理接口类型
+        /// </summary>
+        /// <returns></returns>
+        public static InterfaceTypeEnum[] GetFileManagementInterfaceServiceTypes()
+        {
+            return new[] {
                 InterfaceTypeEnum.FileUpload,
                 InterfaceTypeEnum.FileDownload,
             };

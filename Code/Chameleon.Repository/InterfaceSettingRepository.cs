@@ -34,6 +34,12 @@ namespace Chameleon.Repository
         /// <param name="dataSourceId"></param>
         /// <returns></returns>
         Result LogicDeleteByDataSourceId(Guid dataSourceId);
+        /// <summary>
+        /// 获取文件管理接口
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        List<InterfaceSetting> GetFileManagementListByCloudApplicationId(Guid cloudApplicationId);
     }
 
     public class InterfaceSettingRepository : MetaObjectRepositoryBase<InterfaceSetting>, IInterfaceSettingRepository
@@ -86,6 +92,13 @@ namespace Chameleon.Repository
         public List<InterfaceSetting> GetListByCloudApplicationId(Guid cloudApplicationId)
         {
             return _dbContext.Queryable<InterfaceSetting>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == 0).ToList();
+        }
+
+        public List<InterfaceSetting> GetFileManagementListByCloudApplicationId(Guid cloudApplicationId)
+        {
+            var fileDownload = (int)InterfaceTypeEnum.FileDownload;
+            var fileUpload = (int)InterfaceTypeEnum.FileUpload;
+            return _dbContext.Queryable<InterfaceSetting>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == 0 && (t.InterfaceType == fileDownload || t.InterfaceType == fileUpload)).ToList();
         }
     }
 }

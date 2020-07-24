@@ -37,15 +37,11 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>接口类型：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <span class="select-box">
-                    <select name="InterfaceType" class="input select" onchange="interfaceTypeSwitch(this)" id="InterfaceType" required>
-                        <option value="">--请选择--</option>
-                        @foreach (var item in InterfaceTypeEnumHelper.GetMetaObjectInterfaceServiceTypes())
-                        {
-                            <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
-                        }
-                    </select>
-                </span>
+                @{
+                    var interfaceTypeLabel = entity.GetInterfaceType().GetDescription();
+                    <input type="text" class="input-text" style="background-color:#e8e8e8;" value="@entity.InterfaceType" readonly="readonly">
+                    <input type="text" class="input-text" name="InterfaceType" value="@interfaceTypeLabel" id="InterfaceType"  hidden>
+                }
             </div>
         </div>
         <div class="row cl" id="InterfaceConditionId">

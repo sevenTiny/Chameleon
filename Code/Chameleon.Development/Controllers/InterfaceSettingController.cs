@@ -2,6 +2,7 @@
 using Chameleon.Domain;
 using Chameleon.Entity;
 using Chameleon.Infrastructure.Configs;
+using Chameleon.Infrastructure.Consts;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
@@ -41,13 +42,13 @@ namespace Chameleon.Development.Controllers
             _InterfaceSettingService = InterfaceSettingService;
         }
 
+        #region MetaObjectInterface
         public IActionResult MetaObjectInterfaceList(Guid metaObjectId, string metaObjectCode)
         {
             SetCookiesMetaObjectInfo(metaObjectId, metaObjectCode);
 
             return View(_InterfaceSettingService.GetInterfaceSettingsTranslated(metaObjectId));
         }
-
         public IActionResult MetaObjectInterfaceAdd()
         {
             ViewData["InterfaceCondition"] = _interfaceConditionRepository.GetTopInterfaceCondition(CurrentMetaObjectId);
@@ -57,7 +58,6 @@ namespace Chameleon.Development.Controllers
 
             return View(ResponseModel.Success(data: new InterfaceSetting { PageSize = ChameleonSettingConfig.Instance.DefaultInterfacePageSize }));
         }
-
         public IActionResult MetaObjectInterfaceAddLogic(InterfaceSetting entity)
         {
             var result = Result.Success()
@@ -89,7 +89,6 @@ namespace Chameleon.Development.Controllers
 
             return Redirect($"/InterfaceSetting/MetaObjectInterfaceList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
-
         public IActionResult MetaObjectInterfaceUpdate(Guid id)
         {
             ViewData["InterfaceCondition"] = _interfaceConditionRepository.GetTopInterfaceCondition(CurrentMetaObjectId);
@@ -99,13 +98,18 @@ namespace Chameleon.Development.Controllers
 
             return View(ResponseModel.Success(data: _InterfaceSettingService.GetById(id)));
         }
-
         public IActionResult MetaObjectInterfaceUpdateLogic(InterfaceSetting entity)
         {
             var result = Result.Success()
                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
                .ContinueEnsureArgumentNotNullOrEmpty(entity.Name, nameof(entity.Name))
                .ContinueAssert(_ => entity.Id != Guid.Empty, "Id Can Not Be Null")
+               .Continue(_ =>
+               {
+                   if (entity.GetInterfaceType() == InterfaceTypeEnum.QueryList)
+                       return _.ContinueAssert(_t => entity.PageSize > 0, "分页页大小不能<=0");
+                   return _;
+               })
                .Continue(_ =>
                {
                    entity.ModifyBy = CurrentUserId;
@@ -125,6 +129,73 @@ namespace Chameleon.Development.Controllers
 
             return Redirect($"/InterfaceSetting/MetaObjectInterfaceList?metaObjectId={CurrentMetaObjectId}&metaObjectCode={CurrentMetaObjectCode}");
         }
+        #endregion
+
+        #region FileManagement
+        public IActionResult FileManagementList()
+        {
+            return View(_InterfaceSettingRepository.GetFileManagementListByCloudApplicationId(CurrentApplicationId));
+        }
+        public IActionResult FileManagementAdd()
+        {
+            return View(ResponseModel.Success());
+        }
+        public IActionResult FileManagementAddLogic(InterfaceSetting entity)
+        {
+            var result = Result.Success()
+                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.Name, nameof(entity.Name))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.Code, nameof(entity.Code))
+                .ContinueAssert(_ => entity.Code.IsAlnum(2, 50), "编码不合法，2-50位且只能包含字母和数字（字母开头）")
+                .Continue(_ =>
+                {
+                    if (entity.FileSizeLimit > CommonConst.MaxFileUploadSizeLimit)
+                        return Result.Error($"cannot set file upload size limit rather than {CommonConst.MaxFileUploadSizeLimit} byte");
+
+                    entity.CloudApplicationId = CurrentApplicationId;
+                    entity.CloudApplicationCode = CurrentApplicationCode;
+                    entity.MetaObjectCode = "-";
+                    entity.CreateBy = CurrentUserId;
+                    entity.ModifyBy = CurrentUserId;
+                    entity.Code = string.Concat(CurrentApplicationCode, ".FDS.", entity.Code);
+
+                    return _InterfaceSettingService.AddCheckCode(entity);
+                });
+
+            if (!result.IsSuccess)
+                return View("FileManagementAdd", result.ToResponseModel(data: entity));
+
+            return Redirect($"/InterfaceSetting/FileManagementList");
+        }
+        public IActionResult FileManagementUpdate(Guid id)
+        {
+            return View(ResponseModel.Success(data: _InterfaceSettingService.GetById(id)));
+        }
+        public IActionResult FileManagementUpdateLogic(InterfaceSetting entity)
+        {
+            var result = Result.Success()
+               .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
+               .ContinueEnsureArgumentNotNullOrEmpty(entity.Name, nameof(entity.Name))
+               .ContinueAssert(_ => entity.Id != Guid.Empty, "Id Can Not Be Null")
+               .Continue(_ =>
+               {
+                   if (entity.FileSizeLimit > CommonConst.MaxFileUploadSizeLimit)
+                       return Result.Error($"cannot set file upload size limit rather than {CommonConst.MaxFileUploadSizeLimit} byte");
+
+                   entity.ModifyBy = CurrentUserId;
+                   return _InterfaceSettingService.UpdateWithOutCode(entity, item =>
+                   {
+                       item.FileExtensionLimit = entity.FileExtensionLimit;
+                       item.FileSizeLimit = entity.FileSizeLimit;
+                   });
+               });
+
+            if (!result.IsSuccess)
+                return View("FileManagementUpdate", result.ToResponseModel(entity));
+
+            return Redirect($"/InterfaceSetting/FileManagementList");
+        }
+        #endregion
 
         /// <summary>
         /// 接口详情页
