@@ -15,5 +15,10 @@ namespace Chameleon.Infrastructure.Configs
         /// </summary>
         [ConfigProperty]
         public int DefaultInterfacePageSize { get; set; } = 15;
+        /// <summary>
+        /// 允许的CorsOrigins多个英文逗号分隔
+        /// </summary>
+        [ConfigProperty]
+        public string AllowCorsOrigins { get; set; }
     }
 }

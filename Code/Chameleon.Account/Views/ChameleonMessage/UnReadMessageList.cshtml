@@ -1,0 +1,162 @@
+﻿@using SevenTiny.Bantina.Extensions.AspNetCore;
+@using Chameleon.Infrastructure.Configs;
+@{
+    ViewData["Title"] = "未读消息";
+    Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
+    var host = UrlsConfig.Instance.DataApi;
+}
+@{
+    ViewData["Level_1"] = "消息列表";
+    ViewData["Level_2"] = "未读消息";
+}
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
+
+<style>
+    .commentList .item {
+        list-style: none outside none;
+        margin: 1.6rem 0 0
+    }
+
+    .commentList .avatar {
+        border: 1px solid transparent;
+        float: left
+    }
+
+    .comment-main {
+        position: relative;
+        margin-left: 64px;
+        border: 1px solid #dedede;
+        border-radius: 2px
+    }
+
+        .comment-main:before, .comment-main:after {
+            position: absolute;
+            top: 11px;
+            left: -16px;
+            right: 100%;
+            width: 0;
+            height: 0;
+            display: block;
+            content: " ";
+            border-color: transparent;
+            border-style: solid solid outset;
+            pointer-events: none
+        }
+
+        .comment-main:before {
+            border-right-color: #dedede;
+            border-width: 8px
+        }
+
+        .comment-main:after {
+            border-width: 7px;
+            border-right-color: #f8f8f8;
+            margin-top: 1px;
+            margin-left: 2px
+        }
+
+    .comment-header {
+        padding: 10px 15px;
+        background: #f8f8f8;
+        border-bottom: 1px solid #eee
+    }
+
+    .comment-title {
+        margin: 0 0 8px 0;
+        font-size: 1.6rem;
+        line-height: 1.2
+    }
+
+    .comment-meta {
+        font-size: 13px;
+        color: #999;
+        line-height: 1.2
+    }
+
+        .comment-meta a {
+            color: #999
+        }
+
+    .comment-author {
+        font-weight: 700;
+        color: #999
+    }
+
+    .comment-body {
+        padding: 15px;
+        overflow: hidden
+    }
+
+        .comment-body > :last-child {
+            margin-bottom: 0
+        }
+
+    .commentList .comment-flip .avatar {
+        float: right
+    }
+
+    .comment-flip .comment-main {
+        margin-left: 0;
+        margin-right: 64px
+    }
+
+        .comment-flip .comment-main:before {
+            border-left-color: #dedede;
+            border-right-color: transparent
+        }
+
+        .comment-flip .comment-main:before, .comment-flip .comment-main:after {
+            left: 100%;
+            position: absolute;
+            right: -16px
+        }
+
+        .comment-flip .comment-main:after {
+            border-left-color: #f8f8f8;
+            border-right-color: transparent;
+            margin-left: auto;
+            margin-right: 2px
+        }
+</style>
+
+<article class="page-container">
+    <ul class="commentList">
+        <li class="item cl">
+            <a href="#"><i class="avatar size-L radius"><img alt="" src="/static-h-ui-net/h-ui/images/ucnter/avatar-default.jpg"></i></a>
+            <div class="comment-main">
+                <header class="comment-header">
+                    <div class="comment-meta">
+                        <a class="comment-author" href="#">辉哥</a> 评论于
+                        <time title="2014年8月31日 下午3:20" datetime="2014-08-31T03:54:20">2014-8-31 15:20</time>
+                    </div>
+                </header>
+                <div class="comment-body">
+                    <p><a href="#"></a> 你是猴子派来的救兵吗？</p>
+                </div>
+            </div>
+        </li>
+    </ul>
+</article>
+
+@await Html.PartialAsync("~/Views/Shared/_FooterScripts.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_CommonScript.cshtml")
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+    $.ajax({
+            type: 'GET',
+            url: '@host/api/CloudData?_interface=ChameleonMessage.MessageAlert.CurrentUserUnReadMessageList',
+            dataType: 'json',
+            data: {
+
+            },
+            success: function (data) {
+                if (data.success) {
+                    console.log(data.data)
+                }
+            },
+            error: function (data) {
+                console.log(data.msg);
+            },
+        });
+</script>
+<!--/请在上方写此页面业务相关的脚本-->

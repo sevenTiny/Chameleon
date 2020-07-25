@@ -153,12 +153,8 @@ namespace Chameleon.Bootstrapper
             services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
                     policy
-                    .WithOrigins(new[]
-                    {
-                        UrlsConfig.Instance.Account,
-                        UrlsConfig.Instance.DataApi,
-                        UrlsConfig.Instance.Development
-                    })
+                    //允许的域在配置文件读取
+                    .WithOrigins(ChameleonSettingConfig.Instance.AllowCorsOrigins?.Split(',') ?? new string[0])
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
