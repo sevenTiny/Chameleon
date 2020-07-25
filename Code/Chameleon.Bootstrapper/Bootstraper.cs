@@ -158,12 +158,13 @@ namespace Chameleon.Bootstrapper
                      .WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
                      //允许的域在配置文件读取
                      //.WithOrigins(ChameleonSettingConfig.Instance.AllowCorsOrigins?.Split(',') ?? new string[0])
-                     .WithOrigins(
-                         new[] {
-                            UrlsConfig.Instance.Account,
-                            UrlsConfig.Instance.DataApi,
-                            UrlsConfig.Instance.Development
-                         })
+                     .AllowAnyOrigin()
+                     //.WithOrigins(
+                     //    new[] {
+                     //       UrlsConfig.Instance.Account,
+                     //       UrlsConfig.Instance.DataApi,
+                     //       UrlsConfig.Instance.Development
+                     //    })
                     )
                 );
 
