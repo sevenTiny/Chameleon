@@ -38,7 +38,10 @@ namespace Chameleon.DataApi
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints
+                .MapControllers()
+                //ÃÌº”øÁ”Ú¥¶¿Ì
+                .RequireCors("ChameleonPolicy");
             });
         }
     }
