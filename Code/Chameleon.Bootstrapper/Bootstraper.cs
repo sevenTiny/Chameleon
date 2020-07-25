@@ -153,18 +153,16 @@ namespace Chameleon.Bootstrapper
             services.AddCors(options =>
                 options.AddPolicy("ChameleonPolicy", policy =>
                      policy
-                     .AllowAnyHeader()
-                     //.AllowCredentials()
-                     .WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
                      //允许的域在配置文件读取
                      //.WithOrigins(ChameleonSettingConfig.Instance.AllowCorsOrigins?.Split(',') ?? new string[0])
-                     .AllowAnyOrigin()
-                     //.WithOrigins(
-                     //    new[] {
-                     //       UrlsConfig.Instance.Account,
-                     //       UrlsConfig.Instance.DataApi,
-                     //       UrlsConfig.Instance.Development
-                     //    })
+                     .WithOrigins(
+                         new[] {
+                            UrlsConfig.Instance.Account,
+                            UrlsConfig.Instance.DataApi,
+                            UrlsConfig.Instance.Development
+                         })
+                     .AllowAnyHeader()
+                     .AllowAnyMethod()
                     )
                 );
 
@@ -228,14 +226,14 @@ namespace Chameleon.Bootstrapper
             app.UseStaticFiles();
             app.UseRouting();
 
+            app.UseCors("ChameleonPolicy");
+
             ///添加jwt验证
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSession();
             app.UseCookiePolicy();
-
-            app.UseCors("ChameleonPolicy");
         }
     }
 }
