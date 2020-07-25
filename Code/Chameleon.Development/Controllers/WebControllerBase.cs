@@ -23,7 +23,7 @@ namespace Chameleon.Development.Controllers
         }
 
         /// <summary>
-        /// 将当前操作的应用信息存储到cookies中
+        /// 将当前操作的应用信息存储到session中
         /// </summary>
         /// <param name="applicationId"></param>
         /// <param name="applicationCode"></param>
@@ -31,8 +31,6 @@ namespace Chameleon.Development.Controllers
         {
             StorageKeyValue("ApplicationId", applicationId.ToString());
             StorageKeyValue("ApplicationCode", applicationCode);
-            //HttpContext.Response.Cookies.Append("ApplicationId", applicationId.ToString());
-            //HttpContext.Response.Cookies.Append("ApplicationCode", applicationCode);
         }
 
         /// <summary>
@@ -42,10 +40,13 @@ namespace Chameleon.Development.Controllers
         {
             get
             {
-                var applicationId = HttpContext.Request.Cookies["ApplicationId"];
+                var applicationId = GetStorage("ApplicationId");
 
                 if (string.IsNullOrEmpty(applicationId))
+                {
                     Response.Redirect("/Home/Index");
+                    return Guid.Empty;
+                }
 
                 return Guid.Parse(applicationId);
             }
@@ -58,7 +59,7 @@ namespace Chameleon.Development.Controllers
         {
             get
             {
-                var applicationCode = HttpContext.Request.Cookies["ApplicationCode"];
+                var applicationCode = GetStorage("ApplicationCode");
 
                 if (string.IsNullOrEmpty(applicationCode))
                     throw new ArgumentNullException("ApplicationCode is null,please check first!");
@@ -69,8 +70,8 @@ namespace Chameleon.Development.Controllers
 
         protected void SetCookiesMetaObjectInfo(Guid metaObjectId, string metaObjectCode)
         {
-            HttpContext.Response.Cookies.Append("MetaObjectId", metaObjectId.ToString());
-            HttpContext.Response.Cookies.Append("MetaObjectCode", metaObjectCode);
+            StorageKeyValue("MetaObjectId", metaObjectId.ToString());
+            StorageKeyValue("MetaObjectCode", metaObjectCode);
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace Chameleon.Development.Controllers
         {
             get
             {
-                var metaObjectId = HttpContext.Request.Cookies["MetaObjectId"];
+                var metaObjectId = GetStorage("MetaObjectId");
 
                 if (string.IsNullOrEmpty(metaObjectId))
                     throw new ArgumentNullException("MetaObjectId is null,please check first!");
@@ -96,7 +97,7 @@ namespace Chameleon.Development.Controllers
         {
             get
             {
-                var metaObjectCode = HttpContext.Request.Cookies["MetaObjectCode"];
+                var metaObjectCode = GetStorage("MetaObjectCode");
 
                 if (string.IsNullOrEmpty(metaObjectCode))
                     throw new ArgumentNullException("MetaObjectCode is null,please check first!");
