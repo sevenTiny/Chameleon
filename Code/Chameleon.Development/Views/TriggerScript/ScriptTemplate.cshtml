@@ -124,7 +124,7 @@ logger.LogError(string message, params object[] args);
 logger.LogInformation(string message, params object[] args);
     </pre>
 
-    <h4>数据操作：</h4>
+    <h4>数据操作（查询）：</h4>
     <pre class="prettyprint linenums">
 //初始化数据库查询上下文
 ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
@@ -137,6 +137,20 @@ var filter = bf.And(bf.Eq("Name","张三"),bf.Eq("IsDeleted",false));
 
 //查询结果
 var result = dbContext.GetCollectionBson("ChameleonDemo.UserInformation").Find(filter).ToList();
+    </pre>
+
+    <h4>数据操作（新增）：</h4>
+    <pre class="prettyprint linenums">
+//初始化数据库查询上下文
+ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
+
+//构造数据
+BsonDocument data = new BsonDocument();
+data.Add("UserId", long.Parse(triggerContext["CurrentUserId"]));//从上下文拿到当前登陆人UserId的方法
+data.Add("UserName", long.Parse(triggerContext["张三"]));
+
+//新增
+dbContext.GetCollectionBson("ChameleonMessage.UserInformation").InsertOne(message);
     </pre>
 </article>
 

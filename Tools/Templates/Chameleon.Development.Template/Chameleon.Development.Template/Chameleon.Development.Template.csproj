@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Chameleon.Common" Version="1.0.7" />
+    <PackageReference Include="Chameleon.Common" Version="1.0.10" />
     <PackageReference Include="SevenTiny.Bantina" Version="1.0.63" />
     <PackageReference Include="SevenTiny.Bantina.Bankinate.Core" Version="1.0.26" />
     <PackageReference Include="SevenTiny.Bantina.Bankinate.MongoDb" Version="1.0.13" />

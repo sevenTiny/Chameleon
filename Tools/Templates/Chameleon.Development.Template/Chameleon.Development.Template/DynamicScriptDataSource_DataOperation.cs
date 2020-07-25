@@ -9,15 +9,21 @@ using Chameleon.Common;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 
-
-public class DynamicScriptDataSource
+public class DynamicScriptDataSource_DataOperation
 {
-    //1. 记录日志
+    //记录日志请使用：logger.LogError("error log.");  logger.LogDebug("debug log.")
     ILogger logger = new SevenTiny.Bantina.Logging.LogManager();
-    //logger.LogError(string message, params object[] args);
 
     public object Get(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic)
     {
-        return null;
+        ChameleonDataDbContext dbContext = new ChameleonDataDbContext();
+
+        var bf = Builders<BsonDocument>.Filter;
+
+        var filter = bf.Eq("IsDeleted", false);
+
+        var re = dbContext.GetCollectionBson("ChameleonDemo.UserInformation").Find(filter).ToList();
+
+        return new { Name = "xxx", Age = 200 };
     }
 }
