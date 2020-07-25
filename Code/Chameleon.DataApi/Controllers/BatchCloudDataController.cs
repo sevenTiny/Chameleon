@@ -63,6 +63,10 @@ namespace Chameleon.DataApi.Controllers
 
                 InitQueryContext(queryArgs);
 
+                //校验接口类型是否匹配
+                if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.BatchAdd)
+                    return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
+
                 //before
                 var arg = TryExecuteTriggerByServiceType(InterfaceServiceTypeEnum.MetaObject_BatchAdd_Before, new object[] { _queryContext.TriggerContext, documents }, documents);
 

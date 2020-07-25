@@ -123,6 +123,10 @@ namespace Chameleon.DataApi.Controllers
 
                 InitQueryContext(queryArgs);
 
+                //校验接口类型是否匹配
+                if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.Add)
+                    return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
+
                 //before
                 var args = TryExecuteTriggerByServiceType(InterfaceServiceTypeEnum.MetaObject_Add_Before, new object[] { _queryContext.TriggerContext, bson }, bson);
 
@@ -161,6 +165,10 @@ namespace Chameleon.DataApi.Controllers
 
                 InitQueryContext(queryArgs);
 
+                //校验接口类型是否匹配
+                if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.Update)
+                    return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
+
                 var filter = GetFilterDefinitionFromInterface();
 
                 //before
@@ -190,6 +198,10 @@ namespace Chameleon.DataApi.Controllers
             return SafeExecute(() =>
             {
                 InitQueryContext(queryArgs);
+
+                //校验接口类型是否匹配
+                if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.Delete)
+                    return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
 
                 var filter = GetFilterDefinitionFromInterface();
 

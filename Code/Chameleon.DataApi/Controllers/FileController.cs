@@ -73,6 +73,7 @@ namespace Chameleon.DataApi.Controllers
                 if (files == null || !files.Any())
                     return Result.Info("file not found").ToJsonResult();
 
+                //校验接口类型是否匹配
                 if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.FileUpload)
                     return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
 
@@ -128,6 +129,7 @@ namespace Chameleon.DataApi.Controllers
                 if (string.IsNullOrEmpty(queryArgs._fileId))
                     return Result.Error("Parameter invalid: _fileId is null").ToJsonResult();
 
+                //校验接口类型是否匹配
                 if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.FileDownload)
                     return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
 

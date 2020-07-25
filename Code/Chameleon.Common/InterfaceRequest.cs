@@ -20,6 +20,14 @@ namespace Chameleon.Common
                 throw new KeyNotFoundException("_AccessToken key not found in triggerContext, please set triggerContext value from trigger script template default method argument.");
         }
 
+        private Dictionary<string, string> GetHeaders()
+        {
+            return new Dictionary<string, string>
+            {
+                { "Authorization",$"Bearer {_AccessToken}"}
+            };
+        }
+
         private static string UrlArgumentsBulder(Dictionary<string, string> arguments)
         {
             StringBuilder urlArg = new StringBuilder();
@@ -44,7 +52,8 @@ namespace Chameleon.Common
 
             var result = HttpHelper.Get(new GetRequestArgs
             {
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}&_AccessToken={_AccessToken}{UrlArgumentsBulder(arguments)}"
+                Headers = GetHeaders(),
+                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}{UrlArgumentsBulder(arguments)}"
             });
 
             return JsonConvert.DeserializeObject<ResponseModel>(result);
@@ -61,7 +70,8 @@ namespace Chameleon.Common
 
             var result = HttpHelper.Post(new PostRequestArgs
             {
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}&_AccessToken={_AccessToken}",
+                Headers = GetHeaders(),
+                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}",
                 Encoding = Encoding.UTF8,
                 ContentType = "application/json",
                 Data = data
@@ -81,7 +91,8 @@ namespace Chameleon.Common
 
             var result = HttpHelper.Put(new PutRequestArgs
             {
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}&_AccessToken={_AccessToken}",
+                Headers = GetHeaders(),
+                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}",
                 Encoding = Encoding.UTF8,
                 ContentType = "application/json",
                 Data = data
@@ -101,7 +112,8 @@ namespace Chameleon.Common
 
             var result = HttpHelper.Delete(new DeleteRequestArgs
             {
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}&_AccessToken={_AccessToken}",
+                Headers = GetHeaders(),
+                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}",
                 Encoding = Encoding.UTF8,
                 ContentType = "application/json",
                 Data = data
