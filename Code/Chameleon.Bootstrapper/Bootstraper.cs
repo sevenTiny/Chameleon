@@ -154,11 +154,7 @@ namespace Chameleon.Bootstrapper
                 options.AddPolicy("ChameleonPolicy", policy =>
                      policy
                      //允许的域在配置文件读取
-                     //.WithOrigins(ChameleonSettingConfig.Instance.AllowCorsOrigins?.Split(',') ?? new string[0])
-                     .WithOrigins(
-                         new[] {
-                            "http://dev.7tiny.com:39021"
-                         })
+                     .WithOrigins(ChameleonSettingConfig.Instance.AllowCorsOrigins?.Split(',') ?? new string[0])
                      .AllowAnyHeader()
                      .AllowAnyMethod()
                     )
