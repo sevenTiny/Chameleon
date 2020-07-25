@@ -31,7 +31,7 @@ namespace Chameleon.Common
             return urlArg.ToString();
         }
 
-        public static Result<TResult> CloudDataGet<TResult>(string interfaceCode, Dictionary<string, string> arguments)
+        public static ResponseModel CloudDataGet(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
@@ -40,10 +40,10 @@ namespace Chameleon.Common
                 Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}{UrlArgumentsBulder(arguments)}"
             });
 
-            return JsonConvert.DeserializeObject<Result<TResult>>(result);
+            return JsonConvert.DeserializeObject<ResponseModel>(result);
         }
 
-        public static Result<TResult> CloudDataPost<TResult>(string interfaceCode, Dictionary<string, string> arguments)
+        public static ResponseModel CloudDataPost(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
@@ -60,10 +60,10 @@ namespace Chameleon.Common
                 Data = data
             });
 
-            return JsonConvert.DeserializeObject<Result<TResult>>(result);
+            return JsonConvert.DeserializeObject<ResponseModel>(result);
         }
 
-        public static Result<TResult> CloudDataPut<TResult>(string interfaceCode, Dictionary<string, string> arguments)
+        public static ResponseModel CloudDataPut(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
@@ -80,10 +80,10 @@ namespace Chameleon.Common
                 Data = data
             });
 
-            return JsonConvert.DeserializeObject<Result<TResult>>(result);
+            return JsonConvert.DeserializeObject<ResponseModel>(result);
         }
 
-        public static Result<TResult> CloudDataDelete<TResult>(string interfaceCode, Dictionary<string, string> arguments)
+        public static ResponseModel CloudDataDelete(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
@@ -100,7 +100,7 @@ namespace Chameleon.Common
                 Data = data
             });
 
-            return JsonConvert.DeserializeObject<Result<TResult>>(result);
+            return JsonConvert.DeserializeObject<ResponseModel>(result);
         }
     }
 }
