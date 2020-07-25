@@ -157,9 +157,7 @@ namespace Chameleon.Bootstrapper
                      //.WithOrigins(ChameleonSettingConfig.Instance.AllowCorsOrigins?.Split(',') ?? new string[0])
                      .WithOrigins(
                          new[] {
-                            UrlsConfig.Instance.Account,
-                            UrlsConfig.Instance.DataApi,
-                            UrlsConfig.Instance.Development
+                            "http://dev.7tiny.com:39021"
                          })
                      .AllowAnyHeader()
                      .AllowAnyMethod()
