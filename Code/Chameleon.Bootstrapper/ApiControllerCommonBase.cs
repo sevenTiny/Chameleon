@@ -12,7 +12,6 @@ using System.Text;
 
 namespace Chameleon.Bootstrapper
 {
-    [EnableCors("ChameleonPolicy")]
     public class ApiControllerCommonBase : ControllerBase
     {
         /// <summary>
