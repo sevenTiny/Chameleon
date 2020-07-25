@@ -153,7 +153,7 @@ namespace Chameleon.Bootstrapper
             services.AddCors(options =>
                 options.AddPolicy("ChameleonPolicy", policy =>
                      policy
-                     //.AllowAnyHeader()
+                     .AllowAnyHeader()
                      //.AllowCredentials()
                      .WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
                      //允许的域在配置文件读取
