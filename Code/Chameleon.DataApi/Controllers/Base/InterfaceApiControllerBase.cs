@@ -71,6 +71,7 @@ namespace Chameleon.DataApi.Controllers
             //上下文赋值一些查询可能用到的参数
             _queryContext.TriggerContext.Add("Interface", queryArgs._interface);
             _queryContext.TriggerContext.Add("PageIndex", queryArgs._pageIndex.ToString());
+            _queryContext.TriggerContext.Add("FileId", queryArgs._fileId);
             _queryContext.TriggerContext.Add("PageSize", _queryContext.InterfaceSetting.PageSize.ToString());
             _queryContext.TriggerContext.Add("MetaObjectCode", _queryContext.InterfaceSetting.MetaObjectCode);
             _queryContext.TriggerContext.Add("MetaObjectId", _queryContext.InterfaceSetting.MetaObjectId.ToString());
@@ -81,6 +82,7 @@ namespace Chameleon.DataApi.Controllers
             _queryContext.TriggerContext.Add("CurrentUserEmail", CurrentUserEmail);
             _queryContext.TriggerContext.Add("CurrentUserName", CurrentUserName);
             _queryContext.TriggerContext.Add("CurrentUserRole", CurrentUserRole.ToString());
+            _queryContext.TriggerContext.Add("_AccessToken", _AccessToken);
         }
     }
 }

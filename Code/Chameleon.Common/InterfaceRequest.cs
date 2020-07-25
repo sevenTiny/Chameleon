@@ -11,8 +11,15 @@ namespace Chameleon.Common
     /// <summary>
     /// 接口请求（代码中httprequest请求，保证走触发器）
     /// </summary>
-    public static class InterfaceRequest
+    public class InterfaceRequest
     {
+        private string _AccessToken;
+        public InterfaceRequest(Dictionary<string, string> triggerContext)
+        {
+            if (!triggerContext.TryGetValue("_AccessToken", out _AccessToken))
+                throw new KeyNotFoundException("_AccessToken key not found in triggerContext, please set triggerContext value from trigger script template default method argument.");
+        }
+
         private static string UrlArgumentsBulder(Dictionary<string, string> arguments)
         {
             StringBuilder urlArg = new StringBuilder();
@@ -31,19 +38,19 @@ namespace Chameleon.Common
             return urlArg.ToString();
         }
 
-        public static ResponseModel CloudDataGet(string interfaceCode, Dictionary<string, string> arguments)
+        public ResponseModel CloudDataGet(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
             var result = HttpHelper.Get(new GetRequestArgs
             {
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}{UrlArgumentsBulder(arguments)}"
+                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}&_AccessToken={_AccessToken}{UrlArgumentsBulder(arguments)}"
             });
 
             return JsonConvert.DeserializeObject<ResponseModel>(result);
         }
 
-        public static ResponseModel CloudDataPost(string interfaceCode, Dictionary<string, string> arguments)
+        public ResponseModel CloudDataPost(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
@@ -54,7 +61,7 @@ namespace Chameleon.Common
 
             var result = HttpHelper.Post(new PostRequestArgs
             {
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}",
+                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}&_AccessToken={_AccessToken}",
                 Encoding = Encoding.UTF8,
                 ContentType = "application/json",
                 Data = data
@@ -63,7 +70,7 @@ namespace Chameleon.Common
             return JsonConvert.DeserializeObject<ResponseModel>(result);
         }
 
-        public static ResponseModel CloudDataPut(string interfaceCode, Dictionary<string, string> arguments)
+        public ResponseModel CloudDataPut(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
@@ -74,7 +81,7 @@ namespace Chameleon.Common
 
             var result = HttpHelper.Put(new PutRequestArgs
             {
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}",
+                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}&_AccessToken={_AccessToken}",
                 Encoding = Encoding.UTF8,
                 ContentType = "application/json",
                 Data = data
@@ -83,7 +90,7 @@ namespace Chameleon.Common
             return JsonConvert.DeserializeObject<ResponseModel>(result);
         }
 
-        public static ResponseModel CloudDataDelete(string interfaceCode, Dictionary<string, string> arguments)
+        public ResponseModel CloudDataDelete(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
@@ -94,7 +101,7 @@ namespace Chameleon.Common
 
             var result = HttpHelper.Delete(new DeleteRequestArgs
             {
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}",
+                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}&_AccessToken={_AccessToken}",
                 Encoding = Encoding.UTF8,
                 ContentType = "application/json",
                 Data = data
