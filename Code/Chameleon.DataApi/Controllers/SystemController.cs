@@ -5,12 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chameleon.DataApi.Controllers
 {
-    public class SystemController : WebControllerCommonBase
+    [Route("/[controller]")]
+    [ApiController]
+    [AllowAnonymous]
+    public class SystemController : ControllerBase
     {
         /// <summary>
         /// 获取当前的日志
         /// </summary>
         /// <returns></returns>
+        [Route("Log")]
         public IActionResult Log()
         {
             var currentLog = LoggerHelper.GetCurrentLog();
@@ -21,6 +25,7 @@ namespace Chameleon.DataApi.Controllers
         /// 清理配置文件
         /// </summary>
         /// <returns></returns>
+        [Route("ClearConfig")]
         public IActionResult ClearConfig()
         {
             var msg = ConfigHelper.ClearConfigFiles();
