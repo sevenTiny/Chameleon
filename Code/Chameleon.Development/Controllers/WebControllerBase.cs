@@ -1,6 +1,8 @@
 ﻿using Chameleon.Bootstrapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Text;
 
 namespace Chameleon.Development.Controllers
 {
@@ -10,6 +12,16 @@ namespace Chameleon.Development.Controllers
     [Authorize]
     public class WebControllerBase : WebControllerCommonBase
     {
+        private void StorageKeyValue(string key, string value)
+        {
+            HttpContext.Session.SetString(key, value);
+        }
+
+        private string GetStorage(string key)
+        {
+            return HttpContext.Session.GetString(key);
+        }
+
         /// <summary>
         /// 将当前操作的应用信息存储到cookies中
         /// </summary>
@@ -17,8 +29,10 @@ namespace Chameleon.Development.Controllers
         /// <param name="applicationCode"></param>
         protected void SetCookiesApplictionInfo(Guid applicationId, string applicationCode)
         {
-            HttpContext.Response.Cookies.Append("ApplicationId", applicationId.ToString());
-            HttpContext.Response.Cookies.Append("ApplicationCode", applicationCode);
+            StorageKeyValue("ApplicationId", applicationId.ToString());
+            StorageKeyValue("ApplicationCode", applicationCode);
+            //HttpContext.Response.Cookies.Append("ApplicationId", applicationId.ToString());
+            //HttpContext.Response.Cookies.Append("ApplicationCode", applicationCode);
         }
 
         /// <summary>

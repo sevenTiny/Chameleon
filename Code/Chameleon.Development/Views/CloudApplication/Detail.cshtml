@@ -130,8 +130,12 @@
         });
     });
 
-    setInterval(function () {
-        $.ajax({
+    getMessageCount()
+
+    setInterval(getMessageCount, 30000);
+
+    function getMessageCount() {
+         $.ajax({
             type: 'GET',
             url: '@apiHost/api/CloudData?_interface=ChameleonMessage.MessageAlert.CurrentUserUnReadMessageCount',
             dataType: 'json',
@@ -153,7 +157,7 @@
                 console.log(data.msg);
             },
      });
-    }, 10000);
+    }
 
     //在frame中打开页面
     function mainFrameOpen(url) {

@@ -1,5 +1,19 @@
 ﻿<!--这里写公共的方法-->
 <script>
+    $.ajaxSetup({
+        headers: {
+            "Authorization": "Bearer " + getCookie("_AccessToken")
+        },
+    });
+
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+
     //ajax删除datatable中数据
     function ajax_delete_table(obj, url) {
         layer.confirm('确认要删除吗？', function (index) {

@@ -120,8 +120,8 @@
 </style>
 
 <article class="page-container">
-    <ul class="commentList">
-        <li class="item cl">
+    <ul class="commentList" id="commentList">
+        @*<li class="item cl">
             <a href="#"><i class="avatar size-L radius"><img alt="" src="/static-h-ui-net/h-ui/images/ucnter/avatar-default.jpg"></i></a>
             <div class="comment-main">
                 <header class="comment-header">
@@ -134,7 +134,7 @@
                     <p><a href="#"></a> 你是猴子派来的救兵吗？</p>
                 </div>
             </div>
-        </li>
+        </li>*@
     </ul>
 </article>
 
@@ -146,17 +146,33 @@
             type: 'GET',
             url: '@host/api/CloudData?_interface=ChameleonMessage.MessageAlert.CurrentUserUnReadMessageList',
             dataType: 'json',
-            data: {
-
-            },
             success: function (data) {
                 if (data.success) {
                     console.log(data.data)
+                    for (var i in data.data) {
+                        var item = data.data[i]
+                        $("#commentList").append(
+                            '<li class="item cl">'
+                                +'<a href="#"><i class="avatar size-L radius"><img alt="" src="/static-h-ui-net/h-ui/images/ucnter/avatar-default.jpg"></i></a>'
+                                +'<div class="comment-main">'
+                                +   '<header class="comment-header">'
+                                +        '<div class="comment-meta">'
+                                +            '<a class="comment-author" href="#">【' + item["MessageTitle"].text + '】</a> 时间：'
+                                +           '<time>'+item["SendTime"].text+'</time>'
+                                +       '</div>'
+                                +    '</header>'
+                                + '<div class="comment-body">'
+                                + '<p><a href="#"></a> ' + item["MessageContent"].text + '</p>'
+                                +    '</div>'
+                                + '</div>'
+                            +'</li>'
+                        )
+                    }
                 }
             },
             error: function (data) {
                 console.log(data.msg);
             },
-        });
+    });
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
