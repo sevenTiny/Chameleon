@@ -131,31 +131,40 @@ namespace Chameleon.Domain
 
             //新增数据
             _cloudApplicationRepository.BatchAdd(deployDto.CloudApplication);
-            result.MoreMessage.Add($"成功导入[{deployDto.CloudApplication?.Count ?? 0}]个应用");
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.CloudApplication?.Count ?? 0}]个应用");
+            deployDto.CloudApplication?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
 
             _metaObjectRepository.BatchAdd(deployDto.MetaObject);
-            result.MoreMessage.Add($"成功导入[{deployDto.MetaObject?.Count ?? 0}]个对象");
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.MetaObject?.Count ?? 0}]个对象");
+            deployDto.MetaObject?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
 
             _metaFieldRepository.BatchAdd(deployDto.MetaField);
-            result.MoreMessage.Add($"成功导入[{deployDto.MetaField?.Count ?? 0}]个字段");
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.MetaField?.Count ?? 0}]个字段");
+            deployDto.MetaField?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
 
             _triggerScriptRepository.BatchAdd(deployDto.TriggerScript);
-            result.MoreMessage.Add($"成功导入[{deployDto.TriggerScript?.Count ?? 0}]个触发器");
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.TriggerScript?.Count ?? 0}]个触发器");
+            deployDto.TriggerScript?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
 
             _interfaceSettingRepository.BatchAdd(deployDto.InterfaceSetting);
-            result.MoreMessage.Add($"成功导入[{deployDto.InterfaceSetting?.Count ?? 0}]个接口设置");
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.InterfaceSetting?.Count ?? 0}]个接口设置");
+            deployDto.InterfaceSetting?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
 
             _interfaceFieldsRepository.BatchAdd(deployDto.InterfaceFields);
-            result.MoreMessage.Add($"成功导入[{deployDto.InterfaceFields?.Count ?? 0}]个接口字段");
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.InterfaceFields?.Count ?? 0}]个接口字段");
+            deployDto.InterfaceFields?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
 
             _interfaceConditionRepository.BatchAdd(deployDto.InterfaceCondition);
-            result.MoreMessage.Add($"成功导入[{deployDto.InterfaceCondition?.Count ?? 0}]个接口条件");
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.InterfaceCondition?.Count ?? 0}]个接口条件");
+            deployDto.InterfaceCondition?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
 
             _interfaceSortRepository.BatchAdd(deployDto.InterfaceSort);
-            result.MoreMessage.Add($"成功导入[{deployDto.InterfaceSort?.Count ?? 0}]个接口排序");
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.InterfaceSort?.Count ?? 0}]个接口排序");
+            deployDto.InterfaceSort?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
 
             _interfaceVerificationRepository.BatchAdd(deployDto.InterfaceVerification);
-            result.MoreMessage.Add($"成功导入[{deployDto.InterfaceVerification?.Count ?? 0}]个接口校验");
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.InterfaceVerification?.Count ?? 0}]个接口校验");
+            deployDto.InterfaceVerification?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
 
             return result;
         }
