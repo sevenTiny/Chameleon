@@ -140,7 +140,7 @@ namespace Chameleon.Domain
             result.MoreMessage.Add($"成功导入[{deployDto.MetaField?.Count ?? 0}]个字段");
 
             _triggerScriptRepository.BatchAdd(deployDto.TriggerScript);
-            result.MoreMessage.Add($"成功导入[{deployDto.TriggerScript?.Count ?? 0}]个触发器脚本");
+            result.MoreMessage.Add($"成功导入[{deployDto.TriggerScript?.Count ?? 0}]个触发器");
 
             _interfaceSettingRepository.BatchAdd(deployDto.InterfaceSetting);
             result.MoreMessage.Add($"成功导入[{deployDto.InterfaceSetting?.Count ?? 0}]个接口设置");
