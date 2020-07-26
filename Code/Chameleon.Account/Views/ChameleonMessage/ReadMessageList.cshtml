@@ -1,7 +1,89 @@
-﻿@using Chameleon.Entity;
+﻿@using Chameleon.Infrastructure.Configs;
 @{
-    ViewData["Title"] = "Abount";
+    ViewData["Title"] = "已读消息";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
+    var host = UrlsConfig.Instance.DataApi;
 }
+@{
+    ViewData["Level_1"] = "消息列表";
+    ViewData["Level_2"] = "已读消息";
+}
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
+<link href="~/lib/commentlist/commentlist.css" rel="stylesheet" />
 
-<h2>简介</h2>
+<article class="page-container">
+    <a class="btn btn-secondary" style="border-Radius: 3px;margin-left: 64px;" href="/ChameleonMessage/UnReadMessageList">查看未读</a>
+    <ul class="commentList" id="commentList">
+        @*<li class="item cl" id="xx">
+                <a href="#"><i class="avatar size-L radius"><img alt="" src="/chameleon.png"></i></a>
+                <div class="comment-main">
+                    <header class="comment-header">
+                        <div class="comment-meta">
+                            <a class="comment-author" href="#">辉哥</a> 评论于
+                            <time title="2014年8月31日 下午3:20" datetime="2014-08-31T03:54:20">2014-8-31 15:20</time>
+                            <button class="btn btn-primary" style="float:right;border-Radius: 3px;" onclick="setMessageRead(11)">标记为已读</button>
+                        </div>
+                        <div style='clear:both;padding:0;margin:0'></div>
+                    </header>
+                    <div class="comment-body">
+                        <p><a href="#"></a> 你是猴子派来的救兵吗？</p>
+                    </div>
+                </div>
+            </li>*@
+    </ul>
+</article>
+@await Html.PartialAsync("~/Views/Shared/_FooterScripts.cshtml")
+@await Html.PartialAsync("~/Views/Shared/_CommonScript.cshtml")
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+    $.ajax({
+            type: 'GET',
+            url: '@host/api/CloudData?_interface=ChameleonMessage.MessageAlert.CurrentUserReadMessageList',
+            dataType: 'json',
+            success: function (data) {
+                if (data.success) {
+                    for (var i in data.data) {
+                        var item = data.data[i]
+                        $("#commentList").append(
+                            '<li class="item cl"  id="'+item["_id"].value+'">'
+                                +'<a href="#"><i class="avatar size-L radius"><img alt="" src="/chameleon.png"></i></a>'
+                                +'<div class="comment-main">'
+                                +   '<header class="comment-header">'
+                                +        '<div class="comment-meta">'
+                                +            '<a class="comment-author" href="#">【' + item["MessageTitle"].text + '】</a> 时间：'
+                                +            '<time>' + item["SendTime"].text + '</time>'
+                                +            '<button class="btn btn-primary" style="float:right;border-Radius: 3px;" onclick="setMessageRead(\''+item["_id"].value+'\')">标记为未读</button>'
+                                +        '</div>'
+                                +        '<div style="clear:both;padding:0;margin:0"></div>'
+                                +    '</header>'
+                                + '<div class="comment-body">'
+                                + '<p><a href="#"></a> ' + item["MessageContent"].text + '</p>'
+                                +    '</div>'
+                                + '</div>'
+                            +'</li>'
+                        )
+                    }
+                }
+            },
+            error: function (data) {
+                console.log(data.msg);
+            },
+    });
+
+    function setMessageRead(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@host/api/CloudData?_interface=ChameleonMessage.TDS.MarkAsUnRead&_id=' + id,
+            dataType: 'json',
+            success: function (data) {
+                if (data.success) {
+                    $("#" + id).remove()
+                }
+            },
+            error: function (data) {
+                console.log(data.msg);
+            },
+    });
+    }
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
