@@ -71,19 +71,23 @@
     });
 
     function setMessageRead(id) {
-        $.ajax({
-            type: 'GET',
-            url: '@host/api/CloudData?_interface=ChameleonMessage.TDS.MarkAsUnRead&_id=' + id,
-            dataType: 'json',
-            success: function (data) {
-                if (data.success) {
-                    $("#" + id).remove()
-                }
-            },
-            error: function (data) {
-                console.log(data.msg);
-            },
-    });
+        layer.confirm('确认移动到未读列表？', function (index) {
+            $.ajax({
+                type: 'GET',
+                url: '@host/api/CloudData?_interface=ChameleonMessage.TDS.MarkAsUnRead&_id=' + id,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.success) {
+                        $("#" + id).remove()
+                        layer.msg('操作成功', { icon: 1, time: 1000 });
+                    }
+                },
+                error: function (data) {
+                    layer.msg('操作失败', { icon: 1, time: 1000 });
+                    console.log(data.msg);
+                },
+        });
+        });
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

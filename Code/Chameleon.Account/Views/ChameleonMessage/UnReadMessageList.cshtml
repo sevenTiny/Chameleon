@@ -78,12 +78,13 @@
             success: function (data) {
                 if (data.success) {
                     $("#" + id).remove()
+                    layer.msg('操作成功', { icon: 1, time: 1000 });
                 }
             },
             error: function (data) {
                 console.log(data.msg);
             },
-    });
+        });
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
