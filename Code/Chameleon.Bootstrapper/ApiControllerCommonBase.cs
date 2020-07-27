@@ -120,17 +120,7 @@ namespace Chameleon.Bootstrapper
         {
             get
             {
-                var _accessToken = HttpContext.Request.Cookies[AccountConst.KEY_AccessToken];
-
-                if (!string.IsNullOrEmpty(_accessToken))
-                    HttpContext.Session.SetString(AccountConst.KEY_AccessToken, _accessToken);
-                else
-                    _accessToken = HttpContext.Session.GetString(AccountConst.KEY_AccessToken);
-
-                if (string.IsNullOrEmpty(_accessToken))
-                    throw new ArgumentNullException("_AccessToken is not found from cookie or session");
-
-                return _accessToken;
+                return HttpContext.Request.Cookies[AccountConst.KEY_AccessToken];
             }
         }
     }
