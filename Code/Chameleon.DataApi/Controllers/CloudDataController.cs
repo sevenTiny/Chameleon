@@ -144,7 +144,7 @@ namespace Chameleon.DataApi.Controllers
                 var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, new[] { args });
 
                 //after
-                TryExecuteTriggerByServiceType<object>(InterfaceServiceTypeEnum.MetaObject_Add_After, new object[] { _queryContext.TriggerContext }, null);
+                TryExecuteTriggerByServiceType<object>(InterfaceServiceTypeEnum.MetaObject_Add_After, new object[] { _queryContext.TriggerContext, bson }, null);
 
                 return result.ToJsonResult();
             });

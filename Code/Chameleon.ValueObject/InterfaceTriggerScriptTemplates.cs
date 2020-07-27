@@ -45,8 +45,10 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public BsonDocument Add_Before(Dictionary<string, string> triggerContext, BsonDocument bsonDocument)
+    public BsonDocument Add_Before(Dictionary<string, string> triggerContext, object bsonDocumentObj)
     {{
+        BsonDocument bsonDocument = BsonDocument.Create(bsonDocumentObj);
+
         var interfaceCode = triggerContext[""Interface""];
 
         if(interfaceCode == ""xxx"")
@@ -71,8 +73,10 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public void Add_After(Dictionary<string, string> triggerContext)
+    public void Add_After(Dictionary<string, string> triggerContext, object bsonDocumentObj)
     {{
+        //BsonDocument bsonDocument = BsonDocument.Create(bsonDocumentObj);
+
         var interfaceCode = triggerContext[""Interface""];
 
         if(interfaceCode == ""xxx"")
@@ -95,8 +99,10 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public BsonDocument[] BatchAdd_Before(Dictionary<string, string> triggerContext, BsonDocument[] bsonDocuments)
+    public BsonDocument[] BatchAdd_Before(Dictionary<string, string> triggerContext, object[] bsonDocumentObjArray)
     {{
+        BsonDocument[] bsonDocument = bsonDocumentObjArray?.Select(t=>BsonDocument.Create(t)).ToArray();
+
         var interfaceCode = triggerContext[""Interface""];
 
         if(interfaceCode == ""xxx"")
@@ -145,8 +151,10 @@ $@"{CommonUsing}
 public class MetaObjectInterfaceTrigger
 {{
     {CommonClassCode}
-    public FilterDefinition<BsonDocument> Update_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter, BsonDocument bsonDocument)
+    public FilterDefinition<BsonDocument> Update_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter, object bsonDocumentObj)
     {{
+        //BsonDocument bsonDocument = BsonDocument.Create(bsonDocumentObj);
+
         var interfaceCode = triggerContext[""Interface""];
 
         if(interfaceCode == ""xxx"")
