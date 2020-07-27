@@ -120,6 +120,7 @@ namespace Chameleon.Domain
         {
             return base.UpdateWithId(id, t =>
             {
+                t.Password = GetSaltPassword(AccountConst.DefaultPassword);
                 t.IsNeedToResetPassword = 1;
             });
         }

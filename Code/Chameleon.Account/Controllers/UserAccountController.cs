@@ -300,6 +300,14 @@ namespace Chameleon.Account.Controllers
             return Result.Success("操作成功")
                 .ContinueEnsureArgumentNotNullOrEmpty(id, nameof(id))
                 .Continue(_ => _userAccountService.SetNextTimeResetPassword(id))
+                .Continue(_ =>
+                {
+                    var userAccount = _userAccountService.GetById(id);
+                    //发送注册成功消息
+                    new Chameleon.Common.InterfaceRequest(new Dictionary<string, string> { { "_AccessToken", _AccessToken } }).CloudDataGet($"ChameleonMessage.TDS.PasswordReset&userId={userAccount.UserId}");
+
+                    return _;
+                })
                 .ToJsonResult();
         }
     }

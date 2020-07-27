@@ -21,6 +21,9 @@ namespace Chameleon.Infrastructure.Consts
         public const string KEY_ChameleonRole = "ChameleonRole";
         public const string KEY_Organization = "Organization";
 
+        //默认密码
+        public static string DefaultPassword = "Chameleon123456";
+
         //根组织
         public static Guid TopOrganization => Guid.Parse("99999999-9999-9999-9999-999999999999");
 

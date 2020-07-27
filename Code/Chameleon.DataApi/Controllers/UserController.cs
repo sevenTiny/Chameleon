@@ -2,6 +2,7 @@
 using Chameleon.Bootstrapper;
 using Chameleon.Domain;
 using Chameleon.Entity;
+using Chameleon.Infrastructure.Consts;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
@@ -264,7 +265,7 @@ namespace Chameleon.DataApi.Controllers
                     return Result.Error($"userAccount info is null,noting to add").ToJsonResult();
 
                 userAccount.CreateBy = CurrentUserId;
-                userAccount.Password = "Chameleon123456";
+                userAccount.Password = AccountConst.DefaultPassword;
                 userAccount.IsNeedToResetPassword = 1;//手动添加的用户，下次登陆需要修改密码
 
                 return _userAccountApp.AddUserAccount(userAccount, _AccessToken).ToJsonResult();
