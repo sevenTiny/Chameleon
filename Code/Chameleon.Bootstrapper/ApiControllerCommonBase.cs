@@ -3,6 +3,8 @@ using Chameleon.Infrastructure.Consts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
 using System;
@@ -14,6 +16,8 @@ namespace Chameleon.Bootstrapper
 {
     public class ApiControllerCommonBase : ControllerBase
     {
+        ILogger logger = new SevenTiny.Bantina.Logging.LogManager();
+
         /// <summary>
         /// 返回安全执行结果
         /// </summary>
@@ -21,20 +25,24 @@ namespace Chameleon.Bootstrapper
         /// <returns></returns>
         protected IActionResult SafeExecute(Func<IActionResult> func)
         {
+            string queryInfo = $"Request.Path:{Request.Path}:Request.Query:{JsonConvert.SerializeObject(Request.Query)},Request.UserId:{CurrentUserId}";
             try
             {
                 return func();
             }
             catch (ArgumentNullException argNullEx)
             {
+                logger.LogError(argNullEx, $"ArgumentNullException exception is throw, {queryInfo}");
                 return Result.Error(argNullEx.Message).ToJsonResult();
             }
             catch (ArgumentException argEx)
             {
+                logger.LogError(argEx, $"ArgumentException exception is throw, {queryInfo}");
                 return Result.Error(argEx.Message).ToJsonResult();
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, $"ArgumentException exception is throw, {queryInfo}");
                 return Result.Error(ex.Message).ToJsonResult();
             }
         }
