@@ -27,7 +27,8 @@ namespace Chameleon.Common
         {
             return new Dictionary<string, string>
             {
-                { "Authorization",$"Bearer {_AccessToken}"}
+                { "Authorization",$"Bearer {_AccessToken}"},
+                { "Cookie", $"_AccessToken={_AccessToken}" }
             };
         }
 
