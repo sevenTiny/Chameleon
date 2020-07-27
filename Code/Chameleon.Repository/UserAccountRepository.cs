@@ -22,6 +22,12 @@ namespace Chameleon.Repository
         /// <returns></returns>
         UserAccount GetUserAccountByEmailOrPhone(string email, string phone);
         /// <summary>
+        /// 通过useId查询账户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        UserAccount GetUserAccountByUserId(long userId);
+        /// <summary>
         /// 校验邮箱或者手机是否已经被注册
         /// </summary>
         /// <param name="email"></param>
@@ -78,6 +84,11 @@ namespace Chameleon.Repository
         {
             var deveolperRole = (int)RoleEnum.Developer;
             return _dbContext.Queryable<UserAccount>().Where(t => t.IsDeleted == 0 && t.Role == deveolperRole).ToList();
+        }
+
+        public UserAccount GetUserAccountByUserId(long userId)
+        {
+            return _dbContext.Queryable<UserAccount>().Where(t => t.UserId == userId).FirstOrDefault();
         }
     }
 }

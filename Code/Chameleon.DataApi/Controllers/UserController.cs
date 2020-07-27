@@ -17,8 +17,10 @@ namespace Chameleon.DataApi.Controllers
     {
         IOrganizationService _organizationService;
         IUserAccountRepository _userAccountRepository;
-        public UserController(IUserAccountRepository userAccountRepository, IOrganizationService organizationService)
+        IUserAccountService _userAccountService;
+        public UserController(IUserAccountService userAccountService, IUserAccountRepository userAccountRepository, IOrganizationService organizationService)
         {
+            _userAccountService = userAccountService;
             _userAccountRepository = userAccountRepository;
             _organizationService = organizationService;
         }
@@ -245,6 +247,67 @@ namespace Chameleon.DataApi.Controllers
                 }).ToList();
 
                 return ResponseModel.Success(data: useResult).ToJsonResult();
+            });
+        }
+
+        [HttpPost]
+        [Route("AddUser")]
+        public IActionResult AddUser(UserAccount userAccount)
+        {
+            return SafeExecute(() =>
+            {
+                userAccount.CreateBy = CurrentUserId;
+                userAccount.Password = "Chameleon123456";
+                userAccount.IsNeedToResetPassword = 1;//手动添加的用户，下次登陆需要修改密码
+
+                return _userAccountService.AddUserAccount(userAccount).ToJsonResult();
+            });
+        }
+
+        [HttpPut]
+        [Route("UpdateUser")]
+        public IActionResult UpdateUser(long userId, UserAccount userAccount)
+        {
+            return SafeExecute(() =>
+            {
+                if (userAccount == null)
+                    return Result.Error($"userAccount info is null,noting to update").ToJsonResult();
+
+                var userAccountExist = _userAccountRepository.GetUserAccountByUserId(userId);
+
+                if (userAccountExist == null)
+                    return Result.Error($"user not found with userId [{userId}]").ToJsonResult();
+
+                return _userAccountService.UpdateWithId(userAccountExist.Id, t =>
+                {
+                    //只有某些属性可以更新
+                    if (!string.IsNullOrEmpty(userAccount.Name))
+                        t.Name = userAccount.Name;
+                    if (!string.IsNullOrEmpty(userAccount.Email))
+                        t.Email = userAccount.Email;
+                    if (!string.IsNullOrEmpty(userAccount.Phone))
+                        t.Phone = userAccount.Phone;
+
+                    userAccountExist.ModifyBy = CurrentUserId;
+
+                }).ToJsonResult();
+            });
+        }
+
+        [HttpDelete]
+        [Route("DeleteUser")]
+        public IActionResult DeleteUser(long userId)
+        {
+            return SafeExecute(() =>
+            {
+                var userAccount = _userAccountRepository.GetUserAccountByUserId(userId);
+
+                if (userAccount == null)
+                    return Result.Error($"user not found with userId [{userId}]").ToJsonResult();
+
+                _userAccountRepository.LogicDelete(userAccount.Id);
+
+                return Result.Success("success").ToJsonResult();
             });
         }
     }

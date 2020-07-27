@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions;
 using SevenTiny.Bantina.Security;
+using SevenTiny.Bantina.Validation;
 using SevenTiny.Cloud.ScriptEngine;
 using System;
 using System.Collections.Generic;
@@ -97,6 +98,10 @@ namespace Chameleon.Domain
 
         public Result AddUserAccount(UserAccount userAccount)
         {
+            Ensure.ArgumentNotNullOrEmpty(userAccount, nameof(userAccount));
+            Ensure.ArgumentNotNullOrEmpty(userAccount.Email, nameof(userAccount.Email));
+            Ensure.ArgumentNotNullOrEmpty(userAccount.Password, nameof(userAccount.Password));
+
             //校验邮箱和手机是否被注册
             if (_userAccountRepository.CheckEmailOrPhoneExist(userAccount.Email, userAccount.Phone))
                 return Result.Error("该联系方式已经被注册");
