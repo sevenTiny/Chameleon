@@ -29,7 +29,6 @@ namespace Chameleon.Bootstrapper
             string queryInfo = $"RequestMethod:{Request.Method};RequestPath:{Request.Path};RequestQuery:{JsonConvert.SerializeObject(Request.Query)};RequestUserId:{CurrentUserId}";
             try
             {
-                logger.LogError($"request before, {queryInfo}");
                 return func();
             }
             catch (ArgumentNullException argNullEx)
