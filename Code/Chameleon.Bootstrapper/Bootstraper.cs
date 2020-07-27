@@ -9,6 +9,7 @@ using Chameleon.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,8 +69,7 @@ namespace Chameleon.Bootstrapper
                         if (!string.IsNullOrEmpty(tokenFromRequest))
                         {
                             context.Token = tokenFromRequest;
-                            //set token to cookie
-                            context.Response.Cookies.Append(AccountConst.KEY_AccessToken, tokenFromRequest);
+
                         }
                         //如果url没有找到，则降级从cookie获取
                         else
@@ -79,11 +79,10 @@ namespace Chameleon.Bootstrapper
 
                             if (!string.IsNullOrEmpty(tokenFromCookie))
                                 context.Token = tokenFromCookie;
-
-                            //如果cookie也没有，但是token是存在的，那么可能是通过header Berear提交的，这时候把这个放在cookie中
-                            else if (!string.IsNullOrEmpty(context.Token))
-                                context.Response.Cookies.Append(AccountConst.KEY_AccessToken, context.Token);
                         }
+
+                        //set token to cookie
+                        context.Response.Cookies.Append(AccountConst.KEY_AccessToken, context.Token);
 
                         return Task.CompletedTask;
                     },
