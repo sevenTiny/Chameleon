@@ -14,7 +14,7 @@ namespace Chameleon.Common
             _DataApiRequest = new DataApiRequest(triggerContext);
         }
 
-        public ResponseModel CloudDataGet(string interfaceCode)
+        public string CloudDataGet(string interfaceCode)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 

@@ -27,7 +27,7 @@ namespace Chameleon.Common
             };
         }
 
-        public ResponseModel Get(string apiRouteNoHost)
+        public string Get(string apiRouteNoHost)
         {
             Ensure.ArgumentNotNullOrEmpty(apiRouteNoHost, nameof(apiRouteNoHost));
 
@@ -37,7 +37,7 @@ namespace Chameleon.Common
                 Url = $"{UrlsConfig.Instance.DataApi}{apiRouteNoHost}"
             });
 
-            return JsonConvert.DeserializeObject<ResponseModel>(result);
+            return result;
         }
 
         public ResponseModel Post(string apiRouteNoHost, Dictionary<string, string> arguments)
