@@ -28,7 +28,7 @@ namespace Chameleon.Common
             };
         }
 
-        private static string UrlArgumentsBulder(Dictionary<string, string> arguments)
+        private static string UrlArgumentsBuilder(Dictionary<string, string> arguments)
         {
             StringBuilder urlArg = new StringBuilder();
 
@@ -53,7 +53,7 @@ namespace Chameleon.Common
             var result = HttpHelper.Get(new GetRequestArgs
             {
                 Headers = GetHeaders(),
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}{UrlArgumentsBulder(arguments)}"
+                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}{UrlArgumentsBuilder(arguments)}"
             });
 
             return JsonConvert.DeserializeObject<ResponseModel>(result);

@@ -1,5 +1,6 @@
 ﻿using Chameleon.Entity;
 using Chameleon.Infrastructure;
+using Chameleon.Infrastructure.Consts;
 using Chameleon.Repository;
 using Chameleon.ValueObject;
 using Newtonsoft.Json;
@@ -65,7 +66,7 @@ namespace Chameleon.Domain
             var nodes = _organizationRepository.GetEnableList();
 
             //获取顶级节点
-            Organization condition = nodes?.FirstOrDefault(t => t.ParentId == Guid.Empty);
+            Organization condition = nodes?.FirstOrDefault(t => t.ParentId == AccountConst.TopOrganization);
 
             if (condition == null)
                 return new List<Organization>(0);
@@ -93,11 +94,6 @@ namespace Chameleon.Domain
 
                 foreach (var item in childs)
                 {
-                    //StringBuilder builder = new StringBuilder();
-
-                    //for (int i = 0; i < dep; i++)
-                    //    builder.Append("   ");
-
                     item.Name = string.Concat(parentName, " - ", item.Name);
                     result.Add(item);
 
@@ -114,7 +110,7 @@ namespace Chameleon.Domain
             var nodes = _organizationRepository.GetEnableList();
 
             //获取顶级节点
-            Organization condition = nodes?.FirstOrDefault(t => t.ParentId == Guid.Empty);
+            Organization condition = nodes?.FirstOrDefault(t => t.ParentId == AccountConst.TopOrganization);
 
             if (condition == null)
                 return new List<Organization>(0);
@@ -154,7 +150,7 @@ namespace Chameleon.Domain
                 };
 
                 //如果兄弟节点!=空，说明当前树有值。反之，则构建新树
-                if (chooseNodeId != Guid.Empty)
+                if (chooseNodeId != AccountConst.TopOrganization && chooseNodeId != Guid.Empty)
                 {
                     //判断是否有树存在
                     List<Organization> conditionListExist = _organizationRepository.GetEnableList();
@@ -197,6 +193,7 @@ namespace Chameleon.Domain
             if (nodes == null || !nodes.Any())
                 return result;
 
+            result.Add(Guid.Empty.ToString());//默认组织，任何人都有此组织权限
             result.AddRange(GetTree(nodes, userOrganization));
 
             return result.Distinct().ToList();
@@ -241,6 +238,9 @@ namespace Chameleon.Domain
             if (chooseNodeId == Guid.Empty || ajustNodeId == Guid.Empty)
                 return Result.Success();
 
+            if (chooseNodeId == ajustNodeId)
+                return Result.Error("关系错误，无法调整组织");
+
             //判断是否有树存在
             List<Organization> conditionListExist = _organizationRepository.GetEnableList();
 
@@ -266,6 +266,8 @@ namespace Chameleon.Domain
                         _organizationRepository.Update(chooseNode);
                         break;
                     case RelationEnum.Child:
+                        if (chooseNode.ParentId == ajustNode.Id)
+                            return Result.Error("关系错误，无法调整组织");
                         ajustNode.ParentId = chooseNode.Id;
                         break;
                     default:

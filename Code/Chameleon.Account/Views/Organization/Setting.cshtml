@@ -213,15 +213,15 @@
         var json =
             [{
                 "name": "目前没有组织，点击我（根节点）开始配置",
-                "id": "00000000-0000-0000-0000-000000000000",
-                "parentId": "00000000-0000-0000-0000-000000000000",
+                "id": "99999999-9999-9999-9999-999999999999",
+                "parentId": "99999999-9999-9999-9999-999999999999",
                 "icon": "",
                 "children": []
             }];
 
         function tree(data) {
             for (var i = 0; i < data.length; i++) {
-                if (data[i].parentId == '00000000-0000-0000-0000-000000000000') {
+                if (data[i].parentId == '99999999-9999-9999-9999-999999999999') {
                     $("#rootUL").append("<li data-name='" + data[i].id + "' title='" + data[i].id + "' titlename='" + data[i].name + "'><span><i class=''></i> " + data[i].name + "</span></li>");
                 } else {
                     var children = $("li[data-name='" + data[i].parentId + "']").children("ul");
