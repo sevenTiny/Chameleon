@@ -7,6 +7,7 @@ using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Chameleon.DataApi.Controllers
 {
@@ -15,36 +16,38 @@ namespace Chameleon.DataApi.Controllers
     public class UserController : ApiControllerCommonBase
     {
         IOrganizationService _organizationService;
-        IOrganizationRepository _organizationRepository;
-        public UserController(IOrganizationRepository organizationRepository, IOrganizationService organizationService)
+        IUserAccountRepository _userAccountRepository;
+        public UserController(IUserAccountRepository userAccountRepository, IOrganizationService organizationService)
         {
-            _organizationRepository = organizationRepository;
+            _userAccountRepository = userAccountRepository;
             _organizationService = organizationService;
         }
 
         /// <summary>
-        /// 获取所有启用的组织
+        /// 获取所有人员
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("EnableOrgnizations")]
-        public IActionResult Get()
+        [Route("AllUsers")]
+        public IActionResult AllUsers()
         {
             return SafeExecute(() =>
             {
-                var enableOrgs = _organizationRepository.GetEnableList() ?? new List<Organization>(0);
+                var allUsers = _userAccountRepository.GetUserAccountList() ?? new List<UserAccount>(0);
 
-                return ResponseModel.Success(data: enableOrgs).ToJsonResult();
+                return ResponseModel.Success(data: allUsers).ToJsonResult();
             });
         }
 
         /// <summary>
-        /// 当前组织列表中有权限的所有下级组织
+        /// 当前组织列表中所有下级组织下的人员
         /// </summary>
+        /// <param name="Organization"></param>
+        /// <param name="level">层级</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("SubordinateOrgnizations")]
-        public IActionResult Get(string Organization)
+        [Route("AllOrgnizationsUsers")]
+        public IActionResult Get(string Organization, int level)
         {
             return SafeExecute(() =>
             {
@@ -63,9 +66,52 @@ namespace Chameleon.DataApi.Controllers
                     orgnizations.Add(uid);
                 }
 
-                var subordinates = _organizationService.GetSubordinatOrganizations(orgnizations);
+                //获取有权限的所有下级组织
+                var subordinates = _organizationService.GetSubordinatOrganizations(orgnizations, level);
 
-                return ResponseModel.Success(data: subordinates).ToJsonResult();
+                //获取所有组织下的人员
+                var allUsers = _userAccountRepository.GetUserAccountList() ?? new List<UserAccount>(0);
+
+                //所有组织内的人员
+                var useResult = allUsers.Where(t => subordinates.Contains(t.Organization.ToString())).ToList();
+
+                return ResponseModel.Success(data: useResult).ToJsonResult();
+            });
+        }
+
+        /// <summary>
+        /// 查询人员账户信息
+        /// </summary>
+        /// <param name="UserId">多个英文逗号分隔</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetUserByUserIds")]
+        public IActionResult Get(string UserId)
+        {
+            return SafeExecute(() =>
+            {
+                if (string.IsNullOrEmpty(UserId))
+                    return Result.Error($"argument [UserId] must be provide").ToJsonResult();
+
+                var userIds = UserId.ToString().Split(',');
+
+                var userIdss = new List<long>(userIds.Length);
+
+                foreach (var item in userIds)
+                {
+                    if (!long.TryParse(item, out long uid))
+                        return Result.Error($"argument [UserId] format error, input is {item}").ToJsonResult();
+
+                    userIdss.Add(uid);
+                }
+
+                //获取所有组织下的人员
+                var allUsers = _userAccountRepository.GetUserAccountList() ?? new List<UserAccount>(0);
+
+                //所有组织内的人员
+                var useResult = allUsers.Where(t => userIdss.Contains(t.UserId)).ToList();
+
+                return ResponseModel.Success(data: useResult).ToJsonResult();
             });
         }
     }
