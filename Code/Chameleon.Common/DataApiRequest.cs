@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SevenTiny.Bantina.Net.Http;
 using SevenTiny.Bantina.Validation;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,6 +18,9 @@ namespace Chameleon.Common
         {
             if (!triggerContext.TryGetValue("_AccessToken", out _AccessToken))
                 throw new KeyNotFoundException("_AccessToken key not found in triggerContext, please set triggerContext value from trigger script template default method argument.");
+
+            if (string.IsNullOrEmpty(_AccessToken))
+                throw new ArgumentNullException("_AccessToken", "_AccessToken is null");
         }
 
         private Dictionary<string, string> GetHeaders()
@@ -27,7 +31,7 @@ namespace Chameleon.Common
             };
         }
 
-        public string Get(string apiRouteNoHost)
+        public ResponseModel Get(string apiRouteNoHost)
         {
             Ensure.ArgumentNotNullOrEmpty(apiRouteNoHost, nameof(apiRouteNoHost));
 
@@ -37,7 +41,7 @@ namespace Chameleon.Common
                 Url = $"{UrlsConfig.Instance.DataApi}{apiRouteNoHost}"
             });
 
-            return result;
+            return JsonConvert.DeserializeObject<ResponseModel>(result);
         }
 
         public ResponseModel Post(string apiRouteNoHost, Dictionary<string, string> arguments)
