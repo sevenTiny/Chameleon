@@ -47,10 +47,13 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public BsonDocument Add_Before(Dictionary<string, string> triggerContext, BsonDocument bsonDocument)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
+
         return bsonDocument;
     }}
 }}
@@ -70,7 +73,9 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public void Add_After(Dictionary<string, string> triggerContext)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
@@ -92,10 +97,13 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public BsonDocument[] BatchAdd_Before(Dictionary<string, string> triggerContext, BsonDocument[] bsonDocuments)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
+
         return bsonDocuments;
     }}
 }}
@@ -115,7 +123,9 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public void BatchAdd_After(Dictionary<string, string> triggerContext)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
@@ -137,10 +147,13 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public FilterDefinition<BsonDocument> Update_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter, BsonDocument bsonDocument)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
+
         return filter;
     }}
 }}
@@ -160,7 +173,9 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public Result Update_After(Dictionary<string, string> triggerContext)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
@@ -182,10 +197,13 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public FilterDefinition<BsonDocument> Delete_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
+
         return filter;
     }}
 }}
@@ -205,7 +223,9 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public Result Delete_After(Dictionary<string, string> triggerContext)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
@@ -227,10 +247,13 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public FilterDefinition<BsonDocument> QueryCount_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
+
         return filter;
     }}
 }}
@@ -250,10 +273,13 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public int QueryCount_After(Dictionary<string, string> triggerContext, int result)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
+
         return result;
     }}
 }}
@@ -273,10 +299,13 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public FilterDefinition<BsonDocument> QuerySingle_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
+
         return filter;
     }}
 }}
@@ -296,10 +325,13 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public Dictionary<string, CloudData> QuerySingle_After(Dictionary<string, string> triggerContext, Dictionary<string, CloudData> result)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
+
         return result;
     }}
 }}
@@ -320,10 +352,13 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public FilterDefinition<BsonDocument> QueryList_Before(Dictionary<string, string> triggerContext, Dictionary<string, string> argumentsUpperKeyDic, FilterDefinition<BsonDocument> filter)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
+
         return filter;
     }}
 }}
@@ -343,10 +378,13 @@ public class MetaObjectInterfaceTrigger
     {CommonClassCode}
     public List<Dictionary<string, CloudData>> QueryList_After(Dictionary<string, string> triggerContext, List<Dictionary<string, CloudData>> result)
     {{
-        if(triggerContext[""Interface""] == ""xxx"")
+        var interfaceCode = triggerContext[""Interface""];
+
+        if(interfaceCode == ""xxx"")
         {{
 
         }}
+
         return result;
     }}
 }}
