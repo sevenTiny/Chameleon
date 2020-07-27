@@ -1,10 +1,5 @@
-﻿using Chameleon.Common.Configs;
-using Newtonsoft.Json;
-using SevenTiny.Bantina;
-using SevenTiny.Bantina.Net.Http;
-using SevenTiny.Bantina.Validation;
+﻿using SevenTiny.Bantina.Validation;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Chameleon.Common
 {
@@ -13,113 +8,46 @@ namespace Chameleon.Common
     /// </summary>
     public class InterfaceRequest
     {
-        private string _AccessToken;
+        private DataApiRequest _DataApiRequest;
         public InterfaceRequest(Dictionary<string, string> triggerContext)
         {
-            if (!triggerContext.TryGetValue("_AccessToken", out _AccessToken))
-                throw new KeyNotFoundException("_AccessToken key not found in triggerContext, please set triggerContext value from trigger script template default method argument.");
+            _DataApiRequest = new DataApiRequest(triggerContext);
         }
 
-        private Dictionary<string, string> GetHeaders()
-        {
-            return new Dictionary<string, string>
-            {
-                { "Authorization",$"Bearer {_AccessToken}"}
-            };
-        }
-
-        private static string UrlArgumentsBuilder(Dictionary<string, string> arguments)
-        {
-            StringBuilder urlArg = new StringBuilder();
-
-            if (arguments != null)
-            {
-                foreach (var item in arguments)
-                {
-                    urlArg.Append("&");
-                    urlArg.Append(item.Key);
-                    urlArg.Append("=");
-                    urlArg.Append(item.Value);
-                }
-            }
-
-            return urlArg.ToString();
-        }
-
-        public ResponseModel CloudDataGet(string interfaceCode, Dictionary<string, string> arguments)
+        public ResponseModel CloudDataGet(string interfaceCode)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
-            var result = HttpHelper.Get(new GetRequestArgs
-            {
-                Headers = GetHeaders(),
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}{UrlArgumentsBuilder(arguments)}"
-            });
+            string url = $"/api/CloudData?_interface={interfaceCode}";
 
-            return JsonConvert.DeserializeObject<ResponseModel>(result);
+            return _DataApiRequest.Get(url);
         }
 
         public ResponseModel CloudDataPost(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
-            string data = string.Empty;
+            string url = $"/api/CloudData?_interface={interfaceCode}";
 
-            if (arguments != null)
-                data = JsonConvert.SerializeObject(arguments);
-
-            var result = HttpHelper.Post(new PostRequestArgs
-            {
-                Headers = GetHeaders(),
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}",
-                Encoding = Encoding.UTF8,
-                ContentType = "application/json",
-                Data = data
-            });
-
-            return JsonConvert.DeserializeObject<ResponseModel>(result);
+            return _DataApiRequest.Post(url, arguments);
         }
 
         public ResponseModel CloudDataPut(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
-            string data = string.Empty;
+            string url = $"/api/CloudData?_interface={interfaceCode}";
 
-            if (arguments != null)
-                data = JsonConvert.SerializeObject(arguments);
-
-            var result = HttpHelper.Put(new PutRequestArgs
-            {
-                Headers = GetHeaders(),
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}",
-                Encoding = Encoding.UTF8,
-                ContentType = "application/json",
-                Data = data
-            });
-
-            return JsonConvert.DeserializeObject<ResponseModel>(result);
+            return _DataApiRequest.Put(url, arguments);
         }
 
         public ResponseModel CloudDataDelete(string interfaceCode, Dictionary<string, string> arguments)
         {
             Ensure.ArgumentNotNullOrEmpty(interfaceCode, nameof(interfaceCode));
 
-            string data = string.Empty;
+            string url = $"/api/CloudData?_interface={interfaceCode}";
 
-            if (arguments != null)
-                data = JsonConvert.SerializeObject(arguments);
-
-            var result = HttpHelper.Delete(new DeleteRequestArgs
-            {
-                Headers = GetHeaders(),
-                Url = $"{UrlsConfig.Instance.DataApi}/api/CloudData?_interface={interfaceCode}",
-                Encoding = Encoding.UTF8,
-                ContentType = "application/json",
-                Data = data
-            });
-
-            return JsonConvert.DeserializeObject<ResponseModel>(result);
+            return _DataApiRequest.Delete(url, arguments);
         }
     }
 }
