@@ -173,6 +173,7 @@
                 success: function (data) {
                     if (data.isSuccess) {
                         window.location = data.data
+                        enableSignInBtn()
                     } else {
                         errorMsg(data.message);
                         enableSignInBtn()
