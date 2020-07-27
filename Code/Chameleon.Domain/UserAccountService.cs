@@ -163,10 +163,6 @@ namespace Chameleon.Domain
             if (userAccount == null)
                 return Result<UserAccount>.Error("账号不存在");
 
-            //如果需要重置密码，也算登陆成功，但是在登陆控制器里做判断强制跳转到修改密码页面
-            if (userAccount.IsNeedToResetPassword == 1)
-                return Result<UserAccount>.Success("密码已被重置，需要修改密码", userAccount);
-
             if (!userAccount.Password.Equals(GetSaltPassword(password)))
                 return Result<UserAccount>.Error("密码不正确");
 
