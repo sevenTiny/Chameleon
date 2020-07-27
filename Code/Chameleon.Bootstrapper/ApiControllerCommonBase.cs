@@ -25,9 +25,10 @@ namespace Chameleon.Bootstrapper
         /// <returns></returns>
         protected IActionResult SafeExecute(Func<IActionResult> func)
         {
-            string queryInfo = $"Request.Path:{Request.Path};Request.Query:{JsonConvert.SerializeObject(Request.Query)};Request.UserId:{CurrentUserId}";
+            string queryInfo = $"RequestMethod:{Request.Method};RequestPath:{Request.Path};RequestQuery:{JsonConvert.SerializeObject(Request.Query)};RequestUserId:{CurrentUserId}";
             try
             {
+                logger.LogError($"request before, {queryInfo}");
                 return func();
             }
             catch (ArgumentNullException argNullEx)
