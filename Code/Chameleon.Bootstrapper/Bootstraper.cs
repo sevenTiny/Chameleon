@@ -79,6 +79,10 @@ namespace Chameleon.Bootstrapper
 
                             if (!string.IsNullOrEmpty(tokenFromCookie))
                                 context.Token = tokenFromCookie;
+
+                            //如果cookie也没有，但是token是存在的，那么可能是通过header Berear提交的，这时候把这个放在cookie中
+                            else if (!string.IsNullOrEmpty(context.Token))
+                                context.Response.Cookies.Append(AccountConst.KEY_AccessToken, context.Token);
                         }
 
                         return Task.CompletedTask;
