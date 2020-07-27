@@ -69,7 +69,6 @@ namespace Chameleon.Bootstrapper
                         if (!string.IsNullOrEmpty(tokenFromRequest))
                         {
                             context.Token = tokenFromRequest;
-
                         }
                         //如果url没有找到，则降级从cookie获取
                         else
@@ -82,7 +81,8 @@ namespace Chameleon.Bootstrapper
                         }
 
                         //set token to cookie
-                        context.Response.Cookies.Append(AccountConst.KEY_AccessToken, context.Token);
+                        if (!string.IsNullOrEmpty(context.Token))
+                            context.Response.Cookies.Append(AccountConst.KEY_AccessToken, context.Token);
 
                         return Task.CompletedTask;
                     },
