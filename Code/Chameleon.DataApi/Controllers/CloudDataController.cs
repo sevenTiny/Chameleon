@@ -2,8 +2,10 @@
 using Chameleon.DataApi.Models;
 using Chameleon.Domain;
 using Chameleon.Entity;
+using Chameleon.Infrastructure;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
@@ -116,12 +118,20 @@ namespace Chameleon.DataApi.Controllers
         {
             return SafeExecute(() =>
             {
+                ILogger logger = new SevenTiny.Bantina.Logging.LogManager();
+
+                logger.LogError("11111");
+
                 var bson = BsonDocument.Parse(arg.ToString());
+
+                logger.LogError("2222");
 
                 if (bson == null || !bson.Any())
                     return Result.Error("Parameter invalid: 业务数据为空，无法执行新增操作").ToJsonResult();
 
                 InitQueryContext(queryArgs);
+
+                logger.LogError("3333");
 
                 //校验接口类型是否匹配
                 if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.Add)
@@ -129,6 +139,8 @@ namespace Chameleon.DataApi.Controllers
 
                 //before
                 var args = TryExecuteTriggerByServiceType(InterfaceServiceTypeEnum.MetaObject_Add_Before, new object[] { _queryContext.TriggerContext, bson }, bson);
+
+                logger.LogError("4444");
 
                 //系统字段赋值
                 if (args != null)
@@ -138,10 +150,17 @@ namespace Chameleon.DataApi.Controllers
                     args["ModifyBy"] = CurrentUserId;
                 }
 
+                logger.LogError("4444444444444");
+
                 //execute
                 var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, new[] { args });
+
+                logger.LogError("5555");
+
                 //after
                 TryExecuteTriggerByServiceType<object>(InterfaceServiceTypeEnum.MetaObject_Add_After, new object[] { _queryContext.TriggerContext }, null);
+
+                logger.LogError("66666666" + result.Message);
 
                 return result.ToJsonResult();
             });

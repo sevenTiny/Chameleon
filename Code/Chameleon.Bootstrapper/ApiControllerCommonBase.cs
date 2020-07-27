@@ -25,7 +25,7 @@ namespace Chameleon.Bootstrapper
         /// <returns></returns>
         protected IActionResult SafeExecute(Func<IActionResult> func)
         {
-            string queryInfo = $"Request.Path:{Request.Path}:Request.Query:{JsonConvert.SerializeObject(Request.Query)},Request.UserId:{CurrentUserId}";
+            string queryInfo = $"Request.Path:{Request.Path};Request.Query:{JsonConvert.SerializeObject(Request.Query)};Request.UserId:{CurrentUserId}";
             try
             {
                 return func();
