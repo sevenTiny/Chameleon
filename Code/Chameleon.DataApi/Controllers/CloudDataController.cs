@@ -129,16 +129,16 @@ namespace Chameleon.DataApi.Controllers
                 if (_queryContext.InterfaceSetting.GetInterfaceType() != InterfaceTypeEnum.Add)
                     return Result.Error("该接口不适用于该接口编码对应的接口类型").ToJsonResult();
 
+                //系统字段赋值
+                if (bson != null)
+                {
+                    bson["Organization"] = CurrentOrganization.ToString();
+                    bson["CreateBy"] = CurrentUserId;
+                    bson["ModifyBy"] = CurrentUserId;
+                }
+
                 //before
                 var args = TryExecuteTriggerByServiceType(InterfaceServiceTypeEnum.MetaObject_Add_Before, new object[] { _queryContext.TriggerContext, bson }, bson);
-
-                //系统字段赋值
-                if (args != null)
-                {
-                    args["Organization"] = CurrentOrganization.ToString();
-                    args["CreateBy"] = CurrentUserId;
-                    args["ModifyBy"] = CurrentUserId;
-                }
 
                 //execute
                 var result = _dataAccessApp.BatchAdd(_queryContext.InterfaceSetting, new[] { args });
@@ -174,13 +174,15 @@ namespace Chameleon.DataApi.Controllers
 
                 var filter = GetFilterDefinitionFromInterface();
 
-                //before
-                filter = TryExecuteTriggerByServiceType(InterfaceServiceTypeEnum.MetaObject_Update_Before, new object[] { _queryContext.TriggerContext, _queryContext.ConditionArgumentsUpperKeyDic, filter, bson }, filter);
                 //系统字段赋值
                 if (bson != null)
                 {
                     bson["ModifyBy"] = CurrentUserId;
                 }
+
+                //before
+                filter = TryExecuteTriggerByServiceType(InterfaceServiceTypeEnum.MetaObject_Update_Before, new object[] { _queryContext.TriggerContext, _queryContext.ConditionArgumentsUpperKeyDic, filter, bson }, filter);
+                
                 //execute
                 var result = _dataAccessApp.BatchUpdate(_queryContext.InterfaceSetting, filter, bson);
                 //after
