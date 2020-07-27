@@ -2,6 +2,7 @@
 using Chameleon.Infrastructure.Consts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -119,7 +120,17 @@ namespace Chameleon.Bootstrapper
         {
             get
             {
-                return HttpContext.Request.Cookies[AccountConst.KEY_AccessToken];
+                var _accessToken = HttpContext.Request.Cookies[AccountConst.KEY_AccessToken];
+
+                if (!string.IsNullOrEmpty(_accessToken))
+                    HttpContext.Session.SetString(AccountConst.KEY_AccessToken, _accessToken);
+                else
+                    _accessToken = HttpContext.Session.GetString(AccountConst.KEY_AccessToken);
+
+                if (string.IsNullOrEmpty(_accessToken))
+                    throw new ArgumentNullException("_AccessToken is not found from cookie or session");
+
+                return _accessToken;
             }
         }
     }
