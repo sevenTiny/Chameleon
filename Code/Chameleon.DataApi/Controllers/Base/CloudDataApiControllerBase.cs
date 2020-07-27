@@ -82,7 +82,7 @@ namespace Chameleon.DataApi.Controllers
 
             //如果开启Mou功能，则拼接MOU权限，有权限的组织下的数据才能被查到
             if (ChameleonSettingConfig.Instance.MouEnable == 1)
-                filter = Builders<BsonDocument>.Filter.And(filter, Builders<BsonDocument>.Filter.In(AccountConst.KEY_Organization, _organizationService.GetPermissionOrganizations(CurrentOrganization)));
+                filter = Builders<BsonDocument>.Filter.And(filter, Builders<BsonDocument>.Filter.In(AccountConst.KEY_Organization, _organizationService.GetSubordinatOrganizations(CurrentOrganization)));
 
             return filter;
         }

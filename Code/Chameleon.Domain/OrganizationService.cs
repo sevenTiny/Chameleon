@@ -44,7 +44,14 @@ namespace Chameleon.Domain
         /// </summary>
         /// <param name="userOrganization"></param>
         /// <returns></returns>
-        List<string> GetPermissionOrganizations(Guid userOrganization);
+        List<string> GetSubordinatOrganizations(Guid userOrganization);
+        /// <summary>
+        /// 获取有权限的所有组织id
+        /// </summary>
+        /// <param name="userOrganizations"></param>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        List<string> GetSubordinatOrganizations(IEnumerable<Guid> userOrganizations, int level);
         /// <summary>
         /// 获取名称展示类似树状层级的列表（用于下拉列表）
         /// </summary>
@@ -182,33 +189,9 @@ namespace Chameleon.Domain
             });
         }
 
-        public List<string> GetPermissionOrganizations(Guid userOrganization)
+        public List<string> GetSubordinatOrganizations(Guid userOrganization)
         {
-            //结果
-            var result = new List<string> { userOrganization.ToString() };
-
-            //获取所有子节点
-            var nodes = _organizationRepository.GetEnableList();
-
-            if (nodes == null || !nodes.Any())
-                return result;
-
-            result.Add(Guid.Empty.ToString());//默认组织，任何人都有此组织权限
-            result.AddRange(GetTree(nodes, userOrganization));
-
-            return result.Distinct().ToList();
-
-            List<string> GetTree(List<Organization> source, Guid parentId)
-            {
-                var childs = source.Where(t => t.ParentId == parentId).ToList();
-
-                if (childs == null || !childs.Any())
-                    return new List<string>(0);
-
-                childs.ForEach(t => result.AddRange(GetTree(source, t.Id)));
-
-                return childs.Select(t => t.Id.ToString()).ToList();
-            }
+            return GetSubordinatOrganizations(new Guid[] { userOrganization }, int.MaxValue);
         }
 
         public Result EnableNode(Guid nodeId)
@@ -278,6 +261,44 @@ namespace Chameleon.Domain
 
                 return Result.Success("保存成功！");
             });
+        }
+        public List<string> GetSubordinatOrganizations(IEnumerable<Guid> userOrganizations, int level)
+        {
+            if (userOrganizations == null || !userOrganizations.Any())
+                return new List<string> { Guid.Empty.ToString() };
+
+            //结果
+            var result = new List<string>();
+
+            //获取所有节点
+            var nodes = _organizationRepository.GetEnableList();
+
+            if (nodes == null || !nodes.Any())
+                return result;
+
+            result.Add(Guid.Empty.ToString());//默认组织，任何人都有此组织权限
+
+            foreach (var item in userOrganizations ?? Enumerable.Empty<Guid>())
+            {
+                result.Add(item.ToString());
+                result.AddRange(GetTree(nodes, item, level));
+            }
+
+            return result.Distinct().ToList();
+
+            List<string> GetTree(List<Organization> source, Guid parentId, int innerLevel)
+            {
+                var childs = source.Where(t => t.ParentId == parentId).ToList();
+
+                if (childs == null || !childs.Any() || innerLevel <= 0)
+                    return new List<string>(0);
+
+                innerLevel--;
+
+                childs.ForEach(t => result.AddRange(GetTree(source, t.Id, innerLevel)));
+
+                return childs.Select(t => t.Id.ToString()).ToList();
+            }
         }
     }
 }

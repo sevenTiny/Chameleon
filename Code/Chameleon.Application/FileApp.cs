@@ -62,7 +62,7 @@ namespace Chameleon.Application
             else
             {
                 //获取员工有权限的所有组织
-                var permissionOrgs = _organizationService.GetPermissionOrganizations(organization);
+                var permissionOrgs = _organizationService.GetSubordinatOrganizations(organization);
 
                 if (!permissionOrgs.Contains(meta.Organization.ToString()))
                     throw new InvalidOperationException("No Permission");
@@ -82,7 +82,7 @@ namespace Chameleon.Application
             if (meta.IsSystemFile != 1)
             {
                 //获取员工有权限的所有组织
-                var permissionOrgs = _organizationService.GetPermissionOrganizations(organization);
+                var permissionOrgs = _organizationService.GetSubordinatOrganizations(organization);
 
                 if (!permissionOrgs.Contains(meta.Organization.ToString()))
                     throw new InvalidOperationException("No Permission");
