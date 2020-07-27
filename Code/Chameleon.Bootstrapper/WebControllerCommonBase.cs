@@ -72,5 +72,16 @@ namespace Chameleon.Bootstrapper
             ViewData["UserRole"] = ((RoleEnum)CurrentUserRole).GetDescription();
             ViewData["UserName"] = CurrentUserName;
         }
+
+        /// <summary>
+        /// 请求的token
+        /// </summary>
+        protected string _AccessToken
+        {
+            get
+            {
+                return HttpContext.Request.Cookies[AccountConst.KEY_AccessToken];
+            }
+        }
     }
 }

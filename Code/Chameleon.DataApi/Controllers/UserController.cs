@@ -1,10 +1,12 @@
-﻿using Chameleon.Bootstrapper;
+﻿using Chameleon.Application;
+using Chameleon.Bootstrapper;
 using Chameleon.Domain;
 using Chameleon.Entity;
 using Chameleon.Repository;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
+using SevenTiny.Bantina.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +20,10 @@ namespace Chameleon.DataApi.Controllers
         IOrganizationService _organizationService;
         IUserAccountRepository _userAccountRepository;
         IUserAccountService _userAccountService;
-        public UserController(IUserAccountService userAccountService, IUserAccountRepository userAccountRepository, IOrganizationService organizationService)
+        IUserAccountApp _userAccountApp;
+        public UserController(IUserAccountApp userAccountApp, IUserAccountService userAccountService, IUserAccountRepository userAccountRepository, IOrganizationService organizationService)
         {
+            _userAccountApp = userAccountApp;
             _userAccountService = userAccountService;
             _userAccountRepository = userAccountRepository;
             _organizationService = organizationService;
@@ -256,11 +260,14 @@ namespace Chameleon.DataApi.Controllers
         {
             return SafeExecute(() =>
             {
+                if (userAccount == null)
+                    return Result.Error($"userAccount info is null,noting to add").ToJsonResult();
+
                 userAccount.CreateBy = CurrentUserId;
                 userAccount.Password = "Chameleon123456";
                 userAccount.IsNeedToResetPassword = 1;//手动添加的用户，下次登陆需要修改密码
 
-                return _userAccountService.AddUserAccount(userAccount).ToJsonResult();
+                return _userAccountApp.AddUserAccount(userAccount, _AccessToken).ToJsonResult();
             });
         }
 

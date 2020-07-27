@@ -12,6 +12,7 @@ using SevenTiny.Bantina.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Chameleon.Infrastructure.Consts;
 using System.Text.RegularExpressions;
+using Chameleon.Application;
 
 namespace Chameleon.Account.Controllers
 {
@@ -21,8 +22,10 @@ namespace Chameleon.Account.Controllers
         IUserAccountRepository _userAccountRepository;
         IOrganizationRepository _organizationRepository;
         IOrganizationService _organizationService;
-        public UserAccountController(IOrganizationService organizationService, IOrganizationRepository organizationRepository, IUserAccountRepository userAccountRepository, IUserAccountService userAccountService)
+        IUserAccountApp _userAccountApp;
+        public UserAccountController(IUserAccountApp userAccountApp, IOrganizationService organizationService, IOrganizationRepository organizationRepository, IUserAccountRepository userAccountRepository, IUserAccountService userAccountService)
         {
+            _userAccountApp = userAccountApp;
             _organizationService = organizationService;
             _organizationRepository = organizationRepository;
             _userAccountRepository = userAccountRepository;
@@ -66,7 +69,7 @@ namespace Chameleon.Account.Controllers
                     entity.CreateBy = CurrentUserId;
                     entity.Password = "Chameleon123456";
                     entity.IsNeedToResetPassword = 1;//手动添加的用户，下次登陆需要修改密码
-                    return _userAccountService.AddUserAccount(entity);
+                    return _userAccountApp.AddUserAccount(entity, _AccessToken);
                 });
 
             if (!result.IsSuccess)
@@ -282,9 +285,8 @@ namespace Chameleon.Account.Controllers
                 .ContinueAssert(_ => Regex.IsMatch(entity.Password, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$"), "必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-20之间")
                 .Continue(_ =>
                 {
-                    //为保证登陆用户没有数据权限，这里给一个不大会有的值
-                    entity.Organization = Guid.Parse("11111111-1111-1111-1111-111111111111");
-                    return _userAccountService.AddUserAccount(entity);
+                    entity.Organization = Guid.Empty;
+                    return _userAccountApp.AddUserAccount(entity, _AccessToken);
                 });
 
             if (!result.IsSuccess)
