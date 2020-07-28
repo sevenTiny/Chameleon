@@ -313,6 +313,8 @@ namespace Chameleon.Account.Controllers
 
         public IActionResult UserAccountInfo(long userId)
         {
+            SetUserInfoToViewData();
+
             var user = _userAccountRepository.GetUserAccountByUserId(userId);
 
             return View(ResponseModel.Success(data: user));
@@ -329,7 +331,7 @@ namespace Chameleon.Account.Controllers
                    return _userAccountService.UpdateWithOutCode(entity, t =>
                    {
                        t.Name = entity.Name;
-                       //t.AvatarPicId = entity.AvatarPicId;
+                       t.AvatarPicId = entity.AvatarPicId;
                    });
                });
 

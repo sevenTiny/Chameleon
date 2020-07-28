@@ -25,6 +25,14 @@ namespace Chameleon.Bootstrapper
 
         protected JsonResult JsonResultSuccess(string msg = "操作成功") => Result.Success(msg).ToJsonResult();
 
+        private string GetArgumentFromTokenCanNull(string key)
+        {
+            var auth = HttpContext.AuthenticateAsync()?.Result?.Principal?.Claims;
+            var value = auth?.FirstOrDefault(t => t.Type.Equals(key))?.Value;
+
+            return value;
+        }
+
         /// <summary>
         /// 从Token串中获取参数
         /// </summary>
@@ -32,8 +40,7 @@ namespace Chameleon.Bootstrapper
         /// <returns></returns>
         private string GetArgumentFromToken(string key)
         {
-            var auth = HttpContext.AuthenticateAsync()?.Result?.Principal?.Claims;
-            var value = auth?.FirstOrDefault(t => t.Type.Equals(key))?.Value;
+            var value = GetArgumentFromTokenCanNull(key);
 
             if (string.IsNullOrEmpty(value))
                 Response.Redirect(string.Concat(AccountConst.AccountSignInAndRedirectUrl, Request.Host, Request.Path));
@@ -72,6 +79,7 @@ namespace Chameleon.Bootstrapper
             ViewData["UserRole"] = ((RoleEnum)CurrentUserRole).GetDescription();
             ViewData["UserName"] = CurrentUserName;
             ViewData["UserId"] = CurrentUserId;
+            ViewData["AvatarPicId"] = GetArgumentFromTokenCanNull(AccountConst.KEY_AvatarPicId);
         }
 
         /// <summary>

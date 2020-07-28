@@ -223,7 +223,9 @@ namespace Chameleon.Domain
                 //用户系统身份
                 new Claim(AccountConst.KEY_ChameleonRole, userAccount.Role.ToString()),
                 //用户组织
-                new Claim(AccountConst.KEY_Organization, userAccount.Organization.ToString())
+                new Claim(AccountConst.KEY_Organization, userAccount.Organization.ToString()),
+                //用户头像
+                new Claim(AccountConst.KEY_AvatarPicId,userAccount.AvatarPicId)
             };
             //sign the token using a secret key.This secret will be shared between your API and anything that needs to check that the token is legit.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AccountConfig.Instance.SecurityKey));

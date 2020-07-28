@@ -6,6 +6,13 @@
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
     var apiHost = UrlsConfig.Instance.DataApi;
+
+    var avatar = Convert.ToString(ViewData["AvatarPicId"]);
+
+    var avatarLink = "~/chameleon.png";
+
+    if (!string.IsNullOrEmpty(avatar))
+        avatarLink = $"{apiHost}/api/File?_interface=ChameleonSystem.FDS.AccountAvatarDownload&_fileId={avatar}";
 }
 <link href="~/lib/avatar/avatar.css" rel="stylesheet" />
 
@@ -23,7 +30,7 @@
                 <ul class="cl">
                     <li>欢迎您，@ViewData["UserRole"] &nbsp;</li>
                     <li class="dropDown dropDown_hover">
-                        <img class="avatar size-S radius" src="~/chameleon.png">
+                        <img class="avatar size-S radius" src="@avatarLink">
                         <a href="#" class="dropDown_A"> @ViewData["UserName"] <i class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
                             <li><a href="@UrlsConfig.Instance.Office" target="_blank">前台首页</a></li>

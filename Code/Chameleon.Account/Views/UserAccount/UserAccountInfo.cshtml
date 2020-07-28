@@ -1,11 +1,19 @@
 ﻿@using Chameleon.Entity;
 @using SevenTiny.Bantina.Extensions.AspNetCore;
+@using Chameleon.Infrastructure.Configs;
 @{
     ViewData["Title"] = "UserAccountInfo";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
     var result = Model as ResponseModel ?? new ResponseModel();
     var entity = result.Data as UserAccount ?? new UserAccount();
+
+    var avatar = Convert.ToString(ViewData["AvatarPicId"]);
+
+    var avatarLink = "~/chameleon.png";
+
+    if (!string.IsNullOrEmpty(avatar))
+        avatarLink = $"{UrlsConfig.Instance.DataApi}/api/File?_interface=ChameleonSystem.FDS.AccountAvatarDownload&_fileId={avatar}";
 }
 
 <link href="~/lib/avatar/avatar.css" rel="stylesheet" />
@@ -15,10 +23,12 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">头像：</label>
             <div class="formControls col-xs-2 col-sm-2">
-                <img id="avatarImg" class="avatar size-XL radius" src="~/chameleon.png">
+                <img id="avatarImg" class="avatar size-XL radius" src='@avatarLink'>
             </div>
             <div class="formControls col-xs-2 col-sm-2">
-                <input class="btn btn-default radius" oncancel="changeAvatar()" type="button" value="更换头像">
+                <input type="file" onchange="avatarChange()" id="avatarFile" accept="image/png,image/jpeg,image/jpg" hidden />
+                <input type="text" id="AvatarPicId" name="AvatarPicId" value="@ViewData["AvatarPicId"]" hidden />
+                <input class="btn btn-default radius" onclick="changeAvatar()" type="button" value="更换头像">
             </div>
         </div>
         <div class="row cl">
@@ -30,13 +40,13 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">邮箱：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="email" class="input-text" value="@entity.Email" disabled>
+                <input type="email" class="input-text" value="@entity.Email" name="Email" disabled>
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">手机号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="tel" class="input-text" value="@entity.Phone" disabled>
+                <input type="tel" class="input-text" value="@entity.Phone" name="Phone" disabled>
             </div>
         </div>
         <div class="row cl">
@@ -57,9 +67,38 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
     function changeAvatar() {
-        $("#avatarImg").prop('src','~/chameleon.png')
+        //模拟点击
+        $("#avatarFile").click()
     }
 
+    function avatarChange() {
+        var file = $("#avatarFile").val()
+        // 判断文件是否为空
+        if (file == "") {
+            alert("请选择上传的目标文件! ")
+            return false;
+        }
+
+        var formData = new FormData();//这里需要实例化一个FormData来进行文件上传
+        formData.append('file', $("#avatarFile")[0].files[0]);
+
+        $.ajax({
+			type : "post",
+			url : "@UrlsConfig.Instance.DataApi/api/File?_interface=ChameleonSystem.FDS.AccountAvatarUpload",
+			data : formData,
+			processData : false,
+			contentType : false,
+            success: function (data) {
+                if (data.success) {
+                    var fileId = data.data[0]
+                    $("#AvatarPicId").val(fileId)
+                    $("#avatarImg").prop('src', "@UrlsConfig.Instance.DataApi/api/File?_interface=ChameleonSystem.FDS.AccountAvatarDownload&_fileId="+fileId)
+                } else {
+                    alert("上传失败！")
+                    console.error(data)
+                }
+			}})
+    }
 
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
