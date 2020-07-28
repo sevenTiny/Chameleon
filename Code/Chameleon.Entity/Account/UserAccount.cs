@@ -40,6 +40,11 @@ namespace Chameleon.Entity
         /// </summary>
         [Column]
         public Guid Organization { get; set; }
+        /// <summary>
+        /// 头像Id
+        /// </summary>
+        [Column]
+        public string AvatarPicId { get; set; }
 
         /// <summary>
         /// 翻译用

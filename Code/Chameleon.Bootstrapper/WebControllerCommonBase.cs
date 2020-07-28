@@ -71,6 +71,7 @@ namespace Chameleon.Bootstrapper
         {
             ViewData["UserRole"] = ((RoleEnum)CurrentUserRole).GetDescription();
             ViewData["UserName"] = CurrentUserName;
+            ViewData["UserId"] = CurrentUserId;
         }
 
         /// <summary>

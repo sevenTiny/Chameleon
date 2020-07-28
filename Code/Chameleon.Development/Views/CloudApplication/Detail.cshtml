@@ -10,7 +10,7 @@
 
     var apiHost = UrlsConfig.Instance.DataApi;
 }
-
+<link href="~/lib/avatar/avatar.css" rel="stylesheet" />
 <header class="navbar-wrapper">
     <div class="navbar navbar-fixed-top">
         <div class="container-fluid cl">
@@ -24,14 +24,16 @@
             </nav>
             <nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
                 <ul class="cl">
-                    <li>欢迎您，@ViewData["UserRole"] </li>
+                    <li>欢迎您，@ViewData["UserRole"] &nbsp;</li>
                     <li class="dropDown dropDown_hover">
+                        <img class="avatar size-S radius" src="~/chameleon.png">
                         <a href="#" class="dropDown_A"> @ViewData["UserName"] <i class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
                             <li><a href="/System/Log" target="_blank">查看日志</a></li>
                             <li><a href="/CloudApplication/List">应用管理</a></li>
                             <li><a href="@UrlsConfig.Instance.Account" target="_blank">后台管理系统</a></li>
                             <li><a href="@UrlsConfig.Instance.Office" target="_blank">前台首页</a></li>
+                            <li><a href="javascript:commonPannel('个人信息','@UrlsConfig.Instance.Account/UserAccount/UserAccountInfo?userId=@ViewData["UserId"]')">个人信息</a></li>
                             <li><a href="@AccountConst.SwitchDevelopmentAccountUrl">切换账户</a></li>
                             <li><a href="@AccountConst.SignOutDevelopmentUrl">退出</a></li>
                         </ul>

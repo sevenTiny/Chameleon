@@ -310,5 +310,34 @@ namespace Chameleon.Account.Controllers
                 })
                 .ToJsonResult();
         }
+
+        public IActionResult UserAccountInfo(long userId)
+        {
+            var user = _userAccountRepository.GetUserAccountByUserId(userId);
+
+            return View(ResponseModel.Success(data: user));
+        }
+
+        public IActionResult SaveUserAccountInfo(UserAccount entity)
+        {
+            var result = Result.Success()
+                .ContinueEnsureArgumentNotNullOrEmpty(entity, nameof(entity))
+                .ContinueEnsureArgumentNotNullOrEmpty(entity.Name, nameof(entity.Name))
+               .Continue(_ =>
+               {
+                   entity.ModifyBy = CurrentUserId;
+                   return _userAccountService.UpdateWithOutCode(entity, t =>
+                   {
+                       t.Name = entity.Name;
+                       //t.AvatarPicId = entity.AvatarPicId;
+                   });
+               });
+
+            if (result.IsSuccess)
+                result.Message = "保存成功";
+
+            GetUserRoleToViewData();
+            return View("UserAccountInfo", result.ToResponseModel(entity));
+        }
     }
 }

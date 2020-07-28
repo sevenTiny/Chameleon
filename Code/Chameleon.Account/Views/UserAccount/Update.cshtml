@@ -14,10 +14,10 @@
     List<Organization> organizations = (ViewData["Organization"] as List<Organization>) ?? new List<Organization>(0);
 }
 @{
-    ViewData["Level_1"] = "对象管理";
-    ViewData["Level_2"] = "修改对象";
+    ViewData["Level_1"] = "用户管理";
+    ViewData["Level_2"] = "修改用户";
 }
-@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml");
+@await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="page-container">
     <form class="form form-horizontal validate" id="form-article-add" method="post" action="/UserAccount/UpdateLogic">
