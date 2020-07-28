@@ -89,7 +89,7 @@ namespace Chameleon.DataApi.Controllers
                     var extensionsLimit = _queryContext.InterfaceSetting.FileExtensionLimit?.Split('|') ?? new string[0];
 
                     if (extensionsLimit.Any() && !extensionsLimit.Contains(Path.GetExtension(item.FileName)))
-                        return Result.Error($"The [{item.FileName}] file type does not conform to the interface definition").ToJsonResult();
+                        return Result.Error($"只支持{string.Join(',', extensionsLimit)}类型").ToJsonResult();
                 }
 
                 foreach (var item in files)
