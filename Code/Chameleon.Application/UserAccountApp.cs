@@ -30,7 +30,7 @@ namespace Chameleon.Application
                 return addResult;
 
             //发送注册成功消息
-            new InterfaceRequest(new Dictionary<string, string> { { "_AccessToken", token } }).CloudDataGet($"ChameleonMessage.TDS.SignUpUserAlert&userId={userAccount.UserId}");
+            new InterfaceRequest(new Dictionary<string, string> { { "_AccessToken", token } }).CloudDataGet($"ChameleonSystem.TDS.SignUpUserAlert&userId={userAccount.UserId}");
 
             return Result.Success();
         }

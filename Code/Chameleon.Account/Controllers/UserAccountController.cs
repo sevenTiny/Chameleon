@@ -304,7 +304,7 @@ namespace Chameleon.Account.Controllers
                 {
                     var userAccount = _userAccountService.GetById(id);
                     //发送注册成功消息
-                    var result = new Chameleon.Common.InterfaceRequest(new Dictionary<string, string> { { "_AccessToken", _AccessToken } }).CloudDataGet($"ChameleonMessage.TDS.PasswordReset&userId={userAccount.UserId}");
+                    var result = new Chameleon.Common.InterfaceRequest(new Dictionary<string, string> { { "_AccessToken", _AccessToken } }).CloudDataGet($"ChameleonSystem.TDS.PasswordReset&userId={userAccount.UserId}");
 
                     return _;
                 })

@@ -150,7 +150,7 @@ data.Add("UserId", long.Parse(triggerContext["CurrentUserId"]));//从上下文�
 data.Add("UserName", long.Parse(triggerContext["张三"]));
 
 //新增
-dbContext.GetCollectionBson("ChameleonMessage.UserInformation").InsertOne(message);
+dbContext.GetCollectionBson("ChameleonSystem.UserInformation").InsertOne(message);
     </pre>
 </article>
 

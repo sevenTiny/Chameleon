@@ -38,7 +38,7 @@
 <script type="text/javascript">
     $.ajax({
             type: 'GET',
-            url: '@host/api/CloudData?_interface=ChameleonMessage.MessageAlert.CurrentUserReadMessageList',
+            url: '@host/api/CloudData?_interface=ChameleonSystem.MessageAlert.CurrentUserReadMessageList',
             dataType: 'json',
             success: function (data) {
                 if (data.success) {
@@ -74,7 +74,7 @@
         layer.confirm('确认移动到未读列表？', function (index) {
             $.ajax({
                 type: 'GET',
-                url: '@host/api/CloudData?_interface=ChameleonMessage.TDS.MarkAsUnRead&_id=' + id,
+                url: '@host/api/CloudData?_interface=ChameleonSystem.TDS.MarkAsUnRead&_id=' + id,
                 dataType: 'json',
                 success: function (data) {
                     if (data.success) {
