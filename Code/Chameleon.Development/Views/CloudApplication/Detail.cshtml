@@ -33,7 +33,7 @@
                             <li><a href="/CloudApplication/List">应用管理</a></li>
                             <li><a href="@UrlsConfig.Instance.Account" target="_blank">后台管理系统</a></li>
                             <li><a href="@UrlsConfig.Instance.Office" target="_blank">前台首页</a></li>
-                            <li><a href="javascript:commonPannel('个人信息','@UrlsConfig.Instance.Account/UserAccount/UserAccountInfo?userId=@ViewData["UserId"]')">个人信息</a></li>
+                            <li><a href="javascript:myinfo()">个人信息</a></li>
                             <li><a href="@AccountConst.SwitchDevelopmentAccountUrl">切换账户</a></li>
                             <li><a href="@AccountConst.SignOutDevelopmentUrl">退出</a></li>
                         </ul>
@@ -164,6 +164,10 @@
     //在frame中打开页面
     function mainFrameOpen(url) {
         $("#main_iframe").prop("src", url);
+    }
+
+     function myinfo() {
+        layer_open('个人信息','@UrlsConfig.Instance.Account/UserAccount/UserAccountInfo?userId=@ViewData["UserId"]',0.7)
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
