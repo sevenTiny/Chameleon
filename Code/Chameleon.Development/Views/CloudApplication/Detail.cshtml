@@ -12,7 +12,7 @@
 
     var avatar = Convert.ToString(ViewData["AvatarPicId"]);
 
-    var avatarLink = "~/chameleon.png";
+    var avatarLink = "/chameleon.png";
 
     if (!string.IsNullOrEmpty(avatar))
         avatarLink = $"{apiHost}/api/File?_interface=ChameleonSystem.FDS.AccountAvatarDownload&_fileId={avatar}";
