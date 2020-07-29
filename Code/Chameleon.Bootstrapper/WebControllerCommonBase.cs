@@ -30,6 +30,9 @@ namespace Chameleon.Bootstrapper
             var auth = HttpContext.AuthenticateAsync()?.Result?.Principal?.Claims;
             var value = auth?.FirstOrDefault(t => t.Type.Equals(key))?.Value;
 
+            //把token中的kv存入Session
+            HttpContext.Session.SetString(key, value);
+
             return value;
         }
 
@@ -44,8 +47,6 @@ namespace Chameleon.Bootstrapper
 
             if (string.IsNullOrEmpty(value))
                 Response.Redirect(string.Concat(AccountConst.AccountSignInAndRedirectUrl, Request.Host, Request.Path));
-
-            HttpContext.Session.SetString(key, value);
 
             return value;
         }
