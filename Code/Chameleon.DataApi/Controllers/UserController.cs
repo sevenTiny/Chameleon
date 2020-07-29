@@ -212,6 +212,41 @@ namespace Chameleon.DataApi.Controllers
             });
         }
 
+        [HttpGet]
+        [Route("GetUserAvatarByUserIds")]
+        public IActionResult GetUserAvatarByUserIds(string UserId)
+        {
+            return SafeExecute(() =>
+            {
+                if (string.IsNullOrEmpty(UserId))
+                    return Result.Error($"argument [UserId] must be provide").ToJsonResult();
+
+                var userIds = UserId.ToString().Split(',');
+
+                var userIdss = new List<long>(userIds.Length);
+
+                foreach (var item in userIds)
+                {
+                    if (!long.TryParse(item, out long uid))
+                        return Result.Error($"argument [UserId] format error, input is {item}").ToJsonResult();
+
+                    userIdss.Add(uid);
+                }
+
+                //获取所有组织下的人员
+                var allUsers = _userAccountRepository.GetUserAccountList() ?? new List<UserAccount>(0);
+
+                //所有组织内的人员
+                var useResult = allUsers.Where(t => userIdss.Contains(t.UserId))
+                .Select(t => new
+                {
+                    AvatarPicId = t.AvatarPicId,
+                }).ToList();
+
+                return ResponseModel.Success(data: useResult).ToJsonResult();
+            });
+        }
+
         /// <summary>
         /// 查询人员账户信息
         /// </summary>
