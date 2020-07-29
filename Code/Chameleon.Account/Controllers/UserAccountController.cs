@@ -23,8 +23,10 @@ namespace Chameleon.Account.Controllers
         IOrganizationRepository _organizationRepository;
         IOrganizationService _organizationService;
         IUserAccountApp _userAccountApp;
-        public UserAccountController(IUserAccountApp userAccountApp, IOrganizationService organizationService, IOrganizationRepository organizationRepository, IUserAccountRepository userAccountRepository, IUserAccountService userAccountService)
+        IFileApp _fileApp;
+        public UserAccountController(IFileApp fileApp, IUserAccountApp userAccountApp, IOrganizationService organizationService, IOrganizationRepository organizationRepository, IUserAccountRepository userAccountRepository, IUserAccountService userAccountService)
         {
+            _fileApp = fileApp;
             _userAccountApp = userAccountApp;
             _organizationService = organizationService;
             _organizationRepository = organizationRepository;
@@ -331,6 +333,11 @@ namespace Chameleon.Account.Controllers
                    return _userAccountService.UpdateWithOutCode(entity, t =>
                    {
                        t.Name = entity.Name;
+
+                       //如果头像不一致，则把旧的图片删掉
+                       if (!string.IsNullOrEmpty(t.AvatarPicId) && !string.IsNullOrEmpty(entity.AvatarPicId) && !string.Equals(t.AvatarPicId, entity.AvatarPicId))
+                           _fileApp.Delete(CurrentUserId, CurrentUserRole, CurrentOrganization, t.AvatarPicId);
+
                        t.AvatarPicId = entity.AvatarPicId;
                    });
                });
