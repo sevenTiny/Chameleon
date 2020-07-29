@@ -1,4 +1,6 @@
-﻿@{
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor  _httpContextAccessor
+@using Microsoft.AspNetCore.Http;
+@{
     Layout = null;
 }
 <!--引入H-ui样式表的框架-->
@@ -9,10 +11,11 @@
 <link rel="stylesheet" type="text/css" href="~/lib/h-ui.admin/css/style.css" />
 <script>
     var ChameleonGlobal = {
-        UserId: @ViewData["UserId"],
-        UserRole: "@ViewData["UserRole"]",
-        UserName: "@ViewData["UserName"]",
-        AvatarPicId: "@ViewData["AvatarPicId"]"
+
+        UserId: "@_httpContextAccessor.HttpContext.Session.GetString("UserId")",
+        UserRole: "@_httpContextAccessor.HttpContext.Session.GetString("UserRole")",
+        UserName: "@_httpContextAccessor.HttpContext.Session.GetString("UserName")",
+        AvatarPicId: "@_httpContextAccessor.HttpContext.Session.GetString("AvatarPicId")"
     }
 </script>
 @RenderBody()

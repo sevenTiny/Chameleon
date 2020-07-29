@@ -2,8 +2,8 @@
 using Chameleon.Infrastructure;
 using Chameleon.Infrastructure.Consts;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
@@ -44,6 +44,8 @@ namespace Chameleon.Bootstrapper
 
             if (string.IsNullOrEmpty(value))
                 Response.Redirect(string.Concat(AccountConst.AccountSignInAndRedirectUrl, Request.Host, Request.Path));
+
+            HttpContext.Session.SetString(key, value);
 
             return value;
         }
