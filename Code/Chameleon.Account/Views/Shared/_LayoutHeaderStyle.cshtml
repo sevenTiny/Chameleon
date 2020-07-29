@@ -10,9 +10,9 @@
 <script>
     var ChameleonGlobal = {
         UserId: @ViewData["UserId"],
-        UserRole: @ViewData["UserRole"],
-        UserName: @ViewData["UserName"],
-        AvatarPicId: @ViewData["AvatarPicId"],
+        UserRole: "@ViewData["UserRole"]",
+        UserName: "@ViewData["UserName"]",
+        AvatarPicId: "@ViewData["AvatarPicId"]"
     }
 </script>
 @RenderBody()
