@@ -25,10 +25,11 @@
             <div class="formControls col-xs-2 col-sm-2">
                 <img id="avatarImg" class="avatar size-XL radius" src='@avatarLink'>
             </div>
-            <div class="formControls col-xs-2 col-sm-2">
+            <div class="formControls col-xs-8 col-sm-7">
                 <input type="file" onchange="avatarChange()" id="avatarFile" accept="image/png,image/jpeg,image/jpg" hidden />
                 <input type="text" id="AvatarPicId" name="AvatarPicId" value="@ViewData["AvatarPicId"]" hidden />
                 <input class="btn btn-default radius" onclick="changeAvatar()" type="button" value="更换头像">
+                <label style="color:orangered">修改头像保存后，需要重新登陆才能生效哦~</label>
             </div>
         </div>
         <div class="row cl">
