@@ -1,5 +1,6 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor  _httpContextAccessor
 @using Microsoft.AspNetCore.Http;
+@using Chameleon.Infrastructure.Consts;
 @{
     Layout = null;
 }
@@ -12,10 +13,10 @@
 <script>
     var ChameleonGlobal = {
 
-        UserId: "@_httpContextAccessor.HttpContext.Session.GetString("UserId")",
-        UserRole: "@_httpContextAccessor.HttpContext.Session.GetString("UserRole")",
-        UserName: "@_httpContextAccessor.HttpContext.Session.GetString("UserName")",
-        AvatarPicId: "@_httpContextAccessor.HttpContext.Session.GetString("AvatarPicId")"
+        UserId: "@_httpContextAccessor.HttpContext.Session.GetString(AccountConst.KEY_UserId)",
+        UserRole: "@_httpContextAccessor.HttpContext.Session.GetString(AccountConst.KEY_ChameleonRole)",
+        UserName: "@_httpContextAccessor.HttpContext.Session.GetString(AccountConst.KEY_UserName)",
+        AvatarPicId: "@_httpContextAccessor.HttpContext.Session.GetString(AccountConst.KEY_AvatarPicId)"
     }
 </script>
 @RenderBody()
