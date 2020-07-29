@@ -27,6 +27,7 @@
                     <th>名称</th>
                     <th>编码</th>
                     <th>描述</th>
+                    <th>分组</th>
                     <th>排序</th>
                     <th>操作</th>
                 </tr>
@@ -38,6 +39,7 @@
                         <td>@item.Id</td>
                         <td>@item.Name</td>
                         <td>@item.Code</td>
+                        <td>@item.Group</td>
                         <td>@item.Description</td>
                         <td>@item.SortNumber</td>
                         <td class="f-14 td-manage">
@@ -58,11 +60,11 @@
 <script type="text/javascript">
     $('.table-sort').dataTable({
         "aLengthMenu": [[50, 100, -1], ["50", "100", "All"]],//二组数组，第一组数量，
-        "aaSorting": [[4, "asc"], [0, "asc"]],//默认第几个排序
+        "aaSorting": [[5, "asc"], [0, "asc"]],//默认第几个排序
         "bStateSave": true,//状态保存
         "aoColumnDefs": [
             { "bVisible": false, "aTargets": [0] }, //控制列的隐藏显示
-            { "orderable": false, "aTargets": [5] }// 不参与排序的列
+            { "orderable": false, "aTargets": [6] }// 不参与排序的列
         ]
     });
 </script>
