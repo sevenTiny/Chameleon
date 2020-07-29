@@ -13,6 +13,7 @@
 <script>
     var ChameleonGlobal = {
 
+        UserEmail: "@_httpContextAccessor.HttpContext.Session.GetString(AccountConst.KEY_UserEmail)",
         UserId: "@_httpContextAccessor.HttpContext.Session.GetString(AccountConst.KEY_UserId)",
         UserRole: "@_httpContextAccessor.HttpContext.Session.GetString(AccountConst.KEY_ChameleonRole)",
         UserName: "@_httpContextAccessor.HttpContext.Session.GetString(AccountConst.KEY_UserName)",

@@ -81,6 +81,7 @@ namespace Chameleon.Bootstrapper
         {
             ViewData["UserRole"] = ((RoleEnum)CurrentUserRole).GetDescription();
             ViewData["UserName"] = CurrentUserName;
+            ViewData["UserEmail"] = CurrentUserEmail;
             ViewData["UserId"] = CurrentUserId;
             ViewData["AvatarPicId"] = GetArgumentFromTokenCanNull(AccountConst.KEY_AvatarPicId);
         }
