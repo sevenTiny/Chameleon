@@ -41,12 +41,7 @@ namespace Chameleon.Account.Controllers
 
         public IActionResult Setting(Guid profileId)
         {
-            ViewData["ProfileId"] = profileId;
-
-            var profile = _ProfileRepository.GetById(profileId);
-
-            ViewData["PermissionMenu"] = new HashSet<string>(profile.PermissionMenu?.Split(',').ToArray() ?? new string[0]);
-            ViewData["PermissionFunction"] = new HashSet<string>(profile.PermissionFunction?.Split(',').ToArray() ?? new string[0]);
+            ViewData["Profile"] = _ProfileRepository.GetById(profileId);
             ViewData["Menus"] = _menuService.GetTreeNameList();
             ViewData["Functions"] = _functionRepository.GetListUnDeleted();
             return View();

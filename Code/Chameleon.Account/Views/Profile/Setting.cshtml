@@ -8,15 +8,16 @@
     var result = Model as ResponseModel ?? new ResponseModel();
     var entity = result?.Data as Profile ?? new Profile();
 
-    string profileId = Convert.ToString(ViewData["ProfileId"]);
     List<Menu> menus = (ViewData["Menus"] as List<Menu>) ?? new List<Menu>(0);
     List<Function> functions = (ViewData["Functions"] as List<Function>) ?? new List<Function>(0);
     var functionView = functions.GroupBy(t => t.Group).SafeToDictionary(k => k.Key, v => functions.Where(t => t.Group == v.Key).ToList());
 
+    Profile profile = (ViewData["Profile"] as Profile);
+
     //菜单
-    HashSet<string> permissionMenu = (ViewData["PermissionMenu"] as HashSet<string>) ?? new HashSet<string>(0);
+    HashSet<string> permissionMenu = new HashSet<string>(profile.PermissionMenu?.Split(',').ToArray() ?? new string[0]);
     //按钮
-    HashSet<string> permissionFunction = (ViewData["PermissionFunction"] as HashSet<string>) ?? new HashSet<string>(0);
+    HashSet<string> permissionFunction = new HashSet<string>(profile.PermissionFunction?.Split(',').ToArray() ?? new string[0]);
 }
 @{
     ViewData["Level_1"] = "身份管理";
@@ -37,13 +38,13 @@
                                 <div class="check-box">
                                     @if (permissionMenu.Contains(item.Id.ToString()))
                                     {
-                                        <input type="checkbox" id="checkbox-@item.Id" checked>
+                                        <input type="checkbox" id="@item.Id" checked>
                                     }
                                     else
                                     {
-                                        <input type="checkbox" id="checkbox-@item.Id">
+                                        <input type="checkbox" id="@item.Id">
                                     }
-                                    <label for="checkbox-@item.Id">@item.Name</label>
+                                    <label for="@item.Id">@item.Name</label>
                                 </div>
                             </section>
                         }
@@ -84,13 +85,13 @@
                                         <div class="check-box">
                                             @if (permissionFunction.Contains(func.Id.ToString()))
                                             {
-                                                <input type="checkbox" id="checkbox-@func.Id" checked>
+                                                <input type="checkbox" id="@func.Id" checked>
                                             }
                                             else
                                             {
-                                                <input type="checkbox" id="checkbox-@func.Id">
+                                                <input type="checkbox" id="@func.Id">
                                             }
-                                            <label for="checkbox-@func.Id">@func.Name</label>
+                                            <label for="@func.Id">@func.Name</label>
                                         </div>
                                     }
                                 </div>
@@ -114,6 +115,14 @@
             radioClass: 'iradio-blue',
             increaseArea: '20%'
         })
+        $('.skin-minimal input').on('ifChecked', function (event) {
+            console.log(event.target.id)
+        });
+        $('.skin-minimal input').on('ifUnchecked', function (event) {
+            console.log(event.target.id)
+        });
+
+        //删除数组：https://www.jb51.net/article/134312.htm
     });
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
