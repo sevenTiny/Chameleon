@@ -33,6 +33,11 @@ namespace Chameleon.Domain
         /// <param name="cloudApplicationId"></param>
         /// <returns></returns>
         CloudApplicationDeployDto DataSourceExport(Guid cloudApplicationId);
+        /// <summary>
+        /// 身份菜单功能
+        /// </summary>
+        /// <returns></returns>
+        CloudApplicationDeployDto ProfileMenuFunc();
     }
 
     public class CloudApplicationDeployService : ICloudApplicationDeployService
@@ -46,7 +51,13 @@ namespace Chameleon.Domain
         IInterfaceConditionRepository _interfaceConditionRepository;
         IInterfaceSortRepository _interfaceSortRepository;
         IInterfaceVerificationRepository _interfaceVerificationRepository;
+        IProfileRepository _profileRepository;
+        IMenuRepository _menuRepository;
+        IFunctionRepository _functionRepository;
         public CloudApplicationDeployService(
+            IProfileRepository profileRepository,
+            IMenuRepository menuRepository,
+            IFunctionRepository functionRepository,
             ICloudApplicationRepository cloudApplicationRepository,
             IMetaObjectRepository metaObjectRepository,
             IMetaFieldRepository metaFieldRepository,
@@ -58,6 +69,9 @@ namespace Chameleon.Domain
             IInterfaceVerificationRepository interfaceVerificationRepository
             )
         {
+            _functionRepository = functionRepository;
+            _menuRepository = menuRepository;
+            _profileRepository = profileRepository;
             _cloudApplicationRepository = cloudApplicationRepository;
             _metaObjectRepository = metaObjectRepository;
             _metaFieldRepository = metaFieldRepository;
@@ -81,6 +95,16 @@ namespace Chameleon.Domain
             deployDto.InterfaceCondition = _interfaceConditionRepository.GetListByCloudApplicationId(cloudApplicationId);
             deployDto.InterfaceSort = _interfaceSortRepository.GetListByCloudApplicationId(cloudApplicationId);
             deployDto.InterfaceVerification = _interfaceVerificationRepository.GetListByCloudApplicationId(cloudApplicationId);
+
+            return deployDto;
+        }
+
+        public CloudApplicationDeployDto ProfileMenuFunc()
+        {
+            var deployDto = new CloudApplicationDeployDto();
+            deployDto.Profile = _profileRepository.GetListUnDeleted();
+            deployDto.Menu = _menuRepository.GetListUnDeleted();
+            deployDto.Function = _functionRepository.GetListUnDeleted();
 
             return deployDto;
         }
@@ -165,6 +189,18 @@ namespace Chameleon.Domain
             _interfaceVerificationRepository.BatchAdd(deployDto.InterfaceVerification);
             result.MoreMessage.Add($"--> 成功导入[{deployDto.InterfaceVerification?.Count ?? 0}]个接口校验");
             deployDto.InterfaceVerification?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
+
+            _profileRepository.BatchAdd(deployDto.Profile);
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.Profile?.Count ?? 0}]个身份");
+            deployDto.Profile?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
+
+            _menuRepository.BatchAdd(deployDto.Menu);
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.Menu?.Count ?? 0}]个菜单");
+            deployDto.Menu?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
+
+            _functionRepository.BatchAdd(deployDto.Function);
+            result.MoreMessage.Add($"--> 成功导入[{deployDto.Function?.Count ?? 0}]个功能");
+            deployDto.Function?.ForEach(item => result.MoreMessage.Add($"{item.Code}({item.Name})"));
 
             return result;
         }

@@ -105,6 +105,19 @@ namespace Chameleon.Development.Controllers
             return File(bytes, "application/json", $"{application.Name}_ApplicationInterface_{DateTime.Now.ToString("yyyyMMddHHmmss")}{MetaDataFileExtension}");
         }
 
+        /// <summary>
+        /// 身份菜单功能
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult ProfileMenuFunc()
+        {
+            var deployDto = _cloudApplicationDeployService.ProfileMenuFunc();
+
+            var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(deployDto));
+
+            return File(bytes, "application/json", $"ProfileMenuFunction_{DateTime.Now.ToString("yyyyMMddHHmmss")}{MetaDataFileExtension}");
+        }
+
         public IActionResult Import()
         {
             return View(ResponseModel.Success());

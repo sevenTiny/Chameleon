@@ -44,5 +44,17 @@ namespace Chameleon.ValueObject
         /// 接口校验
         /// </summary>
         public List<InterfaceVerification> InterfaceVerification { get; set; }
+        /// <summary>
+        /// 身份
+        /// </summary>
+        public List<Profile> Profile { get; set; }
+        /// <summary>
+        /// 菜单
+        /// </summary>
+        public List<Menu> Menu { get; set; }
+        /// <summary>
+        /// 功能
+        /// </summary>
+        public List<Function> Function { get; set; }
     }
 }
