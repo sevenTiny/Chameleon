@@ -79,6 +79,7 @@ namespace Chameleon.Bootstrapper
         /// </summary>
         protected void SetUserInfoToViewData()
         {
+            ViewData["IsDeveloper"] = IsDeveloper;
             ViewData["UserRole"] = ((RoleEnum)CurrentUserRole).GetDescription();
             ViewData["UserName"] = CurrentUserName;
             ViewData["UserEmail"] = CurrentUserEmail;

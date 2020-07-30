@@ -5,6 +5,9 @@
     ViewData["Title"] = "Home";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
+    //是否开发人员
+    bool isDeveloper = Convert.ToBoolean(ViewData["IsDeveloper"]);
+
     var apiHost = UrlsConfig.Instance.DataApi;
 
     var avatar = Convert.ToString(ViewData["AvatarPicId"]);
@@ -75,6 +78,26 @@
                 </ul>
             </dd>
         </dl>
+        <dl id="menu-article">
+            <dt title="身份管理"><i class="Hui-iconfont">&#xe653;</i> 身份管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
+                <ul>
+                    <li><a href="javascript:mainFrameOpen('#')"><i class="Hui-iconfont">&#xe63c;</i> 身份配置</a></li>
+                </ul>
+            </dd>
+        </dl>
+        @if (isDeveloper)
+        {
+            <dl id="menu-article">
+                <dt title="系统配置"><i class="Hui-iconfont">&#xe62e;</i> 系统配置<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+                <dd>
+                    <ul>
+                        <li><a href="javascript:mainFrameOpen('#')"><i class="Hui-iconfont">&#xe681;</i> 菜单设置</a></li>
+                        <li><a href="javascript:mainFrameOpen('#')"><i class="Hui-iconfont">&#xe72b;</i> 功能设置</a></li>
+                    </ul>
+                </dd>
+            </dl>
+        }
     </div>
 </aside>
 <div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
