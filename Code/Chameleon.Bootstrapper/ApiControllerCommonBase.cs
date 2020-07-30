@@ -101,6 +101,14 @@ namespace Chameleon.Bootstrapper
             }
         }
 
+        protected int CurrentUserProfile
+        {
+            get
+            {
+                return Convert.ToInt32(GetArgumentFromToken(AccountConst.KEY_Profile));
+            }
+        }
+
         /// <summary>
         /// 当前登陆人的组织
         /// </summary>

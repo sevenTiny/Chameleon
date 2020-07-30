@@ -207,7 +207,7 @@ namespace Chameleon.Domain
                 foreach (var item in userList)
                 {
                     item.OrganizationView = orgs.SafeGet(item.Organization);
-                    item.IdentityView = profiles.SafeGet(item.Identity);
+                    item.ProfileView = profiles.SafeGet(item.Profile);
                 }
             }
 
@@ -229,6 +229,8 @@ namespace Chameleon.Domain
                 new Claim(AccountConst.KEY_ChameleonRole, userAccount.Role.ToString()),
                 //用户组织
                 new Claim(AccountConst.KEY_Organization, userAccount.Organization.ToString()),
+                //用户身份
+                new Claim(AccountConst.KEY_Profile, userAccount.Profile.ToString()),
                 //用户头像
                 new Claim(AccountConst.KEY_AvatarPicId, userAccount.AvatarPicId ?? string.Empty)
             };

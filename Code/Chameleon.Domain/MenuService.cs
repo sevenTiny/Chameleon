@@ -37,6 +37,7 @@ namespace Chameleon.Domain
         /// </summary>
         /// <returns></returns>
         List<Menu> GetTreeNameList();
+        public string[] GetMenuArrayFromString(string menuString);
     }
 
     public class MenuService : CommonServiceBase<Menu>, IMenuService
@@ -288,6 +289,14 @@ namespace Chameleon.Domain
 
                 return childs.Select(t => t.Id.ToString()).ToList();
             }
+        }
+
+        public string[] GetMenuArrayFromString(string menuString)
+        {
+            if (string.IsNullOrEmpty(menuString))
+                return new string[0];
+
+            return menuString.Split(',');
         }
     }
 }

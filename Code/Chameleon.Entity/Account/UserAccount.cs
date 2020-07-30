@@ -34,7 +34,7 @@ namespace Chameleon.Entity
         /// 身份
         /// </summary>
         [Column]
-        public Guid Identity { get; set; }
+        public Guid Profile { get; set; }
         /// <summary>
         /// 所属组织
         /// </summary>
@@ -53,7 +53,7 @@ namespace Chameleon.Entity
         /// <summary>
         /// 翻译用
         /// </summary>
-        public string IdentityView { get; set; }
+        public string ProfileView { get; set; }
 
 
         public RoleEnum GetRole() => (RoleEnum)this.Role;

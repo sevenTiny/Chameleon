@@ -58,6 +58,7 @@ namespace Chameleon.Bootstrapper
         protected string CurrentUserName => GetArgumentFromToken(AccountConst.KEY_UserName);
 
         protected int CurrentUserRole => Convert.ToInt32(GetArgumentFromToken(AccountConst.KEY_ChameleonRole));
+        protected int CurrentUserProfile => Convert.ToInt32(GetArgumentFromToken(AccountConst.KEY_Profile));
 
         protected void GetUserRoleToViewData()
         {

@@ -121,7 +121,7 @@ namespace Chameleon.Account.Controllers
                        t.Name = entity.Name;
                        t.Organization = entity.Organization;
                        t.Role = entity.Role;
-                       t.Identity = entity.Identity;
+                       t.Profile = entity.Profile;
                    });
                });
 

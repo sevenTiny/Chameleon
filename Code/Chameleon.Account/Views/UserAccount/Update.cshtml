@@ -59,7 +59,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>身份：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
-                    <select class="input select" value="0" name="Identity" id="Identity" required>
+                    <select class="input select" value="0" name="Profile" id="Profile" required>
                         <option value="">--请选择--</option>
                         @foreach (var item in profiles)
                         {
@@ -120,7 +120,7 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
     $("#Organization").val('@entity.Organization')
-    $("#Identity").val('@entity.Identity')
+    $("#Profile").val('@entity.Profile')
     $("#Role").val('@entity.Role')
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

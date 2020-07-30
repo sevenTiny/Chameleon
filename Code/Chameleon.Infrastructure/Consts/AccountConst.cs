@@ -20,6 +20,7 @@ namespace Chameleon.Infrastructure.Consts
         public const string KEY_AccessToken = "_AccessToken";
         public const string KEY_ChameleonRole = "ChameleonRole";
         public const string KEY_Organization = "Organization";
+        public const string KEY_Profile = "Profile";
         public const string KEY_AvatarPicId = "AvatarPicId";
 
         //默认密码

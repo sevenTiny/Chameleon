@@ -9,7 +9,7 @@ namespace Chameleon.Domain
 {
     public interface IFunctionService : ICommonServiceBase<Function>
     {
-        
+        public string[] GetFunctionArrayFromString(string functionString);
     }
 
     public class FunctionService : CommonServiceBase<Function>, IFunctionService
@@ -18,6 +18,14 @@ namespace Chameleon.Domain
         public FunctionService(IFunctionRepository FunctionRepository) : base(FunctionRepository)
         {
             _FunctionRepository = FunctionRepository;
+        }
+
+        public string[] GetFunctionArrayFromString(string functionString)
+        {
+            if (string.IsNullOrEmpty(functionString))
+                return new string[0];
+
+            return functionString.Split(',');
         }
     }
 }
