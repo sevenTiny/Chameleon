@@ -27,6 +27,7 @@
                     <th>手机号</th>
                     <th>角色</th>
                     <th>所属组织</th>
+                    <th>身份</th>
                     <th>排序</th>
                     <th>操作</th>
                 </tr>
@@ -53,6 +54,7 @@
                             }
                         }
                         <td>@item.OrganizationView</td>
+                        <td>@item.IdentityView</td>
                         <td>@item.SortNumber</td>
                         <td class="f-14 td-manage">
                             <a style="text-decoration: none" class="ml-5" href="/UserAccount/Update/@item.Id" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
@@ -73,11 +75,11 @@
 <script type="text/javascript">
     $('.table-sort').dataTable({
         "aLengthMenu": [[50, 100, -1], ["50", "100", "All"]],//二组数组，第一组数量，
-        "aaSorting": [[5, "asc"], [3, "desc"]],//默认第几个排序
+        "aaSorting": [[6, "asc"], [3, "desc"]],//默认第几个排序
         "bAutoWidth": false,
         "bStateSave": true,//状态保存
         "aoColumnDefs": [
-            { "orderable": false, "aTargets": [6] }// 不参与排序的列
+            { "orderable": false, "aTargets": [7] }// 不参与排序的列
         ]
     });
 </script>

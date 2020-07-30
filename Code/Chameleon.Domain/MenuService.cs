@@ -153,6 +153,9 @@ namespace Chameleon.Domain
                     switch (relation)
                     {
                         case RelationEnum.Parent:
+                            if (chooseNode.ParentId == Guid.Empty)
+                                return Result.Error("无法调整为根菜单的上级菜单");
+
                             newNode.ParentId = chooseNode.ParentId;
                             chooseNode.ParentId = newNode.Id;
                             _MenuRepository.Update(chooseNode);
@@ -163,6 +166,27 @@ namespace Chameleon.Domain
                         default:
                             return Result.Error("关系错误，无法新增菜单");
                     }
+                }
+                //如果没有，则添加一个内置的根菜单，然后把当前新增的菜单加入根菜单下面
+                else
+                {
+                    Menu root = new Menu
+                    {
+                        Id = Guid.NewGuid(),
+                        ParentId = Guid.Empty,
+                        Name = "根菜单（无实际作用）",
+                        CreateBy = entity.CreateBy,
+                        CreateTime = DateTime.Now,
+                        ModifyBy = entity.CreateBy,
+                        ModifyTime = DateTime.Now,
+                        Route = "-",
+                        Icon = "-"
+                    };
+
+                    _MenuRepository.Add(root);
+
+                    //把新增的父关系id设置为根节点
+                    newNode.ParentId = root.Id;
                 }
 
                 newNode.Code = newNode.Id.ToString();

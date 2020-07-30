@@ -85,8 +85,10 @@ namespace Chameleon.Domain
     {
         IUserAccountRepository _userAccountRepository;
         IOrganizationRepository _organizationRepository;
-        public UserAccountService(IOrganizationRepository organizationRepository, IUserAccountRepository userAccountRepository) : base(userAccountRepository)
+        IProfileRepository _profileRepository;
+        public UserAccountService(IProfileRepository profileRepository, IOrganizationRepository organizationRepository, IUserAccountRepository userAccountRepository) : base(userAccountRepository)
         {
+            _profileRepository = profileRepository;
             _organizationRepository = organizationRepository;
             _userAccountRepository = userAccountRepository;
         }
@@ -200,9 +202,12 @@ namespace Chameleon.Domain
             {
                 var orgs = _organizationRepository.GetListUnDeleted()?.SafeToDictionary(k => k.Id, v => v.Name);
 
+                var profiles = _profileRepository.GetListUnDeleted()?.SafeToDictionary(k => k.Id, v => v.Name);
+
                 foreach (var item in userList)
                 {
                     item.OrganizationView = orgs.SafeGet(item.Organization);
+                    item.IdentityView = profiles.SafeGet(item.Identity);
                 }
             }
 
@@ -225,7 +230,7 @@ namespace Chameleon.Domain
                 //用户组织
                 new Claim(AccountConst.KEY_Organization, userAccount.Organization.ToString()),
                 //用户头像
-                new Claim(AccountConst.KEY_AvatarPicId,userAccount.AvatarPicId)
+                new Claim(AccountConst.KEY_AvatarPicId, userAccount.AvatarPicId ?? string.Empty)
             };
             //sign the token using a secret key.This secret will be shared between your API and anything that needs to check that the token is legit.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AccountConfig.Instance.SecurityKey));

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Chameleon.Infrastructure.Consts;
 using System.Text.RegularExpressions;
 using Chameleon.Application;
+using SevenTiny.Bantina.Extensions;
 
 namespace Chameleon.Account.Controllers
 {
@@ -24,8 +25,10 @@ namespace Chameleon.Account.Controllers
         IOrganizationService _organizationService;
         IUserAccountApp _userAccountApp;
         IFileApp _fileApp;
-        public UserAccountController(IFileApp fileApp, IUserAccountApp userAccountApp, IOrganizationService organizationService, IOrganizationRepository organizationRepository, IUserAccountRepository userAccountRepository, IUserAccountService userAccountService)
+        IProfileRepository _profileRepository;
+        public UserAccountController(IProfileRepository profileRepository, IFileApp fileApp, IUserAccountApp userAccountApp, IOrganizationService organizationService, IOrganizationRepository organizationRepository, IUserAccountRepository userAccountRepository, IUserAccountService userAccountService)
         {
+            _profileRepository = profileRepository;
             _fileApp = fileApp;
             _userAccountApp = userAccountApp;
             _organizationService = organizationService;
@@ -48,6 +51,7 @@ namespace Chameleon.Account.Controllers
         public IActionResult Add()
         {
             ViewData["Organization"] = _organizationService.GetTreeNameList();
+            ViewData["Profile"] = _profileRepository.GetListUnDeleted();
             UserAccount entity = new UserAccount();
             return View(ResponseModel.Success(data: entity));
         }
@@ -77,6 +81,7 @@ namespace Chameleon.Account.Controllers
             if (!result.IsSuccess)
             {
                 ViewData["Organization"] = _organizationService.GetTreeNameList();
+                ViewData["Profile"] = _profileRepository.GetListUnDeleted();
                 return View("Add", result.ToResponseModel(entity));
             }
 
@@ -87,6 +92,7 @@ namespace Chameleon.Account.Controllers
         {
             GetUserRoleToViewData();
             ViewData["Organization"] = _organizationService.GetTreeNameList();
+            ViewData["Profile"] = _profileRepository.GetListUnDeleted();
             var entity = _userAccountRepository.GetById(id);
             return View(ResponseModel.Success(data: entity));
         }
@@ -115,6 +121,7 @@ namespace Chameleon.Account.Controllers
                        t.Name = entity.Name;
                        t.Organization = entity.Organization;
                        t.Role = entity.Role;
+                       t.Identity = entity.Identity;
                    });
                });
 
@@ -122,6 +129,7 @@ namespace Chameleon.Account.Controllers
             {
                 GetUserRoleToViewData();
                 ViewData["Organization"] = _organizationService.GetTreeNameList();
+                ViewData["Profile"] = _profileRepository.GetListUnDeleted();
                 return View("Update", result.ToResponseModel(entity));
             }
 

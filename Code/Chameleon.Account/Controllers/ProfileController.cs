@@ -47,9 +47,27 @@ namespace Chameleon.Account.Controllers
             return View();
         }
 
-        public IActionResult SettingSave()
+        public IActionResult SettingSave(Guid profileId, string[] permissionMenu, string[] permissionFunc)
         {
-            return null;
+            var profile = _ProfileRepository.GetById(profileId);
+
+            if (profile == null)
+                return Result.Error("该身份不存在").ToJsonResult();
+
+            profile.ModifyBy = CurrentUserId;
+            profile.PermissionMenu = string.Join(",", permissionMenu ?? new string[0]);
+            profile.PermissionFunction = string.Join(",", permissionFunc ?? new string[0]);
+
+            var updateResult = _ProfileService.UpdateWithOutCode(profile, item =>
+           {
+               item.PermissionMenu = profile.PermissionMenu;
+               item.PermissionFunction = profile.PermissionFunction;
+           });
+
+            if (!updateResult.IsSuccess)
+                return updateResult.ToJsonResult();
+
+            return Result.Success("保存成功").ToJsonResult();
         }
 
         public IActionResult AddLogic(Profile entity)

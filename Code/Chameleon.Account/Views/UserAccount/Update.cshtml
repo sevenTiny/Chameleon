@@ -12,6 +12,7 @@
     RoleEnum[] roleEnums = (RoleEnum)Convert.ToInt32(ViewData["UserRole"]) == RoleEnum.Developer ? RoleEnumHelper.GetAllRelationEnums() : RoleEnumHelper.GetRelationEnums();
 
     List<Organization> organizations = (ViewData["Organization"] as List<Organization>) ?? new List<Organization>(0);
+    List<Profile> profiles = (ViewData["Profile"] as List<Profile>) ?? new List<Profile>(0);
 }
 @{
     ViewData["Level_1"] = "用户管理";
@@ -47,6 +48,20 @@
                     <select class="input select" value="0" name="Organization" id="Organization" required>
                         <option value="">--请选择--</option>
                         @foreach (var item in organizations)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>身份：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select class="input select" value="0" name="Identity" id="Identity" required>
+                        <option value="">--请选择--</option>
+                        @foreach (var item in profiles)
                         {
                             <option value="@item.Id">@item.Name</option>
                         }
@@ -105,6 +120,7 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
     $("#Organization").val('@entity.Organization')
+    $("#Identity").val('@entity.Identity')
     $("#Role").val('@entity.Role')
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

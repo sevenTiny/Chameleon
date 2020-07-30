@@ -50,6 +50,11 @@ namespace Chameleon.Entity
         /// 翻译用
         /// </summary>
         public string OrganizationView { get; set; }
+        /// <summary>
+        /// 翻译用
+        /// </summary>
+        public string IdentityView { get; set; }
+
 
         public RoleEnum GetRole() => (RoleEnum)this.Role;
     }

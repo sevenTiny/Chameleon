@@ -5,9 +5,6 @@
     ViewData["Title"] = "Setting";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 
-    var result = Model as ResponseModel ?? new ResponseModel();
-    var entity = result?.Data as Profile ?? new Profile();
-
     List<Menu> menus = (ViewData["Menus"] as List<Menu>) ?? new List<Menu>(0);
     List<Function> functions = (ViewData["Functions"] as List<Function>) ?? new List<Function>(0);
     var functionView = functions.GroupBy(t => t.Group).SafeToDictionary(k => k.Key, v => functions.Where(t => t.Group == v.Key).ToList());
@@ -26,6 +23,12 @@
 @await Html.PartialAsync("~/Views/Shared/_PartialNavigation.cshtml")
 
 <article class="page-container">
+    <div class="row cl">
+        <div class="col-xs-8 col-sm-9">
+            <span>当前身份：</span>
+            <span style="font-weight:bold">@profile.Name</span>
+        </div>
+    </div>
     <div class="row cl" style="margin-top:10px;">
         <div class="col-xs-5 col-sm-5">
             <div class="panel panel-success mb-20">
@@ -38,11 +41,11 @@
                                 <div class="check-box">
                                     @if (permissionMenu.Contains(item.Id.ToString()))
                                     {
-                                        <input type="checkbox" id="@item.Id" checked>
+                                        <input type="checkbox" class="permissionMenu" id="@item.Id" checked>
                                     }
                                     else
                                     {
-                                        <input type="checkbox" id="@item.Id">
+                                        <input type="checkbox" class="permissionMenu" id="@item.Id">
                                     }
                                     <label for="@item.Id">@item.Name</label>
                                 </div>
@@ -56,21 +59,6 @@
             <div class="panel panel-primary mb-20">
                 <div class="panel-header">功能权限</div>
                 <div class="panel-body">
-                    <div class="panel panel-default mb-20">
-                        <div class="panel-header">功能权限</div>
-                        <div class="panel-body">
-                            <div class="skin-minimal">
-                                <div class="check-box">
-                                    <input type="checkbox" id="checkbox-1">
-                                    <label for="checkbox-1">复选框</label>
-                                </div>
-                                <div class="check-box">
-                                    <input type="checkbox" id="checkbox-2" checked>
-                                    <label for="checkbox-2">复选框 checked状态</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     @foreach (var item in functionView)
                     {
                         <div class="panel panel-default mb-20">
@@ -85,11 +73,11 @@
                                         <div class="check-box">
                                             @if (permissionFunction.Contains(func.Id.ToString()))
                                             {
-                                                <input type="checkbox" id="@func.Id" checked>
+                                                <input type="checkbox" class="permissionFunction" id="@func.Id" checked>
                                             }
                                             else
                                             {
-                                                <input type="checkbox" id="@func.Id">
+                                                <input type="checkbox" class="permissionFunction" id="@func.Id">
                                             }
                                             <label for="@func.Id">@func.Name</label>
                                         </div>
@@ -102,6 +90,12 @@
             </div>
         </div>
     </div>
+    <div class="row cl">
+        <div class="col-xs-8 col-sm-9">
+            <input class="btn btn-primary radius" type="button" onclick="saveProfile()" value="&nbsp;&nbsp;保存&nbsp;&nbsp;">
+            <button onClick="javascript: window.location='/Profile/List'" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+        </div>
+    </div>
 </article>
 
 @await Html.PartialAsync("~/Views/Shared/_FooterScripts.cshtml")
@@ -109,6 +103,23 @@
 @await Html.PartialAsync("~/Views/Shared/_FormValidate.cshtml")
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
+
+    Array.prototype.remove = function(val) {
+        var index = this.indexOf(val);
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+
+    var permissionMenu = "@profile.PermissionMenu";
+    var permissionFunction = "@profile.PermissionFunction";
+
+    var permissionMenuArray = permissionMenu.split(',')
+    var permissionFunctionArray = permissionFunction.split(',')
+
+    permissionMenuArray.remove("")
+    permissionFunctionArray.remove("")
+
     $(function () {
         $('.skin-minimal input').iCheck({
             checkboxClass: 'icheckbox-blue',
@@ -116,13 +127,46 @@
             increaseArea: '20%'
         })
         $('.skin-minimal input').on('ifChecked', function (event) {
-            console.log(event.target.id)
+            var currentId = event.target.id
+            var target = $("#" + currentId);
+            if (target.hasClass("permissionMenu")) {
+                permissionMenuArray.push(currentId)
+            } else if (target.hasClass("permissionFunction")) {
+                permissionFunctionArray.push(currentId)
+            }
         });
         $('.skin-minimal input').on('ifUnchecked', function (event) {
-            console.log(event.target.id)
+            var currentId = event.target.id
+            var target = $("#" + currentId);
+            if (target.hasClass("permissionMenu")) {
+                permissionMenuArray.remove(currentId)
+            } else if (target.hasClass("permissionFunction")) {
+                permissionFunctionArray.remove(currentId)
+            }
         });
-
-        //删除数组：https://www.jb51.net/article/134312.htm
     });
+
+    function saveProfile() {
+         $.ajax({
+            type: 'POST',
+            url: '/Profile/SettingSave?profileId=@profile.Id',
+            dataType: 'json',
+             data: {
+                 permissionMenu: permissionMenuArray,
+                 permissionFunc:permissionFunctionArray
+            },
+            success: function (data) {
+                layer.msg(data.message, { icon: 1, time: 1000 });
+                if (data.isSuccess) {
+                    setTimeout(function () {
+                        window.location='/Profile/List'
+                    }, 1000);
+                }
+            },
+            error: function (data) {
+                console.log(data.message);
+            }
+            });
+    }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
