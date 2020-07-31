@@ -7,6 +7,7 @@ namespace Chameleon.Repository
 {
     public interface IMetaObjectRepositoryBase<TEntity> : ICommonRepositoryBase<TEntity> where TEntity : MetaObjectBase
     {
+        long GetCountByCloudApplicationId(Guid applicationId);
         void LogicDeleteByMetaObjectId(Guid metaObjectId);
         List<TEntity> GetListByMetaObjectId(Guid metaObjectId);
         List<TEntity> GetListDeletedByMetaObjectId(Guid metaObjectId);
@@ -67,6 +68,11 @@ namespace Chameleon.Repository
         public string GetMetaObjectCodeById(Guid metaObjectId)
         {
             return GetMetaObjectById(metaObjectId).Code;
+        }
+
+        public long GetCountByCloudApplicationId(Guid applicationId)
+        {
+            return _dbContext.Queryable<TEntity>().Where(t => t.IsDeleted == (int)IsDeleted.UnDeleted && t.CloudApplicationId == applicationId).Count();
         }
     }
 }

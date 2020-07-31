@@ -13,6 +13,7 @@ namespace Chameleon.Repository
         /// <param name="cloudApplicationId"></param>
         /// <returns></returns>
         List<MetaObject> GetListByCloudApplicationId(Guid cloudApplicationId);
+        long GetCountByCloudApplicationId(Guid cloudApplicationId);
         List<MetaObject> GetMetaObjectListUnDeletedByApplicationId(Guid applicationId);
         List<MetaObject> GetMetaObjectListDeletedByApplicationId(Guid applicationId);
         MetaObject GetMetaObjectByCodeOrNameWithApplicationId(Guid applicationId, string code, string name);
@@ -39,5 +40,8 @@ namespace Chameleon.Repository
         {
             return _dbContext.Queryable<MetaObject>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == 0).ToList();
         }
+
+        public long GetCountByCloudApplicationId(Guid cloudApplicationId)
+            => _dbContext.Queryable<MetaObject>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == (int)IsDeleted.UnDeleted).Count();
     }
 }

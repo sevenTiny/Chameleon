@@ -9,7 +9,7 @@ namespace Chameleon.Domain
 {
     public interface IFunctionService : ICommonServiceBase<Function>
     {
-        public string[] GetFunctionArrayFromString(string functionString);
+        string[] GetFunctionArrayFromString(string functionString);
     }
 
     public class FunctionService : CommonServiceBase<Function>, IFunctionService

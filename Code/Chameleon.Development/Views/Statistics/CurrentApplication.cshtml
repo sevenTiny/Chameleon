@@ -1,17 +1,7 @@
-﻿@using Chameleon.Entity;
-@{
-    ViewData["Title"] = "Abount";
+﻿@{
+    ViewData["Title"] = "CurrentApplication";
     Layout = "~/Views/Shared/_LayoutHeaderStyle.cshtml";
 }
-
-@*<style>
-        #aboutBg {
-            width:100%;height:100%;position:absolute;z-index:-1;
-        }
-    </style>
-
-    <img id="aboutBg" src="/about.jpg" />*@
-
 <script src="~/js/jquery-1.11.3.min.js"></script>
 <script src="~/lib/echarts/3.4.0/echarts.common.min.js"></script>
 <div class="page-container">
@@ -23,13 +13,13 @@
 
         $.ajax({
             type: 'GET',
-            url: '/Home/AbountStatisticsJson',
+            url: '/Statistics/CurrentApplicationJson?applicationId=@ViewData["ApplicationId"]',
             dataType: 'json',
             success: function (data) {
                 if (data.isSuccess) {
                     option = {
                         title: {
-                            text: '企业统计'
+                            text: '应用配置统计'
                         },
                         color: ['#3398DB'],
                         tooltip: {
@@ -47,7 +37,7 @@
                         xAxis: [
                             {
                                 type: 'category',
-                                data: ['总人数', '管理员人数', '功能数', '菜单数', '身份数'],
+                                data: ['对象', '字段', '接口字段', '接口条件', '接口校验', '接口排序', '接口', '触发器'],
                                 axisTick: {
                                     alignWithLabel: true
                                 }
@@ -64,16 +54,19 @@
                                 type: 'bar',
                                 barWidth: '30%',
                                 data: [
-                                    data.data.userAccountAllCount,
-                                    data.data.userAccountAdminisratorCount,
-                                    data.data.functionCount,
-                                    data.data.menuCount,
-                                    data.data.profileCount,
+                                    data.data.metaObjectCount,
+                                    data.data.metaFieldCount,
+                                    data.data.interfaceFieldsCount,
+                                    data.data.interfaceConditionCount,
+                                    data.data.interfaceVerificationCount,
+                                    data.data.interfaceSortCount,
+                                    data.data.interfaceCount,
+                                    data.data.triggerScriptCount
                                 ]
                             }
                         ]
                     };
-                    // 使用刚指定的配置项和数据显示图表。
+                            // 使用刚指定的配置项和数据显示图表。
                     myChart.setOption(option);
 
                     window.onresize = myChart.resize;
@@ -82,6 +75,6 @@
             error: function (data) {
                 console.log(data.message);
             }
-        });
+            });
     </script>
 </div>

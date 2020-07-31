@@ -24,6 +24,8 @@ namespace Chameleon.Repository
         List<TEntity> GetListDeleted();
         List<TEntity> GetListUnDeleted();
 
+        long GetUnDeletedCount();
+
         TEntity GetByCodeWithoutSameId(Guid id, string code);
         bool CheckCodeExist(string code);
         bool CheckCodeExistWithoutSameId(Guid id, string code);
@@ -112,6 +114,12 @@ namespace Chameleon.Repository
             }
 
             return Result.Success();
+        }
+
+        public long GetUnDeletedCount()
+        {
+            return _dbContext.Queryable<TEntity>().Where(t => t.IsDeleted == 0).Count();
+
         }
     }
 }

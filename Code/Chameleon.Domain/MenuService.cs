@@ -37,7 +37,7 @@ namespace Chameleon.Domain
         /// </summary>
         /// <returns></returns>
         List<Menu> GetTreeNameList();
-        public string[] GetMenuArrayFromString(string menuString);
+        string[] GetMenuArrayFromString(string menuString);
     }
 
     public class MenuService : CommonServiceBase<Menu>, IMenuService

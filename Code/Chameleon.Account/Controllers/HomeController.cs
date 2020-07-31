@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Chameleon.Account.Models;
 using Microsoft.AspNetCore.Authorization;
+using Chameleon.Application;
+using SevenTiny.Bantina.Extensions.AspNetCore;
 
 namespace Chameleon.Account.Controllers
 {
@@ -14,8 +16,10 @@ namespace Chameleon.Account.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        IStatisticsApp _statisticsApp;
+        public HomeController(IStatisticsApp statisticsApp, ILogger<HomeController> logger)
         {
+            _statisticsApp = statisticsApp;
             _logger = logger;
         }
 
@@ -53,6 +57,11 @@ namespace Chameleon.Account.Controllers
         public IActionResult Abount()
         {
             return View();
+        }
+
+        public IActionResult AbountStatisticsJson()
+        {
+            return ResponseModel.Success(data: _statisticsApp.GetUserAccountStatistics()).ToJsonResult();
         }
     }
 }

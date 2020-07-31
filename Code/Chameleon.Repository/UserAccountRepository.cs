@@ -8,6 +8,8 @@ namespace Chameleon.Repository
 {
     public interface IUserAccountRepository : ICommonRepositoryBase<UserAccount>
     {
+        long GetAllUserCount();
+        long GetAdministratorCount();
         List<UserAccount> GetUserAccountList();
         /// <summary>
         /// 获取无开发人员的所有人员列表
@@ -89,6 +91,17 @@ namespace Chameleon.Repository
         public UserAccount GetUserAccountByUserId(long userId)
         {
             return _dbContext.Queryable<UserAccount>().Where(t => t.UserId == userId).FirstOrDefault();
+        }
+
+        public long GetAllUserCount()
+        {
+            return _dbContext.Queryable<UserAccount>().Where(t => t.IsDeleted == 0).Count();
+        }
+
+        public long GetAdministratorCount()
+        {
+            var deveolperRole = (int)RoleEnum.Administrator;
+            return _dbContext.Queryable<UserAccount>().Where(t => t.IsDeleted == 0 && t.Role == deveolperRole).Count();
         }
     }
 }
