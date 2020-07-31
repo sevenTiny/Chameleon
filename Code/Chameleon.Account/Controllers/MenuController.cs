@@ -59,6 +59,7 @@ namespace Chameleon.Account.Controllers
                         t.Name = entity.Name;
                         //t.Icon = entity.Icon;
                         t.Route = entity.Route;
+                        t.SortNumber = entity.SortNumber;
                     });
                 })
                 .ToJsonResult();

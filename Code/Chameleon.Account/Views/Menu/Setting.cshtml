@@ -106,6 +106,12 @@
                                         </div>
                                     </div>
                                     <div class="row cl">
+                                        <label class="form-label col-xs-5 col-sm-3">排序值：</label>
+                                        <div class="formControls col-xs-7 col-sm-8">
+                                            <input type="text" class="input-text" placeholder="" id="newSortNumber">
+                                        </div>
+                                    </div>
+                                    <div class="row cl">
                                         <div class="col-xs-8 col-sm-9 col-xs-offset-5 col-sm-offset-3">
                                             <a class="btn btn-primary radius" href="javascript:addCondition(this);"><i class="Hui-iconfont">&#xe632;</i> 新增菜单</a>
                                         </div>
@@ -115,15 +121,21 @@
                             <div class="tabCon">
                                 <div class="form form-horizontal mt-20">
                                     <div class="row cl">
-                                        <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>新菜单名称：</label>
+                                        <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>菜单名称：</label>
                                         <div class="formControls col-xs-7 col-sm-8">
                                             <input type="text" class="input-text" id="newNodeName">
                                         </div>
                                     </div>
                                     <div class="row cl">
-                                        <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>新菜单路由：</label>
+                                        <label class="form-label col-xs-5 col-sm-3"><span class="c-red">*</span>菜单路由：</label>
                                         <div class="formControls col-xs-7 col-sm-8">
                                             <input type="text" class="input-text" id="newNodeRoute2">
+                                        </div>
+                                    </div>
+                                    <div class="row cl">
+                                        <label class="form-label col-xs-5 col-sm-3">排序值：</label>
+                                        <div class="formControls col-xs-7 col-sm-8">
+                                            <input type="text" class="input-text" placeholder="" id="editSortNumber">
                                         </div>
                                     </div>
                                     <div class="row cl">
@@ -153,7 +165,7 @@
                                         <div class="formControls col-xs-7 col-sm-8">
                                             <span class="select-box">
                                                 <select name="fieldType" class="input select" value="0" id="ajustRelation">
-                                                    @foreach (var item in RelationEnumHelper.GetRelationEnums())
+                                                    @foreach (var item in MenuRelationEnumHelper.GetRelationEnums())
                                                     {
                                                         <option value="@Convert.ToInt32(item)">@item.GetDescription()</option>
                                                     }
@@ -314,6 +326,7 @@
                         if (data.data != null) {
                             $("#newNodeName").val(data.data.name)
                             $("#newNodeRoute2").val(data.data.route)
+                            $("#editSortNumber").val(data.data.sortNumber)
                         } else {
                             tree(json);
                         }
@@ -354,7 +367,8 @@
                 dataType: 'json',
                 data: {
                     'Name': $("#newNodeId").val(),
-                    'Route': $("#newNodeRoute").val()
+                    'Route': $("#newNodeRoute").val(),
+                    'SortNumber': $("#newSortNumber").val()
                 },
                 success: function (data) {
                     if (data.isSuccess) {
@@ -394,7 +408,8 @@
             dataType: 'json',
             data: {
                 'Name': $("#newNodeName").val(),
-                'Route': $("#newNodeRoute2").val()
+                'Route': $("#newNodeRoute2").val(),
+                'SortNumber': $("#editSortNumber").val()
             },
             success: function (data) {
                 if (data.isSuccess) {

@@ -88,7 +88,9 @@ namespace Chameleon.DataApi.Controllers
             List<MenuView> GetTree(List<Menu> source, Guid parentId)
             {
                 var childs = source.Where(t => t.ParentId == parentId && permissionSet.Contains(t.Id.ToString()))
-                    .Select(t => new MenuView { Id = t.Id, Name = t.Name, Route = t.Route }).ToList();
+                    .OrderBy(t => t.SortNumber)
+                    .Select(t => new MenuView { Id = t.Id, Name = t.Name, Route = t.Route })
+                    .ToList();
 
                 if (childs == null)
                     return new List<MenuView>(0);

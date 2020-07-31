@@ -120,7 +120,7 @@ namespace Chameleon.Domain
 
                 childs.ForEach(t => t.Children = GetTree(source, t.Id));
 
-                return childs;
+                return childs.OrderBy(t=>t.SortNumber).ToList();
             }
         }
 
