@@ -356,7 +356,10 @@
             $("#sp_result_error").html("请点击选择菜单图谱中的菜单！"); return;
         }
         if ($('#newNodeId').val() == '' || $('#newNodeId').val() == null) {
-            $("#sp_result_error").html("请输入新增菜单名称！"); return;
+            $("#sp_result_error").html("请输入菜单名称！"); return;
+        }
+        if ($('#newNodeRoute').val() == '' || $('#newNodeRoute').val() == null) {
+            $("#sp_result_error").html("请输入路由！"); return;
         }
         if (!lock) {
             lock = true;
@@ -400,6 +403,9 @@
         }
         if ($('#newNodeName').val() == '' || $('#newNodeName').val() == null) {
             $("#sp_result_error").html("请输入新菜单名称！"); return;
+        }
+        if ($('#newNodeRoute2').val() == '' || $('#newNodeRoute2').val() == null) {
+            $("#sp_result_error").html("请输入路由！"); return;
         }
 
         $.ajax({

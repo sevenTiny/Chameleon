@@ -143,7 +143,8 @@ namespace Chameleon.Domain
                     ModifyBy = entity.CreateBy,
                     ModifyTime = DateTime.Now,
                     Route = entity.Route,
-                    Icon = entity.Icon
+                    Icon = entity.Icon,
+                    SortNumber = entity.SortNumber
                 };
 
                 //如果兄弟节点!=空，说明当前树有值。反之，则构建新树
