@@ -36,14 +36,9 @@ namespace Chameleon.ValueObject
         /// </summary>
         public List<MenuView> ViewMenu { get; set; }
         /// <summary>
-        /// 有权限的功能
+        /// 有权限的功能编码
         /// </summary>
-        public List<ViewFunction> ViewFunction { get; set; }
-    }
-
-    public class ViewFunction
-    {
-        public string Code { get; set; }
+        public List<string> ViewFunction { get; set; }
     }
 
     public class MenuView

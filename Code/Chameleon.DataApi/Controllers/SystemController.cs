@@ -63,7 +63,7 @@ namespace Chameleon.DataApi.Controllers
                     UserProfileId = userAccount.Profile,
                     UserRoleId = userAccount.Role,
                     AvatarPicId = userAccount.AvatarPicId,
-                    ViewFunction = allFunctions.Where(t => permissionFunctions.Contains(t.Id.ToString())).Select(t => new ViewFunction { Code = t.Code }).ToList(),
+                    ViewFunction = allFunctions.Where(t => permissionFunctions.Contains(t.Id.ToString())).Select(t => t.Code).ToList(),
                     ViewMenu = GetTree(permissionMenus)
                 };
 
