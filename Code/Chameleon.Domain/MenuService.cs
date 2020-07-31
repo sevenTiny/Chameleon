@@ -107,6 +107,7 @@ namespace Chameleon.Domain
 
             //递归构造子节点
             condition.Children = GetTree(nodes, condition.Id);
+            condition.Name = $"{condition.Name}[{condition.SortNumber}]";
 
             return new List<Menu> { condition };
 
@@ -118,9 +119,13 @@ namespace Chameleon.Domain
                 if (childs == null)
                     return new List<Menu>(0);
 
-                childs.ForEach(t => t.Children = GetTree(source, t.Id));
+                childs.ForEach(t =>
+                {
+                    t.Children = GetTree(source, t.Id);
+                    t.Name = $"{t.Name}[{t.SortNumber}]";
+                });
 
-                return childs.OrderBy(t=>t.SortNumber).ToList();
+                return childs.OrderBy(t => t.SortNumber).ToList();
             }
         }
 

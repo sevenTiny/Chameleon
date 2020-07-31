@@ -46,7 +46,7 @@ namespace Chameleon.Entity
     {
         public static MenuRelationEnum[] GetRelationEnums()
         {
-            return new[] { MenuRelationEnum.Parent, MenuRelationEnum.Child };
+            return new[] { MenuRelationEnum.Child, MenuRelationEnum.Parent };
         }
     }
 }

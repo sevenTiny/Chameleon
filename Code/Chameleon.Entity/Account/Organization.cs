@@ -42,7 +42,7 @@ namespace Chameleon.Entity
     {
         public static RelationEnum[] GetRelationEnums()
         {
-            return new[] { RelationEnum.Parent, RelationEnum.Child };
+            return new[] { RelationEnum.Child, RelationEnum.Parent };
         }
     }
 }
