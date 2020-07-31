@@ -82,7 +82,7 @@ namespace Chameleon.Application
                 InterfaceVerificationCount = _interfaceVerificationRepository.GetCountByCloudApplicationId(application),
                 InterfaceSortCount = _interfaceSortRepository.GetCountByCloudApplicationId(application),
                 InterfaceCount = _interfaceSettingRepository.GetCountByCloudApplicationId(application),
-                TriggerScriptCount = _triggerScriptRepository.GetUnDeletedCount()
+                TriggerScriptCount = _triggerScriptRepository.GetCountByCloudApplicationId(application)
             };
         }
 

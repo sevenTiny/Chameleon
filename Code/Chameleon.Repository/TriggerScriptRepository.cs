@@ -14,6 +14,12 @@ namespace Chameleon.Repository
         /// <returns></returns>
         List<TriggerScript> GetListByCloudApplicationId(Guid cloudApplicationId);
         /// <summary>
+        /// 通过应用id查未删除数量
+        /// </summary>
+        /// <param name="cloudApplicationId"></param>
+        /// <returns></returns>
+        long GetCountByCloudApplicationId(Guid cloudApplicationId);
+        /// <summary>
         /// 获取对象下的对象触发器列表
         /// </summary>
         /// <param name="metaObjectId"></param>
@@ -89,6 +95,11 @@ namespace Chameleon.Repository
             //以后扩展其他类型应用触发器在这里添加条件
             int scriptType = (int)ScriptTypeEnum.FileManagement;
             return _dbContext.Queryable<TriggerScript>().Where(t => t.CloudApplicationId.Equals(cloudApplicationId) && t.ScriptType == scriptType && t.IsDeleted == 0).ToList();
+        }
+
+        public long GetCountByCloudApplicationId(Guid cloudApplicationId)
+        {
+            return _dbContext.Queryable<TriggerScript>().Where(t => t.CloudApplicationId == cloudApplicationId && t.IsDeleted == 0).Count();
         }
     }
 }
