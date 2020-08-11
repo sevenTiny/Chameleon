@@ -227,7 +227,7 @@ namespace Chameleon.Account.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult SignInThirdParty(LoginRequest loginRequest)
+        public JsonResult SignInThirdParty([FromBody]LoginRequest loginRequest)
         {
             if (string.IsNullOrEmpty(loginRequest.Email) || string.IsNullOrEmpty(loginRequest.Password))
                 return Result.Error("参数错误").ToJsonResult();
@@ -255,7 +255,7 @@ namespace Chameleon.Account.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult ResetPasswordThirdParty(LoginRequest loginRequest)
+        public JsonResult ResetPasswordThirdParty([FromBody]LoginRequest loginRequest)
         {
             var result = Result.Success()
                 .ContinueEnsureArgumentNotNullOrEmpty(loginRequest, nameof(loginRequest))
