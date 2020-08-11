@@ -14,6 +14,7 @@ using Chameleon.Infrastructure.Consts;
 using System.Text.RegularExpressions;
 using Chameleon.Application;
 using SevenTiny.Bantina.Extensions;
+using Chameleon.ValueObject;
 
 namespace Chameleon.Account.Controllers
 {
@@ -150,12 +151,20 @@ namespace Chameleon.Account.Controllers
             return View();
         }
 
-        private string GetReidrectFullPath(UserAccount userAccount, string redirect)
+        private string GetTokenAndSaveCookie(UserAccount userAccount)
         {
             //get token
             var token = _userAccountService.GetToken(userAccount).Data;
             //set token to cookie
             Response.Cookies.Append(AccountConst.KEY_AccessToken, token);
+
+            return token;
+        }
+
+        private string GetReidrectFullPath(UserAccount userAccount, string redirect)
+        {
+            //get token
+            var token = GetTokenAndSaveCookie(userAccount);
 
             if (string.IsNullOrEmpty(redirect))
                 redirect = "/Home/Index";
@@ -209,6 +218,59 @@ namespace Chameleon.Account.Controllers
             redirect = GetReidrectFullPath(checkResult.Data, redirect);
 
             return Redirect(redirect);
+        }
+
+        /// <summary>
+        /// 第三方登陆，返回授权token
+        /// </summary>
+        /// <param name="loginRequest"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult SignInThirdParty(LoginRequest loginRequest)
+        {
+            if (string.IsNullOrEmpty(loginRequest.Email) || string.IsNullOrEmpty(loginRequest.Password))
+                return Result.Error("参数错误").ToJsonResult();
+
+            //如果校验密码成功，则会返回账号信息
+            var checkResult = _userAccountService.VerifyPassword(null, loginRequest.Email, loginRequest.Password);
+
+            if (!checkResult.IsSuccess)
+                return Result.Error("账号或密码不正确").ToJsonResult();
+
+            LoginResponse loginResult = new LoginResponse
+            {
+                AccessToken = GetTokenAndSaveCookie(checkResult.Data),
+                IsNeedToResetPassword = checkResult.Data.IsNeedToResetPassword,
+                TokenExpiredTimeStamp = TimeHelper.GetTimeStamp(DateTime.Now.AddDays(1)),
+            };
+
+            return Result<LoginResponse>.Success("登陆成功", loginResult).ToJsonResult();
+        }
+
+        /// <summary>
+        /// 第三方修改密码
+        /// </summary>
+        /// <param name="loginRequest"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult ResetPasswordThirdParty(LoginRequest loginRequest)
+        {
+            var result = Result.Success()
+                .ContinueEnsureArgumentNotNullOrEmpty(loginRequest, nameof(loginRequest))
+                .ContinueEnsureArgumentNotNullOrEmpty(loginRequest.Email, nameof(loginRequest.Email))
+                .ContinueEnsureArgumentNotNullOrEmpty(loginRequest.NewPassword, nameof(loginRequest.NewPassword))
+                .ContinueAssert(_ => Regex.IsMatch(loginRequest.NewPassword, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$"), "必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-20之间")
+                .Continue(_ =>
+                {
+                    return _userAccountService.ResetPassword(loginRequest.Email, loginRequest.NewPassword);
+                });
+
+            if (!result.IsSuccess)
+                return result.ToJsonResult();
+
+            return Result.Success("操作成功").ToJsonResult();
         }
 
         /// <summary>

@@ -55,7 +55,6 @@ namespace Chameleon.Entity
         /// </summary>
         public string ProfileView { get; set; }
 
-
         public RoleEnum GetRole() => (RoleEnum)this.Role;
     }
 

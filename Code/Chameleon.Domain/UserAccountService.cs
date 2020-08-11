@@ -29,13 +29,6 @@ namespace Chameleon.Domain
         /// <returns></returns>
         Result AddUserAccount(UserAccount userAccount);
         /// <summary>
-        /// 修改密码
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        Result ChangePassword(Guid id, string password);
-        /// <summary>
         /// 验证密码并获取账号信息
         /// </summary>
         /// <param name="phone"></param>
@@ -43,6 +36,13 @@ namespace Chameleon.Domain
         /// <param name="password"></param>
         /// <returns></returns>
         Result<UserAccount> VerifyPassword(string phone, string email, string password);
+        /// <summary>
+        /// 重置密码
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        Result ResetPassword(string email, string password);
         /// <summary>
         /// 重置密码
         /// </summary>
@@ -127,31 +127,41 @@ namespace Chameleon.Domain
             });
         }
 
+        public Result ResetPassword(string email, string password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+                return Result.Error("密码不能为空");
+
+            var user = _userAccountRepository.GetUserAccountByEmailOrPhone(email, string.Empty);
+
+            if (user == null)
+                return Result.Error("用户不存在");
+
+            return ResetPassword(user, password);
+        }
+
         public Result ResetPassword(Guid id, string password)
         {
             if (string.IsNullOrWhiteSpace(password))
                 return Result.Error("密码不能为空");
 
             var user = base.GetById(id);
-            //判断该账号是否被设置成了修改密码,如果不是，则
 
-            if (user.IsNeedToResetPassword != 1)
-                return Result.Error("该账号无需重置密码，请联系管理员处理");
+            if (user == null)
+                return Result.Error("用户不存在");
 
-            return base.UpdateWithId(id, t =>
-            {
-                t.IsNeedToResetPassword = 0;
-                t.Password = GetSaltPassword(password);
-            });
+            return ResetPassword(user, password);
         }
 
-        public Result ChangePassword(Guid id, string password)
+        private Result ResetPassword(UserAccount userAccount, string password)
         {
-            if (string.IsNullOrWhiteSpace(password))
-                return Result.Error("密码不能为空");
+            //判断该账号是否被设置成了修改密码,如果不是，则
+            if (userAccount.IsNeedToResetPassword != 1)
+                return Result.Error("该账号无需重置密码，请联系管理员处理");
 
-            return base.UpdateWithId(id, t =>
+            return base.UpdateWithId(userAccount.Id, t =>
             {
+                t.IsNeedToResetPassword = 0;
                 t.Password = GetSaltPassword(password);
             });
         }
