@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using SevenTiny.Bantina;
 using SevenTiny.Bantina.Extensions.AspNetCore;
@@ -41,6 +42,13 @@ namespace Chameleon.Bootstrapper
                 logger.LogError(argEx, $"ArgumentException exception is throw, {queryInfo}");
                 return Result.Error(argEx.Message).ToJsonResult();
             }
+            catch (SecurityTokenException tokenEx)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                Response.Headers.Add("Token-Validation", tokenEx.Message);
+                Response.WriteAsync(tokenEx.Message);
+                return Result.Error(tokenEx.Message).ToJsonResult();
+            }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"ArgumentException exception is throw, {queryInfo}");
@@ -64,7 +72,7 @@ namespace Chameleon.Bootstrapper
             var value = auth?.FirstOrDefault(t => t.Type.Equals(key))?.Value;
 
             if (string.IsNullOrEmpty(value))
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                throw new SecurityTokenException($"value of key [{key}] not found int token");
 
             return value;
         }

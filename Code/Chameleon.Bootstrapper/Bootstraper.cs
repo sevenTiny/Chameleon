@@ -93,8 +93,10 @@ namespace Chameleon.Bootstrapper
                         //如果token验证失败，则跳转登陆地址(dataapi仅返回错误码）
                         if (chameleonSystemEnum == ChameleonSystemEnum.DataApi)
                         {
+                            string exception = $"{context.Error} {context.ErrorDescription}";
                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                            context.Response.WriteAsync($"{context.Error} {context.ErrorDescription}");
+                            context.Response.Headers.Add("Token-Validation", exception);
+                            context.Response.WriteAsync(exception);
                         }
                         else
                         {
@@ -108,6 +110,19 @@ namespace Chameleon.Bootstrapper
                         //Token expired
                         if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
                             context.Response.Headers.Add("Token-Expired", "true");
+
+                        //如果token验证失败，则跳转登陆地址(dataapi仅返回错误码）
+                        if (chameleonSystemEnum == ChameleonSystemEnum.DataApi)
+                        {
+                            string exception = "validation failed. The token is expired.";
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            context.Response.Headers.Add("Token-Validation", exception);
+                            context.Response.WriteAsync(exception);
+                        }
+                        else
+                        {
+                            context.Response.Redirect(string.Concat(AccountConst.AccountSignInAndRedirectUrl, context.Request.IsHttps ? "https://" : "http://", context.Request.Host, context.Request.Path, context.Request.QueryString));
+                        }
 
                         return Task.CompletedTask;
                     },
