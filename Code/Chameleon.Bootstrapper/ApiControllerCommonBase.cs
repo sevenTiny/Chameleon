@@ -135,13 +135,22 @@ namespace Chameleon.Bootstrapper
         {
             get
             {
-                if (!HttpContext.Request.Cookies.ContainsKey(AccountConst.KEY_AccessToken))
+                if (HttpContext.Request.Headers.ContainsKey("Authorization") && !string.IsNullOrEmpty(HttpContext.Request.Headers["Authorization"]))
                 {
-                    Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    return string.Empty;
+                    return HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                }
+                else if (HttpContext.Request.Query.ContainsKey(AccountConst.KEY_AccessToken))
+                {
+                    return HttpContext.Request.Query[AccountConst.KEY_AccessToken];
+                }
+                else if (HttpContext.Request.Cookies.ContainsKey(AccountConst.KEY_AccessToken))
+                {
+                    return HttpContext.Request.Cookies[AccountConst.KEY_AccessToken];
                 }
 
-                return HttpContext.Request.Cookies[AccountConst.KEY_AccessToken];
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                Response.Headers.Add("Token-Validation", $"{AccountConst.KEY_AccessToken} not found");
+                return string.Empty;
             }
         }
     }

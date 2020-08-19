@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using SevenTiny.Cloud.ScriptEngine;
 using SevenTiny.Cloud.ScriptEngine.CSharp;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -84,7 +85,10 @@ namespace Chameleon.Bootstrapper
 
                         //set token to cookie
                         if (!string.IsNullOrEmpty(context.Token))
-                            context.Response.Cookies.Append(AccountConst.KEY_AccessToken, context.Token);
+                        {
+                            context.HttpContext.Request.Cookies.Append(new KeyValuePair<string, string>(AccountConst.KEY_AccessToken, context.Token));
+                            context.HttpContext.Response.Cookies.Append(AccountConst.KEY_AccessToken, context.Token);
+                        }
 
                         return Task.CompletedTask;
                     },
