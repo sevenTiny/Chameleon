@@ -135,14 +135,17 @@ namespace Chameleon.Bootstrapper
         {
             get
             {
+                //bearer方式
                 if (HttpContext.Request.Headers.ContainsKey("Authorization") && !string.IsNullOrEmpty(HttpContext.Request.Headers["Authorization"]))
                 {
                     return HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
                 }
+                //request参数方式
                 else if (HttpContext.Request.Query.ContainsKey(AccountConst.KEY_AccessToken))
                 {
                     return HttpContext.Request.Query[AccountConst.KEY_AccessToken];
                 }
+                //cookie方式
                 else if (HttpContext.Request.Cookies.ContainsKey(AccountConst.KEY_AccessToken))
                 {
                     return HttpContext.Request.Cookies[AccountConst.KEY_AccessToken];
