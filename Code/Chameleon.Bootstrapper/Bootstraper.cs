@@ -40,6 +40,8 @@ namespace Chameleon.Bootstrapper
                                 "/UserAccount/SignInLogic",
                                 "/UserAccount/SignOut",
                                 "/UserAccount/SignUp",
+                                "/api/UserAccount/SignInThirdParty",//第三方登陆
+                                "/api/UserAccount/ResetPasswordThirdParty",//第三方修改密码
                                 };
 
         /// <summary>
@@ -90,6 +92,14 @@ namespace Chameleon.Bootstrapper
                     {
                         //此处代码为终止.Net Core默认的返回类型和数据结果，这个很重要哦，必须
                         context.HandleResponse();
+
+                        if (context.HttpContext.Request.Path.HasValue)
+                        {
+                            //这里默认放行路径，不走角色过滤
+                            if (_AllowAnonymousPath.Contains(context.HttpContext.Request.Path.Value))
+                                return Task.CompletedTask;
+                        }
+
                         //如果token验证失败，则跳转登陆地址(dataapi仅返回错误码）
                         if (chameleonSystemEnum == ChameleonSystemEnum.DataApi)
                         {
@@ -107,6 +117,13 @@ namespace Chameleon.Bootstrapper
                     },
                     OnAuthenticationFailed = context =>
                     {
+                        if (context.HttpContext.Request.Path.HasValue)
+                        {
+                            //这里默认放行路径，不走角色过滤
+                            if (_AllowAnonymousPath.Contains(context.HttpContext.Request.Path.Value))
+                                return Task.CompletedTask;
+                        }
+
                         //Token expired
                         if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
                             context.Response.Headers.Add("Token-Expired", "true");
@@ -135,10 +152,9 @@ namespace Chameleon.Bootstrapper
                             return Task.CompletedTask;
                         }
 
-                        if (chameleonSystemEnum == ChameleonSystemEnum.Account && context.HttpContext.Request.Path.HasValue)
+                        if (context.HttpContext.Request.Path.HasValue)
                         {
                             //这里默认放行路径，不走角色过滤
-                            //这几个路由是account里面的
                             if (_AllowAnonymousPath.Contains(context.HttpContext.Request.Path.Value))
                                 return Task.CompletedTask;
                         }
