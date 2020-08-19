@@ -27,19 +27,19 @@ namespace Chameleon.Bootstrapper
         /// <returns></returns>
         protected IActionResult SafeExecute(Func<IActionResult> func)
         {
-            string queryInfo = $"RequestMethod:{Request.Method};RequestPath:{Request.Path};RequestQuery:{JsonConvert.SerializeObject(Request.Query)};RequestUserId:{CurrentUserId}";
+            var queryInfo = new Lazy<string>(() => $"RequestMethod:{Request.Method};RequestPath:{Request.Path};RequestQuery:{JsonConvert.SerializeObject(Request.Query)};RequestUserId:{CurrentUserId}");
             try
             {
                 return func();
             }
             catch (ArgumentNullException argNullEx)
             {
-                logger.LogError(argNullEx, $"ArgumentNullException exception is throw, {queryInfo}");
+                logger.LogError(argNullEx, $"ArgumentNullException exception is throw, {queryInfo.Value}");
                 return Result.Error(argNullEx.Message).ToJsonResult();
             }
             catch (ArgumentException argEx)
             {
-                logger.LogError(argEx, $"ArgumentException exception is throw, {queryInfo}");
+                logger.LogError(argEx, $"ArgumentException exception is throw, {queryInfo.Value}");
                 return Result.Error(argEx.Message).ToJsonResult();
             }
             catch (SecurityTokenException tokenEx)
@@ -51,7 +51,7 @@ namespace Chameleon.Bootstrapper
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"ArgumentException exception is throw, {queryInfo}");
+                logger.LogError(ex, $"ArgumentException exception is throw, {queryInfo.Value}");
                 return Result.Error(ex.Message).ToJsonResult();
             }
         }

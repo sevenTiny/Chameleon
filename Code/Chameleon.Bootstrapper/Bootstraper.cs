@@ -45,6 +45,8 @@ namespace Chameleon.Bootstrapper
                                 "/api/UserAccount/ResetPasswordThirdParty",//第三方修改密码
                                 };
 
+        private const string TokenErrorMessage = "validation failed. The token is expired.";
+
         /// <summary>
         /// 配置服务
         /// </summary>
@@ -89,7 +91,7 @@ namespace Chameleon.Bootstrapper
                             context.HttpContext.Request.Cookies.Append(new KeyValuePair<string, string>(AccountConst.KEY_AccessToken, context.Token));
                             context.HttpContext.Response.Cookies.Append(AccountConst.KEY_AccessToken, context.Token);
                         }
-
+                      
                         return Task.CompletedTask;
                     },
                     OnChallenge = context =>
@@ -107,10 +109,8 @@ namespace Chameleon.Bootstrapper
                         //如果token验证失败，则跳转登陆地址(dataapi仅返回错误码）
                         if (chameleonSystemEnum == ChameleonSystemEnum.DataApi)
                         {
-                            string exception = $"{context.Error} {context.ErrorDescription}";
                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                            context.Response.Headers.Add("Token-Validation", exception);
-                            context.Response.WriteAsync(exception);
+                            context.Response.Headers.Add("Token-Validation", $"{context.Error} {context.ErrorDescription}");
                         }
                         else
                         {
@@ -135,10 +135,8 @@ namespace Chameleon.Bootstrapper
                         //如果token验证失败，则跳转登陆地址(dataapi仅返回错误码）
                         if (chameleonSystemEnum == ChameleonSystemEnum.DataApi)
                         {
-                            string exception = "validation failed. The token is expired.";
                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                            context.Response.Headers.Add("Token-Validation", exception);
-                            context.Response.WriteAsync(exception);
+                            context.Response.Headers.Add("Token-Validation", TokenErrorMessage);
                         }
                         else
                         {
