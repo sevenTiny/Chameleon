@@ -221,59 +221,6 @@ namespace Chameleon.Account.Controllers
         }
 
         /// <summary>
-        /// 第三方登陆，返回授权token
-        /// </summary>
-        /// <param name="loginRequest"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpPost]
-        public JsonResult SignInThirdParty([FromBody]LoginRequest loginRequest)
-        {
-            if (string.IsNullOrEmpty(loginRequest.Email) || string.IsNullOrEmpty(loginRequest.Password))
-                return Result.Error("参数错误").ToJsonResult();
-
-            //如果校验密码成功，则会返回账号信息
-            var checkResult = _userAccountService.VerifyPassword(null, loginRequest.Email, loginRequest.Password);
-
-            if (!checkResult.IsSuccess)
-                return Result.Error("账号或密码不正确").ToJsonResult();
-
-            LoginResponse loginResult = new LoginResponse
-            {
-                AccessToken = GetTokenAndSaveCookie(checkResult.Data),
-                IsNeedToResetPassword = checkResult.Data.IsNeedToResetPassword,
-                TokenExpiredTimeStamp = TimeHelper.GetTimeStamp(DateTime.Now.AddDays(1)),
-            };
-
-            return Result<LoginResponse>.Success("登陆成功", loginResult).ToJsonResult();
-        }
-
-        /// <summary>
-        /// 第三方修改密码
-        /// </summary>
-        /// <param name="loginRequest"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpPost]
-        public JsonResult ResetPasswordThirdParty([FromBody]LoginRequest loginRequest)
-        {
-            var result = Result.Success()
-                .ContinueEnsureArgumentNotNullOrEmpty(loginRequest, nameof(loginRequest))
-                .ContinueEnsureArgumentNotNullOrEmpty(loginRequest.Email, nameof(loginRequest.Email))
-                .ContinueEnsureArgumentNotNullOrEmpty(loginRequest.NewPassword, nameof(loginRequest.NewPassword))
-                .ContinueAssert(_ => Regex.IsMatch(loginRequest.NewPassword, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$"), "必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-20之间")
-                .Continue(_ =>
-                {
-                    return _userAccountService.ResetPassword(loginRequest.Email, loginRequest.NewPassword);
-                });
-
-            if (!result.IsSuccess)
-                return result.ToJsonResult();
-
-            return Result.Success("操作成功").ToJsonResult();
-        }
-
-        /// <summary>
         /// 登陆（用于前端界面ajax处理）
         /// </summary>
         /// <param name="userAccount"></param>

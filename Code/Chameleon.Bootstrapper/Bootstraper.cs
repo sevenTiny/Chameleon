@@ -90,8 +90,16 @@ namespace Chameleon.Bootstrapper
                     {
                         //此处代码为终止.Net Core默认的返回类型和数据结果，这个很重要哦，必须
                         context.HandleResponse();
-                        //如果token验证失败，则跳转登陆地址
-                        context.Response.Redirect(string.Concat(AccountConst.AccountSignInAndRedirectUrl, context.Request.IsHttps ? "https://" : "http://", context.Request.Host, context.Request.Path, context.Request.QueryString));
+                        //如果token验证失败，则跳转登陆地址(dataapi仅返回错误码）
+                        if (chameleonSystemEnum == ChameleonSystemEnum.DataApi)
+                        {
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            context.Response.WriteAsync($"{context.Error} {context.ErrorDescription}");
+                        }
+                        else
+                        {
+                            context.Response.Redirect(string.Concat(AccountConst.AccountSignInAndRedirectUrl, context.Request.IsHttps ? "https://" : "http://", context.Request.Host, context.Request.Path, context.Request.QueryString));
+                        }
 
                         return Task.CompletedTask;
                     },
