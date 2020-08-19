@@ -47,6 +47,7 @@ namespace Chameleon.DataApi.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
+        [Route("SignInThirdParty")]
         public JsonResult SignInThirdParty([FromBody]LoginRequest loginRequest)
         {
             if (string.IsNullOrEmpty(loginRequest.Email) || string.IsNullOrEmpty(loginRequest.Password))
@@ -75,6 +76,7 @@ namespace Chameleon.DataApi.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
+        [Route("ResetPasswordThirdParty")]
         public JsonResult ResetPasswordThirdParty([FromBody]LoginRequest loginRequest)
         {
             var result = Result.Success()
