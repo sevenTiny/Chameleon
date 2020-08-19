@@ -64,7 +64,7 @@ namespace Chameleon.Bootstrapper
             var value = auth?.FirstOrDefault(t => t.Type.Equals(key))?.Value;
 
             if (string.IsNullOrEmpty(value))
-                Response.Redirect(string.Concat(AccountConst.AccountSignInAndRedirectUrl, Request.Host, Request.Path));
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
 
             return value;
         }
@@ -127,6 +127,12 @@ namespace Chameleon.Bootstrapper
         {
             get
             {
+                if (!HttpContext.Request.Cookies.ContainsKey(AccountConst.KEY_AccessToken))
+                {
+                    Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return string.Empty;
+                }
+
                 return HttpContext.Request.Cookies[AccountConst.KEY_AccessToken];
             }
         }
