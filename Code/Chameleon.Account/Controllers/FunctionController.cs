@@ -46,6 +46,10 @@ namespace Chameleon.Account.Controllers
                     entity.CreateBy = CurrentUserId;
                     entity.ModifyBy = CurrentUserId;
                     entity.Code = entity.Code;
+
+                    if (string.IsNullOrEmpty(entity.Group))
+                        entity.Group = "默认";
+
                     return _FunctionService.AddCheckCode(entity);
                 });
 
@@ -70,6 +74,10 @@ namespace Chameleon.Account.Controllers
                .Continue(_ =>
                {
                    entity.ModifyBy = CurrentUserId;
+
+                   if (string.IsNullOrEmpty(entity.Group))
+                       entity.Group = "默认";
+
                    return _FunctionService.UpdateWithOutCode(entity, item =>
                    {
                        item.Code = entity.Code;
