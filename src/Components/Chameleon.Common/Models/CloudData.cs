@@ -1,4 +1,4 @@
-﻿namespace Chameleon.Common
+﻿namespace Chameleon.Common.Models
 {
     /// <summary>
     /// 通用数据交换对象

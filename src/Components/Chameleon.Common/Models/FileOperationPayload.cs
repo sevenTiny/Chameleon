@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chameleon.Common
+namespace Chameleon.Common.Models
 {
     /// <summary>
     /// 文件操作载荷

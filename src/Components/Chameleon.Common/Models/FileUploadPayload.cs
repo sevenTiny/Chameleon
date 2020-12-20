@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Chameleon.Common
+namespace Chameleon.Common.Models
 {
     /// <summary>
     /// 上传载荷
