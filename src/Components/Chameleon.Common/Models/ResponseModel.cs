@@ -23,5 +23,78 @@ namespace Chameleon.Common.Models
         public TipType TipType { get; set; }
         [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
         public object Data { get; set; }
+
+        /// <summary>
+        /// 快速返回成功模型
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static ResponseModel Success(string message, object data = null)
+        {
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Code = 200,
+                Message = message,
+                TipType = TipType.Success,
+                Data = data
+            };
+        }
+
+        /// <summary>
+        /// 快速返回成功模型
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static ResponseModel Info(string message, object data = null)
+        {
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Code = 200,
+                Message = message,
+                TipType = TipType.Info,
+                Data = data
+            };
+        }
+
+        /// <summary>
+        /// 快速返回成功模型
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static ResponseModel Warning(string message, object data = null)
+        {
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Code = 200,
+                Message = message,
+                TipType = TipType.Warning,
+                Data = data
+            };
+        }
+
+        /// <summary>
+        /// 快速返回失败模型
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="message"></param>
+        /// <param name="moreMessage"></param>
+        /// <returns></returns>
+        public static ResponseModel Error(int code, string message, List<string> moreMessage = null)
+        {
+            return new ResponseModel
+            {
+                IsSuccess = false,
+                Code = code,
+                Message = message,
+                TipType = TipType.Error,
+                MoreMessage = moreMessage
+            };
+        }
     }
 }
