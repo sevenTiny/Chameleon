@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chameleon.Account", "Chamel
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chameleon.Common", "Components\Chameleon.Common\Chameleon.Common.csproj", "{94AE1AD0-EF9E-4999-8EA0-81F787487C08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Chameleon.Common", "Components\Tests\Test.Chameleon.Common\Test.Chameleon.Common.csproj", "{F8B719DF-7190-4ACE-9F4B-16663D2E372B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DD536F55-A618-468F-9BC1-C75D814CA8C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,12 +23,18 @@ Global
 		{94AE1AD0-EF9E-4999-8EA0-81F787487C08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94AE1AD0-EF9E-4999-8EA0-81F787487C08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94AE1AD0-EF9E-4999-8EA0-81F787487C08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8B719DF-7190-4ACE-9F4B-16663D2E372B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8B719DF-7190-4ACE-9F4B-16663D2E372B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8B719DF-7190-4ACE-9F4B-16663D2E372B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8B719DF-7190-4ACE-9F4B-16663D2E372B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{94AE1AD0-EF9E-4999-8EA0-81F787487C08} = {1824D958-D760-4C36-80E4-B4742E010C76}
+		{F8B719DF-7190-4ACE-9F4B-16663D2E372B} = {DD536F55-A618-468F-9BC1-C75D814CA8C7}
+		{DD536F55-A618-468F-9BC1-C75D814CA8C7} = {1824D958-D760-4C36-80E4-B4742E010C76}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F6F7A19-5FC4-4BCA-99C6-AB135734C7F3}

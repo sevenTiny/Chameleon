@@ -12,25 +12,54 @@ namespace Chameleon.Common.Context
     [Serializable]
     public class ChameleonContext
     {
-        private IDictionary<string, object> _map;
+        /// <summary>
+        /// 常量
+        /// </summary>
+        public static class Const
+        {
+            /// <summary>
+            /// 上下文
+            /// </summary>
+            public const string ChameleonContext = "Chameleon.Context";
+            /// <summary>
+            /// 应用名
+            /// </summary>
+            public const string ApplicationName = "Chameleon.Context.XApplicationName";
+            /// <summary>
+            /// 租户Id
+            /// </summary>
+            public const string TenantId = "Chameleon.Context.XTenantId";
+            /// <summary>
+            /// 用户Id
+            /// </summary>
+            public const string UserId = "Chameleon.Context.XUserId";
+            /// <summary>
+            /// 请求参数
+            /// </summary>
+            public const string RequestQuery = "Chameleon.RequestQuery";
+            /// <summary>
+            /// 请求体
+            /// </summary>
+            public const string RequestBody = "Chameleon.RequestBody";
+        }
 
-        private static readonly string _key = "Chameleon.Context";
+        private IDictionary<string, object> _map;
 
         public static ChameleonContext Current
         {
             get
             {
-                ChameleonContext current = (ChameleonContext)CallContext.GetData(ChameleonContext._key);
+                ChameleonContext current = (ChameleonContext)CallContext.GetData(Const.ChameleonContext);
                 if (current == null)
                 {
                     current = new ChameleonContext();
-                    CallContext.SetData(ChameleonContext._key, current);
+                    CallContext.SetData(Const.ChameleonContext, current);
                 }
                 return current;
             }
             set
             {
-                CallContext.SetData(ChameleonContext._key, value);
+                CallContext.SetData(Const.ChameleonContext, value);
             }
         }
 
@@ -48,11 +77,11 @@ namespace Chameleon.Common.Context
         {
             get
             {
-                return this.Get("Chameleon.Context.XApplicationName");
+                return Convert.ToString(this.Get(Const.ApplicationName));
             }
             set
             {
-                this.Put("Chameleon.Context.XApplicationName", value);
+                this.Put(Const.ApplicationName, value);
             }
         }
 
@@ -60,16 +89,16 @@ namespace Chameleon.Common.Context
         {
             get
             {
-                string value = this.Get("Chameleon.Context.XTenantId");
+                object value = this.Get(Const.TenantId);
                 if (value != null)
                 {
-                    return System.Convert.ToInt32(value);
+                    return Convert.ToInt32(value);
                 }
                 return -1;
             }
             set
             {
-                this.Put("Chameleon.Context.XTenantId", value);
+                this.Put(Const.TenantId, value);
             }
         }
 
@@ -77,16 +106,16 @@ namespace Chameleon.Common.Context
         {
             get
             {
-                string value = this.Get("Chameleon.Context.XUserId");
+                object value = this.Get(Const.UserId);
                 if (value != null)
                 {
-                    return System.Convert.ToInt32(value);
+                    return Convert.ToInt32(value);
                 }
                 return -1;
             }
             set
             {
-                this.Put("Chameleon.Context.XUserId", value);
+                this.Put(Const.UserId, value);
             }
         }
 
@@ -98,19 +127,9 @@ namespace Chameleon.Common.Context
             }
         }
 
-        internal void Put(string key, int value)
-        {
-            this._map[key] = value.ToString();
-        }
-
-        public void Put(string key, string value)
-        {
-            this._map[key] = value;
-        }
-
         public void Put(string key, object value)
         {
-            this._map[key] = JsonConvert.SerializeObject(value);
+            this._map[key] = value;
         }
 
         public bool Contains(string key)
@@ -118,26 +137,10 @@ namespace Chameleon.Common.Context
             return this._map.ContainsKey(key);
         }
 
-        public string Get(string key)
+        public object Get(string key)
         {
-            object value;
-            this._map.TryGetValue(key, out value);
-            if (value == null)
-            {
-                return null;
-            }
-            return value.ToString();
-        }
-
-        public T Get<T>(string key)
-        {
-            object value;
-            this._map.TryGetValue(key, out value);
-            if (value != null)
-            {
-                return JsonConvert.DeserializeObject<T>(value.ToString());
-            }
-            return default(T);
+            this._map.TryGetValue(key, out object value);
+            return value;
         }
 
         public bool Remove(string key)
@@ -163,7 +166,7 @@ namespace Chameleon.Common.Context
 
         public static void Clear()
         {
-            CallContext.Remove(ChameleonContext._key);
+            CallContext.Remove(Const.ChameleonContext);
         }
     }
 }
